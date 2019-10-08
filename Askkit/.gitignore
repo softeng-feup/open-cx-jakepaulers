@@ -1,0 +1,10 @@
+.dart_tool/
+.packages
+.pub/
+build/
+
+app_feup/pubspec.lock
+.DS_Store
+.atom/
+.vscode/
+.packages
