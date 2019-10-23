@@ -39,7 +39,7 @@ class QuestionCard extends CardTemplate {
 
   @override
   onClick(BuildContext context) {
-    return QuestionPage(question);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionPage(question)));
   }
 
   @override

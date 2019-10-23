@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +36,24 @@ class QuestionPageState extends State<QuestionPage> {
   }
 
   Widget getBody() {
-    return Text("OLA");
+    return Stack(
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.only(top: 100.0, left: 20.0),
+            child: ListView.builder(
+                itemCount: 8,
+                itemBuilder: (BuildContext context, int i) {
+                  var rng = new Random();
+                  int random = rng.nextInt(1000);
+                  Question question = Question("Moas$random", "Comment$i");
+                  return QuestionCard(question);
+                }
+            )
+          ),
+          Positioned(
+            child: QuestionCard(widget._question)
+          )
+        ]
+    );
   }
 }
