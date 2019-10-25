@@ -1,0 +1,391 @@
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="background-color: rgb(255, 255, 255);" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="517px" height="312px" viewBox="-0.5 -0.5 517 312" >
+    <defs>
+        <style type="text/css">ul { margin-top: 0px; margin-bottom: 10px } &#xa;ol { margin-top: 0px; margin-bottom: 10px } &#xa;ul { margin-top: 0px; margin-bottom: 10px } &#xa;ol { margin-top: 0px; margin-bottom: 10px } &#xa;ul { margin-top: 0px; margin-bottom: 10px } &#xa;ol { margin-top: 0px; margin-bottom: 10px } &#xa;</style>
+    </defs>
+    <g>
+        <rect x="33" y="29" width="80" height="96" fill="#facc8d" stroke="#000000" pointer-events="none"/>
+        <path d="M 33 45.86 L 113 45.86" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="#000000" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="12px">
+            <text x="72.5" y="41.07">Conferencia</text>
+        </g>
+        <g fill="#000000" font-family="Helvetica" font-size="12px">
+            <text x="39.5" y="60.36">nome</text>
+        </g>
+        <g fill="#000000" font-family="Helvetica" font-size="12px">
+            <text x="39.5" y="76.36">sala</text>
+        </g>
+        <g fill="#000000" font-family="Helvetica" font-size="12px">
+            <text x="39.5" y="92.36">descricao</text>
+        </g>
+        <rect x="279" y="171" width="80" height="65" fill="#facc8d" stroke="#000000" pointer-events="none"/>
+        <path d="M 279 187.86 L 359 187.86" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="#000000" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="12px">
+            <text x="318.5" y="183.07">Comentario</text>
+        </g>
+        <g fill="#000000" font-family="Helvetica" font-size="12px">
+            <text x="285.5" y="202.36">texto</text>
+        </g>
+        <rect x="188" y="33" width="80" height="40" fill="#facc8d" stroke="#000000" pointer-events="none"/>
+        <path d="M 188 50.34 L 268 50.34" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="#000000" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="12px">
+            <text x="227.5" y="45.07">Pergunta</text>
+        </g>
+        <rect x="362.5" y="33" width="80" height="40" fill="#facc8d" stroke="#000000" pointer-events="none"/>
+        <path d="M 362.5 50.02 L 442.5 50.02" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="#000000" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="12px">
+            <text x="402" y="45.07">Resposta</text>
+        </g>
+        <path d="M 126.71 63 L 141.86 63 Q 151.86 63 161.86 63 L 187.86 63" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 113.71 63 L 120.21 56.5 L 126.71 63 L 120.21 69.5 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 281.71 60.14 L 329.29 60.14 Q 339.29 60.14 349.29 60.14 L 362.5 60.14" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 268.71 60.14 L 275.21 53.64 L 281.71 60.14 L 275.21 66.64 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 319.29 157.88 L 319.29 139.29 Q 319.29 129.29 309.29 129.29 L 255 129.29 Q 245 129.29 245 119.29 L 245 73" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 319.29 169.88 L 313.29 157.88 L 325.29 157.88 Z" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 319.29 157.88 L 319.29 139.29 Q 319.29 129.29 329.29 129.29 L 377.86 129.29 Q 387.86 129.29 387.86 119.29 L 387.86 73" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 319.29 169.88 L 313.29 157.88 L 325.29 157.88 Z" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 54.14 125 L 54.14 134.57 Q 54.14 144.14 54.14 153.82 L 54.14 163.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <rect x="124" y="136" width="66" height="17" fill="#facc8d" stroke="#000000" pointer-events="none"/>
+        <path d="M 124 153.02 L 190 153.02" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="#000000" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="12px">
+            <text x="156.5" y="148.07">Up/Down</text>
+        </g>
+        <g transform="translate(202.5,166.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="30" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 30px; white-space: normal; overflow-wrap: break-word; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; text-align: inherit; text-decoration: inherit; width: 100%;">
+                            <font style="font-size: 8px">vote</font>
+                        </div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 30px; height: 12px;" width="30" height="12">
+                    <defs>
+                        <path id="bTRawHaGYDxAMgC8" d="M8.5,12.599996948242186 h13"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="8px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#bTRawHaGYDxAMgC8" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">vote</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <rect x="36" y="163.5" width="77" height="74" fill="#facc8d" stroke="#000000" pointer-events="none"/>
+        <path d="M 36 180.36 L 113 180.36" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="#000000" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="12px">
+            <text x="74" y="175.57">Pessoa</text>
+        </g>
+        <g fill="#000000" font-family="Helvetica" font-size="12px">
+            <text x="42.5" y="194.86">nome</text>
+        </g>
+        <g fill="#000000" font-family="Helvetica" font-size="12px">
+            <text x="42.5" y="210.86">foto</text>
+        </g>
+        <path d="M 113 181.86 L 197.86 181.86 Q 207.86 181.86 207.86 171.86 L 207.86 73.29" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g transform="translate(113.5,168.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="4" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                            <font style="font-size: 8px">1</font>
+                        </div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 4px; height: 12px;" width="4" height="12">
+                    <defs>
+                        <path id="HTRawHaGYDxAMgC9" d="M0,12.599996948242186 h4"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="8px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#HTRawHaGYDxAMgC9" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">1</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <g transform="translate(182.5,69.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="29" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 29px; white-space: normal; overflow-wrap: break-word; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; text-align: inherit; text-decoration: inherit; width: 100%;">
+                            <font style="font-size: 8px">0...1</font>
+                        </div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 29px; height: 12px;" width="29" height="12">
+                    <defs>
+                        <path id="3TRawHaGYDxAMgC." d="M7.5,12.599996948242186 h14"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="8px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#3TRawHaGYDxAMgC." startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">0...1</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <path d="M 95.29 138.71 L 95.29 141.42 Q 95.29 144.14 95.29 153.82 L 95.29 163.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 95.29 125.71 L 101.79 132.21 L 95.29 138.71 L 88.79 132.21 Z" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g transform="translate(36.5,123.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="29" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 29px; white-space: normal; overflow-wrap: break-word; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; text-align: inherit; text-decoration: inherit; width: 100%;">*</div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 29px; height: 12px;" width="29" height="12">
+                    <defs>
+                        <path id="vTRawHaGYDxAMgC_" d="M0,12.6 h29"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="12px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#vTRawHaGYDxAMgC_" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">*</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <g transform="translate(33.5,149.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="29" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 29px; white-space: normal; overflow-wrap: break-word; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; text-align: inherit; text-decoration: inherit; width: 100%;">
+                            <font style="font-size: 8px">1</font>
+                        </div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 29px; height: 12px;" width="29" height="12">
+                    <defs>
+                        <path id="AzRawHaGYDxAMgDA" d="M12.5,12.599996948242186 h4"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="8px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#AzRawHaGYDxAMgDA" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">1</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <g transform="translate(29.5,135.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="29" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 29px; white-space: normal; overflow-wrap: break-word; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; text-align: inherit; text-decoration: inherit; width: 100%;">
+                            <font style="font-size: 8px">host</font>
+                        </div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 29px; height: 12px;" width="29" height="12">
+                    <defs>
+                        <path id="gzRawHaGYDxAMgDB" d="M7.5,12.599996948242186 h14"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="8px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#gzRawHaGYDxAMgDB" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">host</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <path d="M 207.86 175 L 190.14 144.71" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="3 3" pointer-events="none"/>
+        <path d="M 113 217.29 L 189.29 217.29 Q 199.29 217.29 209.29 217.29 L 279 217.29" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g transform="translate(113.5,202.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="4" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                            <div>
+                                <font style="font-size: 8px">1</font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 4px; height: 12px;" width="4" height="12">
+                    <defs>
+                        <path id="IzRawHaGYDxAMgDC" d="M0,12.599996948242186 h4"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="8px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#IzRawHaGYDxAMgDC" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">1</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <g transform="translate(273.5,207.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="5" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">*</div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 5px; height: 12px;" width="5" height="12">
+                    <defs>
+                        <path id="ozRawHaGYDxAMgDD" d="M0,12.6 h5"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="12px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#ozRawHaGYDxAMgDD" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">*</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <path d="M 126.71 63 L 141.86 63 Q 151.86 63 161.86 63 L 187.86 63" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 113.71 63 L 120.21 56.5 L 126.71 63 L 120.21 69.5 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 54.14 125 L 54.14 134.57 Q 54.14 144.14 54.14 153.82 L 54.14 163.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 95.29 138.71 L 95.29 141.42 Q 95.29 144.14 95.29 153.82 L 95.29 163.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 95.29 125.71 L 101.79 132.21 L 95.29 138.71 L 88.79 132.21 Z" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 319.29 157.88 L 319.29 139.29 Q 319.29 129.29 309.29 129.29 L 255 129.29 Q 245 129.29 245 119.29 L 245 73" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 319.29 169.88 L 313.29 157.88 L 325.29 157.88 Z" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 319.29 157.88 L 319.29 139.29 Q 319.29 129.29 329.29 129.29 L 377.86 129.29 Q 387.86 129.29 387.86 119.29 L 387.86 73" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 319.29 169.88 L 313.29 157.88 L 325.29 157.88 Z" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 113 217.29 L 189.29 217.29 Q 199.29 217.29 209.29 217.29 L 279 217.29" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g transform="translate(113.5,202.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="4" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                            <div>
+                                <font style="font-size: 8px">1</font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 4px; height: 12px;" width="4" height="12">
+                    <defs>
+                        <path id="EzRawHaGYDxAMgDE" d="M0,12.599996948242186 h4"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="8px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#EzRawHaGYDxAMgDE" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">1</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <g transform="translate(273.5,207.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="5" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">*</div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 5px; height: 12px;" width="5" height="12">
+                    <defs>
+                        <path id="0zRawHaGYDxAMgDF" d="M0,12.6 h5"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="12px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#0zRawHaGYDxAMgDF" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">*</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <path d="M 126.71 63 L 141.86 63 Q 151.86 63 161.86 63 L 187.86 63" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 113.71 63 L 120.21 56.5 L 126.71 63 L 120.21 69.5 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 281.71 60.14 L 329.29 60.14 Q 339.29 60.14 349.29 60.14 L 362.5 60.14" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 268.71 60.14 L 275.21 53.64 L 281.71 60.14 L 275.21 66.64 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 319.29 157.88 L 319.29 139.29 Q 319.29 129.29 309.29 129.29 L 255 129.29 Q 245 129.29 245 119.29 L 245 73" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 319.29 169.88 L 313.29 157.88 L 325.29 157.88 Z" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 113 181.86 L 197.86 181.86 Q 207.86 181.86 207.86 171.86 L 207.86 73.29" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g transform="translate(113.5,168.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="4" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                            <font style="font-size: 8px">1</font>
+                        </div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 4px; height: 12px;" width="4" height="12">
+                    <defs>
+                        <path id="8zRawHaGYDxAMgDG" d="M0,12.599996948242186 h4"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="8px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#8zRawHaGYDxAMgDG" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">1</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <path d="M 281.71 60.14 L 329.29 60.14 Q 339.29 60.14 349.29 60.14 L 362.5 60.14" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 268.71 60.14 L 275.21 53.64 L 281.71 60.14 L 275.21 66.64 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 319.29 157.88 L 319.29 139.29 Q 319.29 129.29 329.29 129.29 L 377.86 129.29 Q 387.86 129.29 387.86 119.29 L 387.86 73" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 319.29 169.88 L 313.29 157.88 L 325.29 157.88 Z" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 207.86 175 L 190.14 144.71" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="3 3" pointer-events="none"/>
+        <path d="M 54.14 125 L 54.14 134.57 Q 54.14 144.14 54.14 153.82 L 54.14 163.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 113 181.86 L 197.86 181.86 Q 207.86 181.86 207.86 171.86 L 207.86 73.29" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g transform="translate(113.5,168.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="4" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                            <font style="font-size: 8px">1</font>
+                        </div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 4px; height: 12px;" width="4" height="12">
+                    <defs>
+                        <path id="izRawHaGYDxAMgDH" d="M0,12.599996948242186 h4"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="8px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#izRawHaGYDxAMgDH" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">1</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <path d="M 95.29 138.71 L 95.29 141.42 Q 95.29 144.14 95.29 153.82 L 95.29 163.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 95.29 125.71 L 101.79 132.21 L 95.29 138.71 L 88.79 132.21 Z" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 113 217.29 L 189.29 217.29 Q 199.29 217.29 209.29 217.29 L 279 217.29" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+        <g transform="translate(113.5,202.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="4" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                            <div>
+                                <font style="font-size: 8px">1</font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 4px; height: 12px;" width="4" height="12">
+                    <defs>
+                        <path id="SzRawHaGYDxAMgDI" d="M0,12.599996948242186 h4"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="8px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#SzRawHaGYDxAMgDI" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">1</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <g transform="translate(273.5,207.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="5" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">*</div>
+                    </div>
+                </foreignObject>
+                <svg style="width: 5px; height: 12px;" width="5" height="12">
+                    <defs>
+                        <path id="KzRawHaGYDxAMgDJ" d="M0,12.6 h5"/>
+                    </defs>
+                    <text fill="rgb(0, 0, 0)" font-size="12px" font-family="Helvetica" font-weight="400">
+                        <textPath xlink:href="#KzRawHaGYDxAMgDJ" startOffset="50%" text-anchor="middle">
+                            <tspan xml:space="preserve">*</tspan>
+                        </textPath>
+                    </text>
+                </svg>
+            </switch>
+        </g>
+        <path d="M 207.86 175 L 190.14 144.71" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="3 3" pointer-events="none"/>
+    </g>
+</svg>
