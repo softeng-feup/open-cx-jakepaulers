@@ -132,12 +132,12 @@ Briefly describe each use case mentioning the following:
 
 *  **Normal Flow**. 
 	1. The attendee presses the up or downvote button.
-	2. If the user is correctly authenticated, the system adds the vote to the current totals.
+	2. If the user is correctly authenticated, the system adds the vote to the respective count, or removes it, if the button had been pressed earlier.
 
 *  **Alternative Flows and Exceptions**. 
 	1. The attendee presses the up or downvote button.
 	2. If the user isn't logged in, the system will prompt them to do so.
-	3. After successfully logging in, the vote is counted.
+	3. After successfully logging in, the vote is counted, and either added or subtracted (depending on if the button had been previously pressed or not).
 
 #### Flag Questions:
 
