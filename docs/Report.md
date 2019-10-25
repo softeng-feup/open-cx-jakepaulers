@@ -90,7 +90,7 @@ Briefly describe each use case mentioning the following:
 
 *  **Description**. This use case exists so that the attendee can upload their questions into the database to later be answered.
 
-*  **Preconditions and Postconditions**.  In order to post a question, the attendee must first provide a username, and join a conference's forum. In the end, the user's question will be added to the database, and displayed on the forum.
+*  **Preconditions and Postconditions**.  In order to post a question, the attendee must first join a conference's forum. In the end, the user's question will be added to the database, and displayed on the forum.
   
 *  **Normal Flow**. 
 	1. The attendee presses the button to add a question to a forum.
@@ -109,7 +109,7 @@ Briefly describe each use case mentioning the following:
 
 *  **Description**. This use case exists so that an attendee can answer other user's questions.
 
-*  **Preconditions and Postconditions**.  In order to answer a question, the attendee must first provide a username, and join a conference's forum. In the end, the user's answer will be added to the database, and displayed as a reply to the chosen question.
+*  **Preconditions and Postconditions**.  In order to answer a question, the attendee must first join a conference's forum. In the end, the user's answer will be added to the database, and displayed as a reply to the chosen question.
 
 *  **Normal Flow**. 
 	1. The attendee selects a question he wants to answer.
@@ -145,12 +145,12 @@ Briefly describe each use case mentioning the following:
 
 *  **Description**. This use case exists so conference hosts can flag questions as having received a satisfactory answer.
 
-*  **Preconditions and Postconditions**.  In order to flag a question, the host must be loggen in. In the end, the question will be marked as answered, with the answer in question highlighted.
+*  **Preconditions and Postconditions**.  In order to flag a question, the host must be logged in. In the end, the question will be marked as answered, with the answer in question highlighted.
 
 *  **Normal Flow**. 
 	1. The host chooses a question.
 	2. The host, as an attendee, posts an answer to the question.
-	3. If the user is correctly logged in, they can highlight their own answer, and the system will flag the question as answered.
+	3. If the host is correctly logged in, they can highlight their own answer, and the system will flag the question as answered.
 
 *  **Alternative Flows and Exceptions**. 
 	1. The host chooses a question.
@@ -168,7 +168,7 @@ Briefly describe each use case mentioning the following:
 
 *  **Description**. This use case exists so conference hosts can delete questions that are not relevant to the topic at hand.
 
-*  **Preconditions and Postconditions**.  In order to delete a question, the host must be loggen in. In the end, the selected question will be removed.
+*  **Preconditions and Postconditions**.  In order to delete a question, the host must be logged in. In the end, the selected question will be removed.
 
 *  **Normal Flow**. 
 	1. The host chooses a question.
