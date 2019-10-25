@@ -31,12 +31,13 @@ class ConferencePageState extends State<ConferencePage> {
           backgroundColor: Colors.indigo[400]
       ),
       body: getBody(),
-      floatingActionButton: RaisedButton(child: Icon(Icons.add), onPressed: addQuestion, color: gray),
+      floatingActionButton: RaisedButton(key: const Key("add question"), child: Icon(Icons.add), onPressed: addQuestion, color: gray),
     );
   }
 
   Widget getBody() {
     return ListView.builder(
+        key: const Key("question list"),
         itemCount: this.questions.length,
         itemBuilder: (BuildContext context, int i) {
           return QuestionCard(this.questions[i]);
@@ -59,6 +60,7 @@ class ConferencePageState extends State<ConferencePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   TextFormField(
+                    key: const Key("username field"),
                     controller: usernameController,
                     decoration: new InputDecoration(
                       hintText: "Username",
@@ -71,6 +73,7 @@ class ConferencePageState extends State<ConferencePage> {
                     }
                   ),
                   TextFormField(
+                    key: const Key("question field"),
                     controller: questionController,
                     decoration: new InputDecoration(
                         hintText: "Question",
@@ -85,6 +88,7 @@ class ConferencePageState extends State<ConferencePage> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     child: RaisedButton(
+                      key: const Key("submit question"),
                       child: Text(
                           "Submit",
                           style: new TextStyle(

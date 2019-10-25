@@ -132,12 +132,12 @@ Briefly describe each use case mentioning the following:
 
 *  **Normal Flow**. 
 	1. The attendee presses the up or downvote button.
-	2. If the user is correctly authenticated, the system adds the vote to the current totals.
+	2. If the user is correctly authenticated, the system adds the vote to the respective count, or removes it, if the button had been pressed earlier.
 
 *  **Alternative Flows and Exceptions**. 
 	1. The attendee presses the up or downvote button.
 	2. If the user isn't logged in, the system will prompt them to do so.
-	3. After successfully logging in, the vote is counted.
+	3. After successfully logging in, the vote is counted, and either added or subtracted (depending on if the button had been previously pressed or not).
 
 #### Flag Questions:
 
@@ -183,7 +183,7 @@ Briefly describe each use case mentioning the following:
 
 ### User stories
 
-#### Story
+#### Story #1
 
 As a conference atendee, I want to be able to easily ask questions to the host, so that I get to understand the subject better and faster.
 
@@ -201,13 +201,14 @@ Value: Must have
 
 Effort: XL
 
-#### Story
+#### Story #2
 
 As a conference host, I want my audience to be able to assist each other on questions they might have, so that I'll have more time to explain other harder questions.
 
 **User interface mockup**
 
-![Mockup](img/mockup_2.png "UI Mockup 2")
+![Mockup](img/mockup_2a.png "UI Mockup 2a")
+![Mockup](img/mockup_2b.png "UI Mockup 2b")
 
 **Acceptance tests**
 
@@ -215,11 +216,11 @@ For each user story you should write also the acceptance tests (textually in Ghe
 
 **Value and effort**
 
-Value: Should have
+Value: Must have
 
-Effort: L
+Effort: XL
 
-#### Story
+#### Story #3
 
 As a user, I want to be able to upvote questions I find relevant, and downvote questions I find off-topic, so that the time is used to answer questions that people find the most important.
 
@@ -237,7 +238,7 @@ Value: Must have
 
 Effort: XL
 
-#### Story
+#### Story #4
 
 As an attendee, I want to be notified when my questions are being answered or verified by the host, so that I don't have to keep the app open until something happens.
 
@@ -255,7 +256,7 @@ Value: Could have
 
 Effort: S
 
-#### Story
+#### Story #5
 
 As an attendee, I want to be automatically entered into the forum corresponding to the conference I'm currently attending, so that I don't need to waste time joining a room every time I open the app.
 
@@ -300,7 +301,7 @@ At the end, it is good to add a rough indication of the value of the user story 
 
 ### Domain model
 
-To better understand the context of the software system, it is very useful to have a simple UML class diagram with all the key concepts (names, attributes) and relationships involved of the problem domain addressed by your module.
+![UML](./img/UML.svg "UML Class Diagram")
 
 ---
 
