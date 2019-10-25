@@ -28,7 +28,7 @@ class ConferencePageState extends State<ConferencePage> {
     return Scaffold(
       appBar: AppBar(
           title: Text("Conference Page"),
-          backgroundColor: Colors.red
+          backgroundColor: Colors.indigo[400]
       ),
       body: getBody(),
       floatingActionButton: RaisedButton(child: Icon(Icons.add), onPressed: addQuestion, color: gray),
