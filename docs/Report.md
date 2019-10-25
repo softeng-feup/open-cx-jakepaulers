@@ -61,10 +61,12 @@ Take a look at the following links to learn some techniques:
 ---
 ## Requirements
 
+<!--
 
 In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
 
 Start by contextualizing your module, describing the main concepts, terms, roles, scope and boundaries of the application domain addressed by the project.
+-->
 
 ### Use case diagram 
 
@@ -195,7 +197,13 @@ As a conference atendee, I want to be able to easily ask questions to the host, 
 
 **Acceptance tests**
 
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
+```gherkin
+Scenario: Posting a question
+  Given There are 3 questions asked
+  When I tap the "add question" button
+  And I submit a question
+  Then There are 4 questions asked
+```
 
 **Value and effort**
 
@@ -214,7 +222,14 @@ As a conference host, I want my audience to be able to assist each other on ques
 
 **Acceptance tests**
 
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
+```gherkin
+Scenario: Adding a comment
+  Given Question A has 2 comments
+  When I tap the "add comment" button
+  And I submit a comment "Hello!"
+  Then Question A has 3 comments
+  And Question A contains a comment "Hello!"
+```
 
 **Value and effort**
 
@@ -232,7 +247,28 @@ As a user, I want to be able to upvote questions I find relevant, and downvote q
 
 **Acceptance tests**
 
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
+```gherkin
+Scenario: Upvoting a question
+  Given Question A has 20 upvotes
+  When I tap the "upvote" button
+  Then Question A has 21 upvotes
+```
+
+```gherkin  
+Scenario: Upvoting a previously upvoted question
+  Given Question A has 20 upvotes
+  And I have already upvoted Question A
+  When I tap the "upvote" button
+  Then Question A has 19 upvotes
+```
+
+```gherkin  
+Scenario: Downvoting a previously upvoted question
+  Given Question A has 20 upvotes
+  And I have already upvoted Question A
+  When I tap the "downvote" button
+  Then Question A has 18 upvotes
+```
 
 **Value and effort**
 
@@ -250,7 +286,21 @@ As an attendee, I want to be notified when my questions are being answered or ve
 
 **Acceptance tests**
 
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
+```gherkin
+Scenario: Being notified of an answer when
+  Given I have posted a question
+  And My app is closed
+  When My question is answered
+  Then I expect to receive a notification
+```
+
+```gherkin
+Scenario: Being notified of an answer when on another page
+  Given I have posted a question
+  And I am not on that conference's page
+  When My question is answered
+  Then I expect to receive a notification
+```
 
 **Value and effort**
 
@@ -268,7 +318,20 @@ As an attendee, I want to be automatically entered into the forum corresponding 
 
 **Acceptance tests**
 
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
+```gherkin
+Scenario: Knowing which conferences are happening nearby
+  Given I am not near any conference room
+  When I check the conference list
+  Then I expect too see no confereces
+```
+
+```gherkin
+Scenario: Conference is created nearby
+  Given I am near 3 conference rooms
+  When A new conference is created near me
+  And I check the conference list
+  Then I expect too see 4 confereces
+```
 
 **Value and effort**
 

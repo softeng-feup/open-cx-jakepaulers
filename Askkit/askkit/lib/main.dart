@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'View/Pages/ConferencePage.dart';
+import 'View/Pages/LogInPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: LogInPage(),
     );
   }
 }
@@ -27,6 +28,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return ConferencePage();
+    return LogInPage();
   }
 }

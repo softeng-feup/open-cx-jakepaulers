@@ -29,7 +29,7 @@ class QuestionPageState extends State<QuestionPage> {
     return Scaffold(
       appBar: AppBar(
           title: Text("Question Page"),
-          backgroundColor: Colors.red
+          backgroundColor: Colors.indigo[400]
       ),
       body: getBody(),
     );
@@ -39,19 +39,22 @@ class QuestionPageState extends State<QuestionPage> {
     return Stack(
         children: <Widget>[
           Container(
-            padding: const EdgeInsets.only(top: 100.0, left: 20.0),
+            padding: const EdgeInsets.only(top: 100.0),
             child: ListView.builder(
                 itemCount: 8,
                 itemBuilder: (BuildContext context, int i) {
                   var rng = new Random();
                   int random = rng.nextInt(1000);
                   Question question = Question("Moas$random", "Comment$i");
-                  return QuestionCard(question);
+                  return Container(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: QuestionCard(question)
+                  );
                 }
             )
           ),
           Positioned(
-            child: QuestionCard(widget._question)
+              child: QuestionCard(widget._question)
           )
         ]
     );
