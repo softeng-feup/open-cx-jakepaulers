@@ -68,6 +68,7 @@ Start by contextualizing your module, describing the main concepts, terms, roles
 
 ### Use case diagram 
 
+<!--
 Create a use-case diagram in UML with all high-level use cases possibly addressed by your module.
 
 Give each use case a concise, results-oriented name. Use cases should reflect the tasks the user needs to be able to accomplish using the system. Include an action verb and a noun. 
@@ -81,6 +82,7 @@ Briefly describe each use case mentioning the following:
 * **Normal Flow**. Provide a detailed description of the user actions and system responses that will take place during execution of the use case under normal, expected conditions. This dialog sequence will ultimately lead to accomplishing the goal stated in the use case name and description. This is best done as a numbered list of actions performed by the actor, alternating with responses provided by the system. 
 * **Alternative Flows and Exceptions**. Document other, legitimate usage scenarios that can take place within this use case, stating any differences in the sequence of steps that take place. In addition, describe any anticipated error conditions that could occur during execution of the use case, and define how the system is to respond to those conditions.
 
+-->
 
 ![Use case diagram](./img/use_case.png "Use case diagram")
 
@@ -327,9 +329,14 @@ The goal of this subsection is to document the high-level physical structure of 
 It should describe also the technologies considered and justify the selections made. Examples of technologies relevant for openCX are, for example, frameworks for mobile applications (Flutter vs ReactNative vs ...), languages to program with microbit, and communication with things (beacons, sensors, etc.).
 
 ### Prototype
+<!--
 To help on validating all the architectural, design and technological decisions made, we usually implement a vertical prototype, a thin vertical slice of the system.
 
 In this subsection please describe in more detail which, and how, user(s) story(ies) were implemented.
+-->
+For this first prototype, we decided to tackle our Story #1, which states that "As a conference atendee, I want to be able to easily ask questions to the host, so that I get to understand the subject better and faster.", this being the basis of our app.
+We've layed out the general structure of a conference room forum's user interface, and while we still don't have a real database to connect to, we've added the functionality to allow users to create and submit their own questions, which will be temporarily stored by the app and then be displayed in said forum.
+In addition, work has also begun on the user interface for the login screen, which for the moment only acts as a redirect to a conference room forum (since we don't have any account data stored for actual logins).
 
 ---
 
