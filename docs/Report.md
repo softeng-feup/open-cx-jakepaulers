@@ -79,7 +79,107 @@ Briefly describe each use case mentioning the following:
 * **Preconditions and Postconditions**. Include any activities that must take place, or any conditions that must be true, before the use case can be started (preconditions) and postconditions. Describe also the state of the system at the conclusion of the use case execution (postconditions). 
 
 * **Normal Flow**. Provide a detailed description of the user actions and system responses that will take place during execution of the use case under normal, expected conditions. This dialog sequence will ultimately lead to accomplishing the goal stated in the use case name and description. This is best done as a numbered list of actions performed by the actor, alternating with responses provided by the system. 
-* **Alternative Flows and Exceptions**. Document other, legitimate usage scenarios that can take place within this use case, stating any differences in the sequence of steps that take place. In addition, describe any anticipated error conditions that could occur during execution of the use case, and define how the system is to respond to those conditions. 
+* **Alternative Flows and Exceptions**. Document other, legitimate usage scenarios that can take place within this use case, stating any differences in the sequence of steps that take place. In addition, describe any anticipated error conditions that could occur during execution of the use case, and define how the system is to respond to those conditions.
+
+
+![Use case diagram](./img/use_case.png "Use case diagram")
+
+#### Post Questions:
+
+*  **Actor**. Conference attendee.
+
+*  **Description**. This use case exists so that the attendee can upload their questions into the database to later be answered.
+
+*  **Preconditions and Postconditions**.  In order to post a question, the attendee must first provide a username, and join a conference's forum. In the end, the user's question will be added to the database, and displayed on the forum.
+  
+*  **Normal Flow**. 
+	1. The attendee presses the button to add a question to a forum.
+	2. The attendee types his question.
+	3. If it's within the allowed length, the system saves the question to the database, and displays it on the forum.
+
+*  **Alternative Flows and Exceptions**. 
+	1. The attendee presses the button to add a question to a forum.
+	2. The attendee types his question.
+	3. If the question is too long, the system will respond with an error message.
+	4. The user can then retype his question, and proceed as normal.
+
+#### Answer Questions:
+
+*  **Actor**. Conference attendee.
+
+*  **Description**. This use case exists so that an attendee can answer other user's questions.
+
+*  **Preconditions and Postconditions**.  In order to answer a question, the attendee must first provide a username, and join a conference's forum. In the end, the user's answer will be added to the database, and displayed as a reply to the chosen question.
+
+*  **Normal Flow**. 
+	1. The attendee selects a question he wants to answer.
+	2. The attendee types his answer.
+	3. If it's within the allowed length, the system saves the answer to the database, and displays it as a reply to the selected question.
+
+*  **Alternative Flows and Exceptions**. 
+	1. The attendee selects a question he wants to answer.
+	2. The attendee types his answer.
+	3. If the answer exceeds the character limit, the system sends and error message.
+	4. The user can then retype his answer and proceed as normal.
+
+#### Up/Downvote Questions:
+
+*  **Actor**. Conference attendee.
+
+*  **Description**. This use case exists so authenticated attendees can help filter good and bad questions.
+
+*  **Preconditions and Postconditions**.  In order to up or downvote a question/answer, the attendee must be logged in. After voting, the vote will then be added to the total count.
+
+*  **Normal Flow**. 
+	1. The attendee presses the up or downvote button.
+	2. If the user is correctly authenticated, the system adds the vote to the current totals.
+
+*  **Alternative Flows and Exceptions**. 
+	1. The attendee presses the up or downvote button.
+	2. If the user isn't logged in, the system will prompt them to do so.
+	3. After successfully logging in, the vote is counted.
+
+#### Flag Questions:
+
+*  **Actor**. Conference host.
+
+*  **Description**. This use case exists so conference hosts can flag questions as having received a satisfactory answer.
+
+*  **Preconditions and Postconditions**.  In order to flag a question, the host must be loggen in. In the end, the question will be marked as answered, with the answer in question highlighted.
+
+*  **Normal Flow**. 
+	1. The host chooses a question.
+	2. The host, as an attendee, posts an answer to the question.
+	3. If the user is correctly logged in, they can highlight their own answer, and the system will flag the question as answered.
+
+*  **Alternative Flows and Exceptions**. 
+	1. The host chooses a question.
+	2. The host, as an attendee, posts an answer to the question.
+	3. If the host isn't correctly logged in, the system will prompt them to do so.
+	4. After logging in, they can proceed as normal.
+*  **OR** 
+	1. The host chooses a question.
+	2. The host, chooses an answer he finds adequate.
+	3. If the host is correctly logged in, they can highlight the answer, and the system will flag the question as answered.
+	
+#### Delete Questions:
+
+*  **Actor**. Conference host.
+
+*  **Description**. This use case exists so conference hosts can delete questions that are not relevant to the topic at hand.
+
+*  **Preconditions and Postconditions**.  In order to delete a question, the host must be loggen in. In the end, the selected question will be removed.
+
+*  **Normal Flow**. 
+	1. The host chooses a question.
+	2. If the host is correctly logged in, they can signal the system to remove it.
+	3. The system removes the question from the database.
+
+*  **Alternative Flows and Exceptions**. 
+	1. The host chooses a question.
+	2. If the host isn't correctly logged in, the system will prompt them to do so.
+	3. After logging in, they can proceed as normal.
+	
 
 ### User stories
 
