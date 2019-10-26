@@ -7,10 +7,8 @@ import 'package:flutter/material.dart';
 import '../Theme.dart';
 import 'CardTemplate.dart';
 
-class UserInputCard extends CardTemplate {
-  final bool _clickable;
-  final Comment _comment;
-  UserInputCard(this._comment, this._clickable);
+abstract class UserInputCard extends CardTemplate {
+  Comment getComment();
 
   @override
   Widget buildCardContent(BuildContext context) {
@@ -23,11 +21,11 @@ class UserInputCard extends CardTemplate {
               backgroundImage: NetworkImage('https://noticias.up.pt//wp-content/uploads/2019/05/Pedro-Mo%C3%A1s-interior-e1556272376936.jpg'),
             ),
             Text(" "),
-            Text(_comment.username)
+            Text(getComment().username)
           ],
         ),
         Container(
-          child: Text(_comment.content, textScaleFactor: 1.3),
+          child: Text(getComment().content, textScaleFactor: 1.3),
           alignment: Alignment.centerLeft,
         ),
       ]
@@ -35,16 +33,8 @@ class UserInputCard extends CardTemplate {
   }
 
   @override
-  onClick(BuildContext context) {
-    if(this._clickable) {
-      Question question = _comment;
-      Navigator.push(context, MaterialPageRoute(
-          builder: (context) => QuestionPage(question)));
-    }
-  }
-
-  @override
   Color getCardColor() {
     return lightGray;
   }
+
 }

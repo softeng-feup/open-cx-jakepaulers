@@ -1,5 +1,6 @@
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/View/Widgets/CollectionListViewBuilder.dart';
+import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/UserInputCard.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +38,7 @@ class ConferencePageState extends State<ConferencePage> {
   }
 
   Widget getBody() {
-    return makeStreamBuilder(Question.getCollection(), (document) => UserInputCard(Question.fromSnapshot(document), true));
+    return makeStreamBuilder(Question.getCollection(), (document) => QuestionCard(Question.fromSnapshot(document), true));
   }
 
   void addQuestion() {

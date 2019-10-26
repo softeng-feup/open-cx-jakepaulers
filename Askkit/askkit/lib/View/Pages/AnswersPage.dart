@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Comment.dart';
 import 'package:askkit/Model/Question.dart';
+import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/CollectionListViewBuilder.dart';
+import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/UserInputCard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +49,7 @@ class QuestionPageState extends State<QuestionPage> {
               child: getCommentView(widget._question)
           ),
           Positioned(
-              child: UserInputCard(widget._question, false)
+              child: QuestionCard(widget._question, false)
           )
         ]
     );
@@ -59,7 +61,7 @@ class QuestionPageState extends State<QuestionPage> {
         query, (document) =>
         Container(
             padding: const EdgeInsets.only(left: 20.0),
-            child: UserInputCard(Answer.fromSnapshot(document), false)
+            child: AnswerCard(Answer.fromSnapshot(document))
         )
     );
   }
