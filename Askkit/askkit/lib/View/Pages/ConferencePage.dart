@@ -1,5 +1,7 @@
 import 'package:askkit/Model/Question.dart';
+import 'package:askkit/View/Widgets/CollectionListViewBuilder.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Theme.dart';
@@ -13,15 +15,13 @@ class ConferencePage extends StatefulWidget {
 }
 
 class ConferencePageState extends State<ConferencePage> {
-  List<Question> questions;
-
   final int USERNAME_MAX_LEN = 16;
   final int QUESTION_MAX_LEN = 64;
 
-  @override
-  void initState() {
-    questions = new List();
-  }
+  //@override
+  //void initState() {
+  //  questions = new List();
+  //}
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +31,12 @@ class ConferencePageState extends State<ConferencePage> {
           backgroundColor: Colors.indigo[400]
       ),
       body: getBody(),
-      floatingActionButton: RaisedButton(key: const Key("add question"), child: Icon(Icons.add), onPressed: addQuestion, color: gray),
+      floatingActionButton: RaisedButton(child: Icon(Icons.add), onPressed: addQuestion, color: gray),
     );
   }
 
   Widget getBody() {
-    return ListView.builder(
-        key: const Key("question list"),
-        itemCount: this.questions.length,
-        itemBuilder: (BuildContext context, int i) {
-          return QuestionCard(this.questions[i]);
-        }
-    );
+    return makeStreamBuilder(Question.getCollection(), (document) => QuestionCard(Question.fromSnapshot(document)));
   }
 
   void addQuestion() {
@@ -60,7 +54,6 @@ class ConferencePageState extends State<ConferencePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   TextFormField(
-                    key: const Key("username field"),
                     controller: usernameController,
                     decoration: new InputDecoration(
                       hintText: "Username",
@@ -73,7 +66,6 @@ class ConferencePageState extends State<ConferencePage> {
                     }
                   ),
                   TextFormField(
-                    key: const Key("question field"),
                     controller: questionController,
                     decoration: new InputDecoration(
                         hintText: "Question",
@@ -88,7 +80,6 @@ class ConferencePageState extends State<ConferencePage> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     child: RaisedButton(
-                      key: const Key("submit question"),
                       child: Text(
                           "Submit",
                           style: new TextStyle(
@@ -99,7 +90,7 @@ class ConferencePageState extends State<ConferencePage> {
                       onPressed: () {
                         if(!_formKey.currentState.validate())
                           return;
-                        questions.add(Question(usernameController.text, questionController.text));
+                        Question.addToCollection(Question(usernameController.text, questionController.text));
                         Navigator.pop(context);
                         this.setState(() {});
                       },

@@ -1,10 +1,11 @@
 import 'dart:math';
 
+import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
+import 'package:askkit/View/Widgets/CollectionListViewBuilder.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import '../Theme.dart';
 
 class QuestionPage extends StatefulWidget {
   final Question _question;
@@ -40,23 +41,23 @@ class QuestionPageState extends State<QuestionPage> {
         children: <Widget>[
           Container(
             padding: const EdgeInsets.only(top: 100.0),
-            child: ListView.builder(
-                itemCount: 8,
-                itemBuilder: (BuildContext context, int i) {
-                  var rng = new Random();
-                  int random = rng.nextInt(1000);
-                  Question question = Question("Moas$random", "Comment$i");
-                  return Container(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: QuestionCard(question)
-                  );
-                }
-            )
+            child: this.makeCommentView(widget._question)
           ),
           Positioned(
               child: QuestionCard(widget._question)
           )
         ]
+    );
+  }
+
+  Widget makeCommentView(Question question) {
+    Query query = Answer.getCollection().where("question", isEqualTo: question.reference);
+    return makeStreamBuilder(
+        query, (document) =>
+        Container(
+            padding: const EdgeInsets.only(left: 20.0),
+            child: QuestionCard(Question.fromSnapshot(document))
+        )
     );
   }
 }

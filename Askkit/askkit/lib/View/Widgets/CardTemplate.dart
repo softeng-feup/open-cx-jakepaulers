@@ -7,7 +7,6 @@ abstract class CardTemplate extends StatefulWidget {
 
   Widget buildCardContent(BuildContext context);
   onClick(BuildContext context);
-  String getTitle();
   Color getCardColor();
 }
 

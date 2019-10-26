@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "688750688794",
+    "firebase_url": "https://askkit-3071b.firebaseio.com",
+    "project_id": "askkit-3071b",
+    "storage_bucket": "askkit-3071b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:688750688794:android:bd5908469240f66b1e2fa3",
+        "android_client_info": {
+          "package_name": "com.jakepaulers.askkit.askkit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "688750688794-bk6nu07rrgio8j9dtqbpviqem1kufn0t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk9ncLRQbxgoS7ELcdnMMgEm-1Bl56lIY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "688750688794-bk6nu07rrgio8j9dtqbpviqem1kufn0t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "688750688794-esgete0tmbsvjkdp95o9894ue7d1t6vi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jakepaulers.askkit.askkit"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

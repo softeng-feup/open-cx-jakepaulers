@@ -17,7 +17,7 @@ class QuestionCard extends CardTemplate {
         Row(
           children: <Widget> [
             CircleAvatar(
-              backgroundColor: lightGray,
+              backgroundColor: getCardColor(),
               backgroundImage: NetworkImage('https://noticias.up.pt//wp-content/uploads/2019/05/Pedro-Mo%C3%A1s-interior-e1556272376936.jpg'),
             ),
             Text(" "),
@@ -25,16 +25,11 @@ class QuestionCard extends CardTemplate {
           ],
         ),
         Container(
-          child: Text(question.text, textScaleFactor: 1.3),
+          child: Text(question.question, textScaleFactor: 1.3),
           alignment: Alignment.centerLeft,
         ),
       ]
     );
-  }
-
-  @override
-  String getTitle() {
-    return "Question :D";
   }
 
   @override
