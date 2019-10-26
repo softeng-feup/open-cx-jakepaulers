@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'View/Pages/ConferencePage.dart';
+import 'View/Pages/QuestionsPage.dart';
 import 'View/Pages/LogInPage.dart';
 
 void main() => runApp(MyApp());

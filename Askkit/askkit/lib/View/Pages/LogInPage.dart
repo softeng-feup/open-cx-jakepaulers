@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'ConferencePage.dart';
+import 'QuestionsPage.dart';
 
 class LogInPage extends StatefulWidget {
   LogInPage({Key key}) : super(key: key);
@@ -159,9 +159,7 @@ class _LogInPageState extends State<LogInPage> {
           child: Padding(
             padding: EdgeInsets.only(),
             child: TextField(
-              style: TextStyle(color: Theme
-                  .of(context)
-                  .accentColor),
+              style: TextStyle(color: Colors.indigo),
               controller: _emailController,
               decoration: InputDecoration(
                 hintText: "Email",
@@ -193,9 +191,7 @@ class _LogInPageState extends State<LogInPage> {
             padding: EdgeInsets.only(),
             child: TextField(
               obscureText: true,
-              style: TextStyle(color: Theme
-                  .of(context)
-                  .accentColor),
+              style: TextStyle(color: Colors.indigo),
               controller: _passwordController,
               decoration: InputDecoration(
                 //Add th Hint text here.
@@ -360,7 +356,7 @@ class _LogInPageState extends State<LogInPage> {
         child: Container(
           width: 120,
           height: 1.0,
-          color: Colors.white.withOpacity(0.6),
+          color: Colors.indigo.withOpacity(0.6),
         ),
       );
 }

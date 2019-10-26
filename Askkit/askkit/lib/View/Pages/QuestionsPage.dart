@@ -1,5 +1,5 @@
-import 'package:askkit/Model/Question.dart';
-import 'package:askkit/View/Widgets/QuestionCard.dart';
+import 'package:askkit/Model/UserInput.dart';
+import 'package:askkit/View/Widgets/UserInputCard.dart';
 import 'package:flutter/material.dart';
 
 import '../Theme.dart';
@@ -13,7 +13,7 @@ class ConferencePage extends StatefulWidget {
 }
 
 class ConferencePageState extends State<ConferencePage> {
-  List<Question> questions;
+  List<UserInput> questions;
 
   final int USERNAME_MAX_LEN = 16;
   final int QUESTION_MAX_LEN = 64;
@@ -40,7 +40,7 @@ class ConferencePageState extends State<ConferencePage> {
         key: const Key("question list"),
         itemCount: this.questions.length,
         itemBuilder: (BuildContext context, int i) {
-          return QuestionCard(this.questions[i]);
+          return UserInputCard(this.questions[i], true);
         }
     );
   }
@@ -99,7 +99,7 @@ class ConferencePageState extends State<ConferencePage> {
                       onPressed: () {
                         if(!_formKey.currentState.validate())
                           return;
-                        questions.add(Question(usernameController.text, questionController.text));
+                        questions.add(UserInput(usernameController.text, questionController.text));
                         Navigator.pop(context);
                         this.setState(() {});
                       },
