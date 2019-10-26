@@ -1,13 +1,17 @@
 import 'dart:math';
 
-import 'package:askkit/Model/UserInput.dart';
+import 'package:askkit/Model/Answer.dart';
+import 'package:askkit/Model/Comment.dart';
+import 'package:askkit/Model/Question.dart';
+import 'package:askkit/View/Widgets/CollectionListViewBuilder.dart';
 import 'package:askkit/View/Widgets/UserInputCard.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Theme.dart';
 
 class QuestionPage extends StatefulWidget {
-  final UserInput _question;
+  final Question _question;
 
   QuestionPage(this._question);
 
@@ -19,7 +23,7 @@ class QuestionPage extends StatefulWidget {
 }
 
 class QuestionPageState extends State<QuestionPage> {
-  final List<UserInput> comments = new List();
+  final List<Answer> answers = new List();
 
   final int COMMENT_MAX_LEN = 80;
 
@@ -40,20 +44,23 @@ class QuestionPageState extends State<QuestionPage> {
         children: <Widget>[
           Container(
               padding: const EdgeInsets.only(top: 100.0),
-              child: ListView.builder(
-                  itemCount: comments.length,
-                  itemBuilder: (BuildContext context, int i) {
-                    return Container(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: UserInputCard(comments[i], false)
-                    );
-                  }
-              )
+              child: getCommentView(widget._question)
           ),
           Positioned(
               child: UserInputCard(widget._question, false)
           )
         ]
+    );
+  }
+
+  Widget getCommentView(Question question) {
+    Query query = Answer.getCollection().where("question", isEqualTo: question.reference);
+    return makeStreamBuilder(
+        query, (document) =>
+        Container(
+            padding: const EdgeInsets.only(left: 20.0),
+            child: UserInputCard(Answer.fromSnapshot(document), false)
+        )
     );
   }
 
@@ -95,7 +102,7 @@ class QuestionPageState extends State<QuestionPage> {
                         onPressed: () {
                           if(!_formKey.currentState.validate())
                             return;
-                          comments.add(UserInput("MOAAS", commentController.text));
+                          Answer.addToCollection(Answer("MOAAS", commentController.text, widget._question.reference));
                           Navigator.pop(context);
                           this.setState(() {});
                         },

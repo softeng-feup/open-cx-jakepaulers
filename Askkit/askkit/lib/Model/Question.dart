@@ -1,22 +1,22 @@
+import 'package:askkit/Model/Comment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Question {
-  String username;
-  String question;
+class Question extends Comment {
   DocumentReference reference;
 
-  Question(this.username, this.question);
+  Question(String username, String question) : super(username, question);
 
   Question.fromSnapshot(DocumentSnapshot snapshot):
-        username = snapshot.data['username'],
-        question = snapshot.data['content'],
-        reference = snapshot.reference;
+        reference = snapshot.reference,
+        super(snapshot.data['username'], snapshot.data['content']);
 
-  Map<String, dynamic> toMap() => {'username' : username, 'content': question};
+
+  Map<String, dynamic> toMap() => {'username': username, 'content': content};
 
   static void addToCollection(Question question) {
     getCollection().add(question.toMap());
   }
 
-  static CollectionReference getCollection() => Firestore.instance.collection('questions');
+  static CollectionReference getCollection() =>
+      Firestore.instance.collection('questions');
 }
