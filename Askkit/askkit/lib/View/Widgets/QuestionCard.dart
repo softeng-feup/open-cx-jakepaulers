@@ -21,7 +21,7 @@ class QuestionCard extends UserInputCard {
     onClick(BuildContext context) {
       if (!_clickable)
         return;
-      Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionPage(_question)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => AnswersPage(_question)));
 
     }
 

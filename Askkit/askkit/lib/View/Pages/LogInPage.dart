@@ -238,7 +238,7 @@ class _LogInPageState extends State<LogInPage> {
                   ],
                 ),
                 color: Colors.blueGrey,
-                onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage()))
+                onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage()))
               /*Controller.tryToLogInUserViaEmail(
                       context, _emailController, _passwordController),*/
             ),

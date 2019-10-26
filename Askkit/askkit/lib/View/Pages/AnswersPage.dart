@@ -12,19 +12,19 @@ import 'package:flutter/material.dart';
 
 import '../Theme.dart';
 
-class QuestionPage extends StatefulWidget {
+class AnswersPage extends StatefulWidget {
   final Question _question;
 
-  QuestionPage(this._question);
+  AnswersPage(this._question);
 
   @override
   State<StatefulWidget> createState() {
-    return QuestionPageState();
+    return AnswersPageState();
   }
 
 }
 
-class QuestionPageState extends State<QuestionPage> {
+class AnswersPageState extends State<AnswersPage> {
   final List<Answer> answers = new List();
 
   final int COMMENT_MAX_LEN = 80;

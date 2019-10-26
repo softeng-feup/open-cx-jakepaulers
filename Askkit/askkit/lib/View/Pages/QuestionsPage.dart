@@ -1,20 +1,19 @@
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/View/Widgets/CollectionListViewBuilder.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
-import 'package:askkit/View/Widgets/UserInputCard.dart';
 import 'package:flutter/material.dart';
 
 import '../Theme.dart';
 
-class ConferencePage extends StatefulWidget {
+class QuestionsPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return ConferencePageState();
+    return QuestionsPageState();
   }
 
 }
 
-class ConferencePageState extends State<ConferencePage> {
+class QuestionsPageState extends State<QuestionsPage> {
  // List<Comment> questions;
 
   final int USERNAME_MAX_LEN = 16;
