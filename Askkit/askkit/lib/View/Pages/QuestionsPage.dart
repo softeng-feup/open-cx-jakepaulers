@@ -2,6 +2,8 @@ import 'package:askkit/Model/Question.dart';
 import 'package:askkit/View/Widgets/CollectionListViewBuilder.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:askkit/Model/UserInput.dart';
+import 'package:askkit/View/Widgets/UserInputCard.dart';
 import 'package:flutter/material.dart';
 
 import '../Theme.dart';
@@ -15,6 +17,8 @@ class ConferencePage extends StatefulWidget {
 }
 
 class ConferencePageState extends State<ConferencePage> {
+  List<UserInput> questions;
+
   final int USERNAME_MAX_LEN = 16;
   final int QUESTION_MAX_LEN = 64;
 
@@ -37,6 +41,13 @@ class ConferencePageState extends State<ConferencePage> {
 
   Widget getBody() {
     return makeStreamBuilder(Question.getCollection(), (document) => QuestionCard(Question.fromSnapshot(document)));
+    return ListView.builder(
+        key: const Key("question list"),
+        itemCount: this.questions.length,
+        itemBuilder: (BuildContext context, int i) {
+          return UserInputCard(this.questions[i], true);
+        }
+    );
   }
 
   void addQuestion() {
