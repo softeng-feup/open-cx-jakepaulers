@@ -61,13 +61,16 @@ Take a look at the following links to learn some techniques:
 ---
 ## Requirements
 
+<!--
 
 In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
 
 Start by contextualizing your module, describing the main concepts, terms, roles, scope and boundaries of the application domain addressed by the project.
+-->
 
 ### Use case diagram 
 
+<!--
 Create a use-case diagram in UML with all high-level use cases possibly addressed by your module.
 
 Give each use case a concise, results-oriented name. Use cases should reflect the tasks the user needs to be able to accomplish using the system. Include an action verb and a noun. 
@@ -81,6 +84,7 @@ Briefly describe each use case mentioning the following:
 * **Normal Flow**. Provide a detailed description of the user actions and system responses that will take place during execution of the use case under normal, expected conditions. This dialog sequence will ultimately lead to accomplishing the goal stated in the use case name and description. This is best done as a numbered list of actions performed by the actor, alternating with responses provided by the system. 
 * **Alternative Flows and Exceptions**. Document other, legitimate usage scenarios that can take place within this use case, stating any differences in the sequence of steps that take place. In addition, describe any anticipated error conditions that could occur during execution of the use case, and define how the system is to respond to those conditions.
 
+-->
 
 ![Use case diagram](./img/use_case.png "Use case diagram")
 
@@ -193,7 +197,13 @@ As a conference atendee, I want to be able to easily ask questions to the host, 
 
 **Acceptance tests**
 
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
+```gherkin
+Scenario: Posting a question
+  Given There are 3 questions asked
+  When I tap the "add question" button
+  And I submit a question
+  Then There are 4 questions asked
+```
 
 **Value and effort**
 
@@ -212,7 +222,14 @@ As a conference host, I want my audience to be able to assist each other on ques
 
 **Acceptance tests**
 
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
+```gherkin
+Scenario: Adding a comment
+  Given Question A has 2 comments
+  When I tap the "add comment" button
+  And I submit a comment "Hello!"
+  Then Question A has 3 comments
+  And Question A contains a comment "Hello!"
+```
 
 **Value and effort**
 
@@ -230,7 +247,28 @@ As a user, I want to be able to upvote questions I find relevant, and downvote q
 
 **Acceptance tests**
 
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
+```gherkin
+Scenario: Upvoting a question
+  Given Question A has 20 upvotes
+  When I tap the "upvote" button
+  Then Question A has 21 upvotes
+```
+
+```gherkin  
+Scenario: Upvoting a previously upvoted question
+  Given Question A has 20 upvotes
+  And I have already upvoted Question A
+  When I tap the "upvote" button
+  Then Question A has 19 upvotes
+```
+
+```gherkin  
+Scenario: Downvoting a previously upvoted question
+  Given Question A has 20 upvotes
+  And I have already upvoted Question A
+  When I tap the "downvote" button
+  Then Question A has 18 upvotes
+```
 
 **Value and effort**
 
@@ -248,7 +286,21 @@ As an attendee, I want to be notified when my questions are being answered or ve
 
 **Acceptance tests**
 
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
+```gherkin
+Scenario: Being notified of an answer when
+  Given I have posted a question
+  And My app is closed
+  When My question is answered
+  Then I expect to receive a notification
+```
+
+```gherkin
+Scenario: Being notified of an answer when on another page
+  Given I have posted a question
+  And I am not on that conference's page
+  When My question is answered
+  Then I expect to receive a notification
+```
 
 **Value and effort**
 
@@ -266,7 +318,20 @@ As an attendee, I want to be automatically entered into the forum corresponding 
 
 **Acceptance tests**
 
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
+```gherkin
+Scenario: Knowing which conferences are happening nearby
+  Given I am not near any conference room
+  When I check the conference list
+  Then I expect too see no confereces
+```
+
+```gherkin
+Scenario: Conference is created nearby
+  Given I am near 3 conference rooms
+  When A new conference is created near me
+  And I check the conference list
+  Then I expect too see 4 confereces
+```
 
 **Value and effort**
 
@@ -327,9 +392,14 @@ The goal of this subsection is to document the high-level physical structure of 
 It should describe also the technologies considered and justify the selections made. Examples of technologies relevant for openCX are, for example, frameworks for mobile applications (Flutter vs ReactNative vs ...), languages to program with microbit, and communication with things (beacons, sensors, etc.).
 
 ### Prototype
+<!--
 To help on validating all the architectural, design and technological decisions made, we usually implement a vertical prototype, a thin vertical slice of the system.
 
 In this subsection please describe in more detail which, and how, user(s) story(ies) were implemented.
+-->
+For this first prototype, we decided to tackle our Story #1, which states that "As a conference atendee, I want to be able to easily ask questions to the host, so that I get to understand the subject better and faster.", this being the basis of our app.
+We've layed out the general structure of a conference room forum's user interface, and while we still don't have a real database to connect to, we've added the functionality to allow users to create and submit their own questions, which will be temporarily stored by the app and then be displayed in said forum.
+In addition, work has also begun on the user interface for the login screen, which for the moment only acts as a redirect to a conference room forum (since we don't have any account data stored for actual logins).
 
 ---
 
