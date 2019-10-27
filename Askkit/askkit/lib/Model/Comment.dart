@@ -1,13 +1,10 @@
 import 'package:askkit/Model/User.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 class Comment {
-  String username;
+  User user;
   String content;
 
-  Comment(this.username, this.content);
-
-  Comment.fromSnapshot(DocumentSnapshot snapshot):
-        username = snapshot.data['username'],
-        content = snapshot.data['content'];
+  Comment(this.user, this.content);
 }

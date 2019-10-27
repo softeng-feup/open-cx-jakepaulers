@@ -1,6 +1,8 @@
 import 'package:askkit/Model/Question.dart';
+import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Widgets/CollectionListViewBuilder.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Theme.dart';
@@ -14,15 +16,28 @@ class QuestionsPage extends StatefulWidget {
 }
 
 class QuestionsPageState extends State<QuestionsPage> {
- // List<Comment> questions;
+  List<Question> questions = new List();
+  bool loaded = false;
 
   final int USERNAME_MAX_LEN = 16;
   final int QUESTION_MAX_LEN = 64;
 
-  //@override
-  //void initState() {
-  //  questions = new List();
-  //}
+  @override
+  void initState() {
+    this.fetchQuestions();
+  }
+
+  void fetchQuestions() async {
+    loaded = false;
+    questions = new List();
+    QuerySnapshot questionSnapshot = await Question.getCollection().getDocuments();
+    for (DocumentSnapshot document in questionSnapshot.documents) {
+      User user = await User.fetchUser(document.data['username']);
+      questions.add(Question.fromSnapshot(user, document));
+    }
+    loaded = true;
+    setState(() { });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +52,15 @@ class QuestionsPageState extends State<QuestionsPage> {
   }
 
   Widget getBody() {
-    return makeStreamBuilder(Question.getCollection(), (document) => QuestionCard(Question.fromSnapshot(document), true));
+    if (!this.loaded)
+      return LinearProgressIndicator();
+    return ListView.builder(
+        itemCount: this.questions.length,
+        itemBuilder: (BuildContext context, int i) {
+          return QuestionCard(this.questions[i], true);
+        }
+    );
+    //return makeStreamBuilder(Question.getCollection(), (document) => QuestionCard(Question.fromSnapshot(document), true));
   }
 
   void addQuestion() {
@@ -91,9 +114,11 @@ class QuestionsPageState extends State<QuestionsPage> {
                       onPressed: () {
                         if(!_formKey.currentState.validate())
                           return;
-                        Question.addToCollection(Question(usernameController.text, questionController.text));
+                        User.fetchUser(usernameController.text).then((user) {
+                          Question.addToCollection(Question(user, questionController.text));
+                          fetchQuestions();
+                        });
                         Navigator.pop(context);
-                        this.setState(() {});
                       },
                     )
                   )

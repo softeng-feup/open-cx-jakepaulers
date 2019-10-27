@@ -18,10 +18,10 @@ abstract class UserInputCard extends CardTemplate {
           children: <Widget> [
             CircleAvatar(
               backgroundColor: getCardColor(),
-              backgroundImage: NetworkImage('https://noticias.up.pt//wp-content/uploads/2019/05/Pedro-Mo%C3%A1s-interior-e1556272376936.jpg'),
+              backgroundImage: getComment().user.image
             ),
             Text(" "),
-            Text(getComment().username)
+            Text(getComment().user.username)
           ],
         ),
         Container(

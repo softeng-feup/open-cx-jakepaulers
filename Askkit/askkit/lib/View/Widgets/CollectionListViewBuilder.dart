@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+// nao usado por agora mas n apagues henrique
 StreamBuilder<QuerySnapshot> makeStreamBuilder(Query query, Widget Function(DocumentSnapshot document) item_builder) {
   return StreamBuilder<QuerySnapshot>(
     stream: query.snapshots(),

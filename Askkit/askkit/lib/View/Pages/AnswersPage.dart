@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Comment.dart';
 import 'package:askkit/Model/Question.dart';
+import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/CollectionListViewBuilder.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
@@ -25,9 +26,28 @@ class AnswersPage extends StatefulWidget {
 }
 
 class AnswersPageState extends State<AnswersPage> {
-  final List<Answer> answers = new List();
+  List<Answer> answers = new List();
+  bool loaded = false;
 
   final int COMMENT_MAX_LEN = 80;
+
+
+  @override
+  void initState() {
+    this.fetchAnswers();
+  }
+
+  void fetchAnswers() async {
+    loaded = false;
+    answers = new List();
+    QuerySnapshot questionSnapshot = await Answer.getCollection().where("question", isEqualTo: widget._question.reference).getDocuments();
+    for (DocumentSnapshot document in questionSnapshot.documents) {
+      User user = await User.fetchUser(document.data['username']);
+      answers.add(Answer.fromSnapshot(user, document));
+    }
+    loaded = true;
+    setState(() { });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +57,18 @@ class AnswersPageState extends State<AnswersPage> {
             backgroundColor: Colors.indigo[400]
         ),
         body: getBody(),
-        floatingActionButton: RaisedButton(child: Icon(Icons.add), onPressed: addComment, color: gray)
+        floatingActionButton: RaisedButton(child: Icon(Icons.add), onPressed: addAnswer, color: gray)
     );
   }
+
+
 
   Widget getBody() {
     return Stack(
         children: <Widget>[
           Container(
               padding: const EdgeInsets.only(top: 100.0),
-              child: getCommentView(widget._question)
+              child: getAnswerView(widget._question)
           ),
           Positioned(
               child: QuestionCard(widget._question, false)
@@ -55,19 +77,22 @@ class AnswersPageState extends State<AnswersPage> {
     );
   }
 
-  Widget getCommentView(Question question) {
-    Query query = Answer.getCollection().where("question", isEqualTo: question.reference);
-    return makeStreamBuilder(
-        query, (document) =>
-        Container(
-            padding: const EdgeInsets.only(left: 20.0),
-            child: AnswerCard(Answer.fromSnapshot(document))
-        )
+  Widget getAnswerView(Question question) {
+    if (!this.loaded)
+      return LinearProgressIndicator();
+    return ListView.builder(
+        itemCount: answers.length,
+        itemBuilder: (BuildContext context, int i) {
+          return Container(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: AnswerCard(answers[i])
+          );
+        }
     );
   }
 
-  void addComment() {
-    final TextEditingController commentController = TextEditingController();
+  void addAnswer() {
+    final TextEditingController answerController = TextEditingController();
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
     showDialog(
@@ -80,7 +105,7 @@ class AnswersPageState extends State<AnswersPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   TextFormField(
-                      controller: commentController,
+                      controller: answerController,
                       decoration: new InputDecoration(
                         hintText: "Comment",
                         labelText: "Enter your comment",
@@ -104,9 +129,11 @@ class AnswersPageState extends State<AnswersPage> {
                         onPressed: () {
                           if(!_formKey.currentState.validate())
                             return;
-                          Answer.addToCollection(Answer("MOAAS", commentController.text, widget._question.reference));
+                          User.fetchUser("Reply Guy").then((user) {
+                            Answer.addToCollection(Answer(user, answerController.text, widget._question.reference));
+                            fetchAnswers();
+                          });
                           Navigator.pop(context);
-                          this.setState(() {});
                         },
                       )
                   )
