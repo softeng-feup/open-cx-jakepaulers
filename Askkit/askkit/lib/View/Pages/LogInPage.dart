@@ -60,303 +60,176 @@ class _LogInPageState extends State<LogInPage> {
                 ],
               ),
             ),
-            child: ListView(
+            child: Column(
               children: <Widget>[
-                Container(
-                  child: Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("AskKit",
-                              style: Theme.of(context).textTheme.title.copyWith(fontSize: 34, fontWeight: FontWeight.bold, color: Colors.white)
-                          ),
-                          Text(
-                              "Ask away!",
-                              style: Theme.of(context).textTheme.title.copyWith(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.white)
-                          ),
-                        ],
-                      )),
-                  width: 750,
-                  height: 120,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                    child: IntrinsicWidth(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          OutlineButton(
-                            onPressed: () =>
-                                setState(() => changeToSignIn()),
-                            borderSide: new BorderSide(
-                              style: BorderStyle.none,
-                            ),
-                            child: new Text("SIGN IN",
-                                style: _signInActive
-                                    ? TextStyle(
-                                    fontSize: 22,
-                                    color: Colors.deepPurpleAccent,
-                                    fontWeight: FontWeight.bold)
-                                    : TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.deepPurpleAccent,
-                                    fontWeight: FontWeight.normal)),
-                          ),
-                          OutlineButton(
-                            onPressed: () =>
-                                setState(() => changeToSignUp()),
-                            borderSide: BorderSide(
-                              style: BorderStyle.none,
-                            ),
-                            child: Text("SIGN UP",
-                                style: _signUpActive
-                                    ? TextStyle(
-                                    fontSize: 22,
-                                    color: Colors.deepPurpleAccent,
-                                    fontWeight: FontWeight.bold)
-                                    : TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.deepPurpleAccent,
-                                    fontWeight: FontWeight.normal)),
-                          )
-                        ],
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("AskKit",
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .title
+                              .copyWith(fontSize: 34,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)
                       ),
-                    ),
+                      Text(
+                          "Ask away!",
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .title
+                              .copyWith(fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.white)
+                      ),
+                    ],
                   ),
-                  width: 750,
-                  height: 80,
                 ),
-                SizedBox(
-                  height: 10,
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      switchSignButton("SIGN IN", () => setState(() => changeToSignIn()), _signInActive),
+                      switchSignButton("SIGN UP", () => setState(() => changeToSignUp()), _signUpActive)
+                    ],
+                  ),
                 ),
                 Container(
-                    child: Padding(
-                        padding: EdgeInsets.only(left: 30.0, right: 30.0),
-                        child: _signInActive ? _showSignIn(context) : _showSignUp()),
-                    width: 750,
-                    height: 778
-                ),
+                    padding: EdgeInsets.only(left: 25.0, right: 25.0, bottom: 25.0),
+                    child: _signInActive ? _showSignIn() : _showSignUp()),
               ],
             )
         )
     );
   }
 
-  Widget _showSignIn(context) {
+  Widget _showSignIn() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        SizedBox(
-          height: 30,
+        Container(
+            margin: EdgeInsets.only(bottom: 25.0),
+            child: loginTextField("Email", Icons.email, _emailController)
         ),
         Container(
-          child: Padding(
-            padding: EdgeInsets.only(),
-            child: TextField(
-              style: TextStyle(color: Colors.indigo),
-              controller: _emailController,
-              decoration: InputDecoration(
-                hintText: "Email",
-                hintStyle: Theme.of(context).textTheme.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.white),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Theme
-                            .of(context)
-                            .accentColor, width: 1.0)),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Theme
-                            .of(context)
-                            .accentColor, width: 1.0)),
-                prefixIcon: const Icon(
-                  Icons.email,
-                  color: Colors.white,
-                ),
-              ),
-              obscureText: false,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 50,
+            margin: EdgeInsets.only(bottom: 25.0),
+            child: loginTextField("Password", Icons.lock, _passwordController)
         ),
         Container(
-          child: Padding(
-            padding: EdgeInsets.only(),
-            child: TextField(
-              obscureText: true,
-              style: TextStyle(color: Colors.indigo),
-              controller: _passwordController,
-              decoration: InputDecoration(
-                //Add th Hint text here.
-                hintText: "Password",
-                hintStyle: Theme.of(context).textTheme.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.white),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Theme
-                            .of(context)
-                            .accentColor, width: 1.0)),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Theme
-                            .of(context)
-                            .accentColor, width: 1.0)),
-                prefixIcon: const Icon(
-                  Icons.lock,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            child: loginSubmitButton("Sign in", Icons.arrow_forward,  () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage())))
           ),
-        ),
-        SizedBox(
-          height: 80,
-        ),
-        Container(
-          child: Padding(
-            padding: EdgeInsets.only(),
-            child: RaisedButton(
-                child: Row(
-                  children: <Widget>[
-                    RawMaterialButton(
-                      shape: CircleBorder(),
-                      child: Icon(Icons.mail, color: Colors.white),
-                    ),
-                    Expanded(
-                      child: Text(
-                        "Sign in",
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.title.copyWith(fontSize: 20, fontWeight: FontWeight.normal, color: Colors.white),
-                      ),
-                    )
-                  ],
-                ),
-                color: Colors.blueGrey,
-                onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage()))
-              /*Controller.tryToLogInUserViaEmail(
-                      context, _emailController, _passwordController),*/
-            ),
-          ),
-        ),
       ],
     );
   }
 
   Widget _showSignUp() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        SizedBox(
-          height: 30,
-        ),
-        Container(
-          child: Padding(
-            padding: EdgeInsets.only(),
-            child: TextField(
-              obscureText: false,
-              style: Theme.of(context).textTheme.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.white),
-              controller: _newEmailController,
-              decoration: InputDecoration(
-                //Add th Hint text here.
-                hintText: "Enter your email",
-                hintStyle: Theme.of(context).textTheme.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.white),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Theme
-                            .of(context)
-                            .accentColor, width: 1.0)),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Theme
-                            .of(context)
-                            .accentColor, width: 1.0)),
-                prefixIcon: const Icon(
-                  Icons.email,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(bottom: 25.0),
+            child: loginTextField("Enter an email", Icons.email, _newEmailController),
           ),
-        ),
-        SizedBox(
-          height: 50,
-        ),
-        Container(
-          child: Padding(
-            padding: EdgeInsets.only(),
-            child: TextField(
-              obscureText: true,
-              style: Theme.of(context).textTheme.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.white),
-              controller: _newPasswordController,
-              decoration: InputDecoration(
-                //Add the Hint text here.
-                hintText: "Enter a password",
-                hintStyle: Theme.of(context).textTheme.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.white),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Theme
-                            .of(context)
-                            .accentColor, width: 1.0)),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Theme
-                            .of(context)
-                            .accentColor, width: 1.0)),
-                prefixIcon: const Icon(
-                  Icons.lock,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+          Container(
+            margin: EdgeInsets.only(bottom: 25.0),
+            child: loginTextField("Pick a password", Icons.lock, _newPasswordController),
           ),
-        ),
-        SizedBox(
-          height: 80,
-        ),
-        Container(
-          child: Padding(
-            padding: EdgeInsets.only(),
-            child: RaisedButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    RawMaterialButton(
-                      shape: CircleBorder(),
-                      child: Icon(Icons.mail, color: Colors.white),
-                    ),
-                    Expanded(
-                      child: Text(
-                        "Sign Up",
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.title.copyWith(fontSize: 20, fontWeight: FontWeight.normal, color: Colors.white),
-                      ),
-                    )
-                  ],
-                ),
-                color: Colors.blueGrey,
-                onPressed: () => {}
-              /*Controller.signUpWithEmailAndPassword(
-                      _newEmailController, _newPasswordController),*/
-            ),
+          Container(
+              child: loginSubmitButton("Sign up", Icons.arrow_upward, () {})
           ),
-        ),
-      ],
-    );
+        ]);
   }
 
   Widget horizontalLine() =>
-      Padding(
+      Container(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
-          width: 120,
           height: 1.0,
-          color: Colors.indigo.withOpacity(0.6),
+          color: Colors.redAccent.withOpacity(0.6),
         ),
       );
+
+  Widget loginTextField(String hint, IconData icon, TextEditingController controller) {
+    return TextField(
+      obscureText: false,
+      style: Theme
+          .of(context)
+          .textTheme
+          .title
+          .copyWith(
+          fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.white),
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: Theme
+            .of(context)
+            .textTheme
+            .title
+            .copyWith(
+            fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.white),
+        enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+                color: Theme
+                    .of(context)
+                    .accentColor, width: 1.0)),
+        focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+                color: Theme
+                    .of(context)
+                    .accentColor, width: 1.0)),
+        prefixIcon: Icon(
+          icon,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget loginSubmitButton(String text, IconData icon, Function onPress) {
+    return RaisedButton(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            RawMaterialButton(
+              shape: CircleBorder(),
+              child: Icon(icon, color: Colors.white),
+            ),
+            Expanded(
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .title
+                    .copyWith(fontSize: 20,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white),
+              ),
+            )
+          ],
+        ),
+        color: Colors.blueGrey,
+        onPressed: onPress
+      /*Controller.signUpWithEmailAndPassword(
+                      _newEmailController, _newPasswordController),*/
+    );
+  }
+
+  Widget switchSignButton(String text, Function onPressed, bool active) {
+    return OutlineButton(
+      onPressed: onPressed,
+      borderSide: new BorderSide(
+        style: BorderStyle.none,
+      ),
+      child: new Text(text,
+          style: active ?
+              TextStyle(fontSize: 22, color: Colors.amber, fontWeight: FontWeight.bold) :
+              TextStyle(fontSize: 16, color: Colors.amber, fontWeight: FontWeight.normal)),
+    );
+  }
 }
