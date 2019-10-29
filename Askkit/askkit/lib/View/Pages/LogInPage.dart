@@ -1,5 +1,9 @@
+import 'dart:core';
+import 'package:askkit/Model/Authenticator.dart';
+import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 import 'QuestionsPage.dart';
 
@@ -15,8 +19,33 @@ class _LogInPageState extends State<LogInPage> {
   bool _signInActive = true, _signUpActive = false;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _newUsernameController = TextEditingController();
   TextEditingController _newEmailController = TextEditingController();
   TextEditingController _newPasswordController = TextEditingController();
+
+  static const Color backgroundColor = Colors.white;
+  static const Color mainColor = Colors.blueAccent;
+  static const Color iconColor = Colors.black;
+  static const Color signUpColor = mainColor;
+  static const usernameMinLength = 8;
+  static const passwordMinLength = 6;
+
+  static const String emailRegex = "^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*\$";
+
+  bool _hidePassword = true;
+ // bool keyboardvisible = false;
+
+  @protected
+  void initState() {
+    super.initState();
+
+    //KeyboardVisibilityNotification().addNewListener(
+    //  onChange: (bool visible) {
+    //     this.keyboardvisible = visible;
+    //  },
+    //);
+  }
+
 
   changeToSignIn() {
     this._signInActive = true;
@@ -36,55 +65,15 @@ class _LogInPageState extends State<LogInPage> {
     ]);
     return Scaffold(
         body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                /*stops: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
-                colors: [
-                  Colors.pink,
-                  Colors.red,
-                  Colors.orange,
-                  Colors.yellow,
-                  Colors.green,
-                  Colors.blue,
-                  Colors.indigo,
-                  Colors.purple
-                ],*/
-                stops: [0.1, 0.5, 0.7, 0.9],
-                colors: [
-                  Colors.indigo[400],
-                  Colors.indigo[300],
-                  Colors.indigo[200],
-                  Colors.indigo[100],
-                ],
-              ),
-            ),
+            color: backgroundColor,
             child: Column(
               children: <Widget>[
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text("AskKit",
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .title
-                              .copyWith(fontSize: 34,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)
-                      ),
-                      Text(
-                          "Ask away!",
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .title
-                              .copyWith(fontSize: 14,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white)
-                      ),
+                      titleText("Askkit", 34),
+                      titleText("Ask away!", 14)
                     ],
                   ),
                 ),
@@ -99,7 +88,7 @@ class _LogInPageState extends State<LogInPage> {
                   ),
                 ),
                 Container(
-                    padding: EdgeInsets.only(left: 25.0, right: 25.0, bottom: 25.0),
+                    margin: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
                     child: _signInActive ? _showSignIn() : _showSignUp()),
               ],
             )
@@ -107,62 +96,184 @@ class _LogInPageState extends State<LogInPage> {
     );
   }
 
+  Widget titleText(String text, double fontSize) {
+   // if (this.keyboardvisible)
+   //   return Container();
+    return Text(text,
+        style: Theme
+            .of(context)
+            .textTheme
+            .title
+            .copyWith(fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+            color: mainColor)
+    );
+  }
+
+  void _showOkDialog(String title, String content) {
+    print(content == null);
+    CustomDialog(
+        context: context,
+        title: title,
+        content: content,
+        actions: <Widget> [
+          new FlatButton(
+            child: new Text("Ok"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          ]
+    ).show();
+  }
+
+  void _showVerifyDialog(String title, String content) {
+    CustomDialog(
+        context: context,
+        title: title,
+        content: content,
+        actions: <Widget> [
+          new FlatButton(
+            child: new Text("Resend email"),
+            onPressed: () {
+              Auth.sendEmailVerification();
+              Navigator.of(context).pop();
+            },
+          ),
+          new FlatButton(
+            child: new Text("Cancel"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ]
+    ).show();
+  }
+
+  Future<void> signIn(String email, String password) async {
+    try {
+      String result = await Auth.signIn(
+          _emailController.text, _passwordController.text);
+      if (result == null) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage()));
+        return;
+      }
+      if (await Auth.isEmailVerified())
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage()));
+      else _showVerifyDialog("Email not verified", "Please check your email to verify your account.");
+    }
+    on PlatformException catch (exception) {
+      _showOkDialog("Login failed", "The username or password is not correct.");
+    }
+  }
+
+  Future<void> signUp(String email, String username, String password) async {
+    try {
+       await Auth.signUp(email, username, password);
+      _showOkDialog("Successfully signed up!", "Please check your email to verify your account.");
+    }
+    on PlatformException catch (exception) {
+      _showOkDialog("Sign up failed", "There is already an account with this email.");
+    }
+  }
+
+
+
+
   Widget _showSignIn() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Container(
             margin: EdgeInsets.only(bottom: 25.0),
-            child: loginTextField("Email", Icons.email, _emailController)
+            child: loginTextField("Username", Icons.person, _emailController)
         ),
         Container(
             margin: EdgeInsets.only(bottom: 25.0),
-            child: loginTextField("Password", Icons.lock, _passwordController)
+            child: loginTextField("Password", Icons.lock, _passwordController, isPasswordField: true)
         ),
         Container(
-            child: loginSubmitButton("Sign in", Icons.arrow_forward,  () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage())))
-          ),
+            child: loginSubmitButton("Sign in", Icons.arrow_forward, () {
+              this.signIn(_emailController.text, _passwordController.text);
+            })
+        ),
       ],
     );
   }
 
   Widget _showSignUp() {
-    return Column(
+    final formKey = GlobalKey<FormState>();
+
+    return Form (
+      key: formKey,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(bottom: 25.0),
-            child: loginTextField("Enter an email", Icons.email, _newEmailController),
+            margin: EdgeInsets.only(bottom: 5.0),
+            child: loginTextField("Enter your email", Icons.email, _newEmailController,
+                validator: (String value) {
+                  RegExp regex = new RegExp(emailRegex, caseSensitive: false);
+                  if (regex.hasMatch(value))
+                    return null;
+                  return "Invalid email";
+                }
+            )
           ),
           Container(
-            margin: EdgeInsets.only(bottom: 25.0),
-            child: loginTextField("Pick a password", Icons.lock, _newPasswordController),
+            margin: EdgeInsets.only(bottom: 5.0),
+            child: loginTextField("Pick a username", Icons.person, _newUsernameController,
+                validator: (String value) {
+                  if (value.length < usernameMinLength)
+                    return "Username must be at least $usernameMinLength characters long";
+                  return null;
+                }
+            )
           ),
           Container(
-              child: loginSubmitButton("Sign up", Icons.arrow_upward, () {})
+            margin: EdgeInsets.only(bottom: 15.0),
+            child: loginTextField("Pick a password", Icons.lock, _newPasswordController, isPasswordField: true,
+                validator: (String value) {
+                  if (value.length < passwordMinLength)
+                    return "Password must be at least $passwordMinLength characters long";
+                  return null;
+                }
+            ),
           ),
-        ]);
+          Container(
+              child: loginSubmitButton("Sign up", Icons.arrow_upward, () {
+                if(!formKey.currentState.validate())
+                  return;
+                this.signUp(_newEmailController.text, _newUsernameController.text, _newPasswordController.text);
+              })
+          ),
+        ])
+    );
   }
 
-  Widget horizontalLine() =>
-      Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        child: Container(
-          height: 1.0,
-          color: Colors.redAccent.withOpacity(0.6),
-        ),
+  Widget loginTextField(String hint, IconData icon, TextEditingController controller, {bool isPasswordField : false, Function validator}) {
+    IconButton suffixIcon;
+    if (isPasswordField)
+      suffixIcon = IconButton(
+          color: iconColor,
+          icon: _hidePassword ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+          onPressed: () { setState(() { _hidePassword = !_hidePassword; }); }
       );
-
-  Widget loginTextField(String hint, IconData icon, TextEditingController controller) {
-    return TextField(
-      obscureText: false,
+    else suffixIcon = IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {  WidgetsBinding.instance.addPostFrameCallback((_) => controller.clear()); },
+        color: iconColor
+    );
+    return TextFormField(
+      obscureText: isPasswordField && _hidePassword,
+      controller: controller,
+      validator: validator,
       style: Theme
           .of(context)
           .textTheme
           .title
           .copyWith(
-          fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.white),
-      controller: controller,
+          fontSize: 20.0, fontWeight: FontWeight.normal, color: mainColor),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: Theme
@@ -170,7 +281,7 @@ class _LogInPageState extends State<LogInPage> {
             .textTheme
             .title
             .copyWith(
-            fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.white),
+            fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.blueAccent),
         enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
                 color: Theme
@@ -180,12 +291,13 @@ class _LogInPageState extends State<LogInPage> {
             borderSide: BorderSide(
                 color: Theme
                     .of(context)
-                    .accentColor, width: 1.0)),
+                    .accentColor, width: 2.0)),
         prefixIcon: Icon(
           icon,
-          color: Colors.white,
+          color: iconColor,
         ),
-      ),
+        suffixIcon: suffixIcon
+        )
     );
   }
 
@@ -213,10 +325,8 @@ class _LogInPageState extends State<LogInPage> {
             )
           ],
         ),
-        color: Colors.blueGrey,
+        color: signUpColor,
         onPressed: onPress
-      /*Controller.signUpWithEmailAndPassword(
-                      _newEmailController, _newPasswordController),*/
     );
   }
 
@@ -228,8 +338,9 @@ class _LogInPageState extends State<LogInPage> {
       ),
       child: new Text(text,
           style: active ?
-              TextStyle(fontSize: 22, color: Colors.amber, fontWeight: FontWeight.bold) :
-              TextStyle(fontSize: 16, color: Colors.amber, fontWeight: FontWeight.normal)),
+              TextStyle(fontSize: 22, color: mainColor, fontWeight: FontWeight.bold) :
+              TextStyle(fontSize: 16, color: mainColor, fontWeight: FontWeight.normal)),
     );
   }
+
 }
