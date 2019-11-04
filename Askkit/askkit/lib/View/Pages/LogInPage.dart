@@ -3,7 +3,6 @@ import 'package:askkit/Model/Authenticator.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 import 'QuestionsPage.dart';
 
