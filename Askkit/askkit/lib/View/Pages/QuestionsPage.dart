@@ -33,7 +33,9 @@ class QuestionsPageState extends State<QuestionsPage> {
     QuerySnapshot questionSnapshot = await Question.getCollection().getDocuments();
     for (DocumentSnapshot document in questionSnapshot.documents) {
       User user = await User.fetchUser(document.data['username']);
-      questions.add(Question.fromSnapshot(user, document));
+      Question question = Question.fromSnapshot(user, document);
+      await question.updateUpvotes();
+      questions.add(question);
     }
     loaded = true;
     setState(() { });

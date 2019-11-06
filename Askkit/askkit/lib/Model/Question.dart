@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Question extends Comment {
   DocumentReference reference;
+  int upvotes = 0;
 
   Question(User user, String question) : super(user, question);
 
@@ -11,6 +12,12 @@ class Question extends Comment {
         reference = snapshot.reference,
         super(user, snapshot.data['content']);
 
+  updateUpvotes() async {
+    QuerySnapshot upvotesSnapshot = await Question.getUpvoteCollection().where("question", isEqualTo: reference).getDocuments();
+    for (DocumentSnapshot document in upvotesSnapshot.documents) {
+      upvotes += document.data['value'];
+    }
+  }
 
   Map<String, dynamic> toMap() => {'username': user.username, 'content': content};
 
@@ -20,4 +27,7 @@ class Question extends Comment {
 
   static CollectionReference getCollection() =>
       Firestore.instance.collection('questions');
+
+  static CollectionReference getUpvoteCollection() =>
+      Firestore.instance.collection('upvotes');
 }
