@@ -13,6 +13,7 @@ class Question extends Comment {
         super(user, snapshot.data['content']);
 
   updateUpvotes() async {
+    upvotes = 0;
     QuerySnapshot upvotesSnapshot = await Question.getUpvoteCollection().where("question", isEqualTo: reference).getDocuments();
     for (DocumentSnapshot document in upvotesSnapshot.documents) {
       upvotes += document.data['value'];
