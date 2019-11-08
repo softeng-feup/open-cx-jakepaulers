@@ -18,7 +18,7 @@ abstract class UserInputCard extends CardTemplate {
           children: <Widget> [
             CircleAvatar(
               backgroundColor: getCardColor(),
-              backgroundImage: getComment().user.image
+              backgroundImage: getComment().user.getImage()
             ),
             Text(" "),
             Text(getComment().user.username)

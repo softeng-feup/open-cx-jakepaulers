@@ -1,22 +1,29 @@
 import 'dart:core';
-import 'package:askkit/Model/Authenticator.dart';
+import 'package:askkit/Controller/Authenticator.dart';
+import 'package:askkit/Model/User.dart';
+import 'package:askkit/View/Controllers/AuthListener.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../Controllers/DatabaseController.dart';
 import 'QuestionsPage.dart';
 
 class LogInPage extends StatefulWidget {
-  LogInPage({Key key}) : super(key: key);
+  DatabaseController _dbcontroller;
+
+  LogInPage(DatabaseController controller) {
+    this._dbcontroller = controller;
+  }
 
   @protected
   @override
   State<StatefulWidget> createState() => _LogInPageState();
 }
 
-class _LogInPageState extends State<LogInPage> {
+class _LogInPageState extends State<LogInPage> implements AuthListener {
   bool _signInActive = true, _signUpActive = false;
-  TextEditingController _emailController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _newUsernameController = TextEditingController();
   TextEditingController _newEmailController = TextEditingController();
@@ -98,8 +105,7 @@ class _LogInPageState extends State<LogInPage> {
   Widget titleText(String text, double fontSize) {
    // if (this.keyboardvisible)
    //   return Container();
-    return Text(text,
-        style: Theme
+    return Text(text, style: Theme
             .of(context)
             .textTheme
             .title
@@ -109,83 +115,13 @@ class _LogInPageState extends State<LogInPage> {
     );
   }
 
-  void _showOkDialog(String title, String content) {
-    print(content == null);
-    CustomDialog(
-        context: context,
-        title: title,
-        content: content,
-        actions: <Widget> [
-          new FlatButton(
-            child: new Text("Ok"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          ]
-    ).show();
-  }
-
-  void _showVerifyDialog(String title, String content) {
-    CustomDialog(
-        context: context,
-        title: title,
-        content: content,
-        actions: <Widget> [
-          new FlatButton(
-            child: new Text("Resend email"),
-            onPressed: () {
-              Auth.sendEmailVerification();
-              Navigator.of(context).pop();
-            },
-          ),
-          new FlatButton(
-            child: new Text("Cancel"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ]
-    ).show();
-  }
-
-  Future<void> signIn(String email, String password) async {
-    try {
-      String result = await Auth.signIn(
-          _emailController.text, _passwordController.text);
-      if (result == null) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage()));
-        return;
-      }
-      if (await Auth.isEmailVerified())
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage()));
-      else _showVerifyDialog("Email not verified", "Please check your email to verify your account.");
-    }
-    on PlatformException catch (exception) {
-      _showOkDialog("Login failed", "The username or password is not correct.");
-    }
-  }
-
-  Future<void> signUp(String email, String username, String password) async {
-    try {
-       await Auth.signUp(email, username, password);
-      _showOkDialog("Successfully signed up!", "Please check your email to verify your account.");
-    }
-    on PlatformException catch (exception) {
-      _showOkDialog("Sign up failed", "There is already an account with this email.");
-    }
-  }
-
-
-
-
   Widget _showSignIn() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Container(
             margin: EdgeInsets.only(bottom: 25.0),
-            child: loginTextField("Username", Icons.person, _emailController)
+            child: loginTextField("Username", Icons.person, _usernameController)
         ),
         Container(
             margin: EdgeInsets.only(bottom: 25.0),
@@ -193,7 +129,7 @@ class _LogInPageState extends State<LogInPage> {
         ),
         Container(
             child: loginSubmitButton("Sign in", Icons.arrow_forward, () {
-              this.signIn(_emailController.text, _passwordController.text);
+              widget._dbcontroller.signIn(_usernameController.text, _passwordController.text, this);
             })
         ),
       ],
@@ -243,7 +179,7 @@ class _LogInPageState extends State<LogInPage> {
               child: loginSubmitButton("Sign up", Icons.arrow_upward, () {
                 if(!formKey.currentState.validate())
                   return;
-                this.signUp(_newEmailController.text, _newUsernameController.text, _newPasswordController.text);
+                widget._dbcontroller.signUp(_newEmailController.text, _newUsernameController.text, _newPasswordController.text, this);
               })
           ),
         ])
@@ -267,59 +203,30 @@ class _LogInPageState extends State<LogInPage> {
       obscureText: isPasswordField && _hidePassword,
       controller: controller,
       validator: validator,
-      style: Theme
-          .of(context)
-          .textTheme
-          .title
-          .copyWith(
-          fontSize: 20.0, fontWeight: FontWeight.normal, color: mainColor),
+      style: Theme.of(context).textTheme.title.copyWith(fontSize: 20.0, fontWeight: FontWeight.normal, color: mainColor),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: Theme
-            .of(context)
-            .textTheme
-            .title
-            .copyWith(
-            fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.blueAccent),
-        enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-                color: Theme
-                    .of(context)
-                    .accentColor, width: 1.0)),
-        focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-                color: Theme
-                    .of(context)
-                    .accentColor, width: 2.0)),
-        prefixIcon: Icon(
-          icon,
-          color: iconColor,
-        ),
+        hintStyle: Theme.of(context).textTheme.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.blueAccent),
+        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1.0)),
+        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 2.0)),
+        prefixIcon: Icon(icon, color: iconColor),
         suffixIcon: suffixIcon
-        )
+      )
     );
   }
 
   Widget loginSubmitButton(String text, IconData icon, Function onPress) {
     return RaisedButton(
+        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RawMaterialButton(
-              shape: CircleBorder(),
-              child: Icon(icon, color: Colors.white),
-            ),
+            Icon(icon, color: Colors.white),
             Expanded(
               child: Text(
                 text,
                 textAlign: TextAlign.center,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .title
-                    .copyWith(fontSize: 20,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white),
+                style: Theme.of(context).textTheme.title.copyWith(fontSize: 20, fontWeight: FontWeight.normal, color: Colors.white),
               ),
             )
           ],
@@ -340,6 +247,31 @@ class _LogInPageState extends State<LogInPage> {
               TextStyle(fontSize: 22, color: mainColor, fontWeight: FontWeight.bold) :
               TextStyle(fontSize: 16, color: mainColor, fontWeight: FontWeight.normal)),
     );
+  }
+
+  @override
+  void onSignInIncorrect() {
+    OkDialog("Login failed", "The username or password is not correct.", context).show();
+  }
+
+  @override
+  void onSignInSuccess(User user) {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage(widget._dbcontroller)));
+  }
+
+  @override
+  void onSignInUnverified() {
+    VerifyDialog("Email not verified", "Please check your email to verify your account.", context, widget._dbcontroller).show();
+  }
+
+  @override
+  void onSignUpDuplicate() {
+    OkDialog("Sign up failed", "There is already an account with this email.", context).show();
+  }
+
+  @override
+  void onSignUpSuccess() {
+    OkDialog("Successfully signed up!", "Please check your email to verify your account.", context).show();
   }
 
 }

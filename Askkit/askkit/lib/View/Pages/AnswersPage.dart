@@ -1,22 +1,21 @@
 import 'dart:math';
 
+import 'package:askkit/Controller/FirebaseController.dart';
 import 'package:askkit/Model/Answer.dart';
-import 'package:askkit/Model/Comment.dart';
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
+import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Widgets/AnswerCard.dart';
-import 'package:askkit/View/Widgets/CollectionListViewBuilder.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
-import 'package:askkit/View/Widgets/UserInputCard.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Theme.dart';
 
 class AnswersPage extends StatefulWidget {
   final Question _question;
+  final DatabaseController _dbcontroller;
 
-  AnswersPage(this._question);
+  AnswersPage(this._question, this._dbcontroller);
 
   @override
   State<StatefulWidget> createState() {
@@ -39,12 +38,7 @@ class AnswersPageState extends State<AnswersPage> {
 
   void fetchAnswers() async {
     loaded = false;
-    answers = new List();
-    QuerySnapshot questionSnapshot = await Answer.getCollection().where("question", isEqualTo: widget._question.reference).getDocuments();
-    for (DocumentSnapshot document in questionSnapshot.documents) {
-      User user = await User.fetchUser(document.data['username']);
-      answers.add(Answer.fromSnapshot(user, document));
-    }
+    answers = await FirebaseController().getAnswers(widget._question);
     loaded = true;
     setState(() { });
   }
@@ -57,7 +51,7 @@ class AnswersPageState extends State<AnswersPage> {
             backgroundColor: Colors.indigo[400]
         ),
         body: getBody(),
-        floatingActionButton: RaisedButton(child: Icon(Icons.add), onPressed: addAnswer, color: gray)
+        floatingActionButton: RaisedButton(child: Icon(Icons.add), onPressed: addAnswerForm, color: gray)
     );
   }
 
@@ -68,16 +62,16 @@ class AnswersPageState extends State<AnswersPage> {
         children: <Widget>[
           Container(
               padding: const EdgeInsets.only(top: 100.0),
-              child: getAnswerView(widget._question)
+              child: answerList(widget._question)
           ),
           Positioned(
-              child: QuestionCard(widget._question, false)
+              child: QuestionCard(widget._question, false, widget._dbcontroller)
           )
         ]
     );
   }
 
-  Widget getAnswerView(Question question) {
+  Widget answerList(Question question) {
     if (!this.loaded)
       return LinearProgressIndicator();
     return ListView.builder(
@@ -91,7 +85,7 @@ class AnswersPageState extends State<AnswersPage> {
     );
   }
 
-  void addAnswer() {
+  void addAnswerForm() {
     final TextEditingController answerController = TextEditingController();
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -121,18 +115,14 @@ class AnswersPageState extends State<AnswersPage> {
                       child: RaisedButton(
                         child: Text(
                             "Submit",
-                            style: new TextStyle(
-                                color: Colors.red
-                            )
+                            style: new TextStyle(color: Colors.red)
                         ),
                         color: Colors.blue,
                         onPressed: () {
                           if(!_formKey.currentState.validate())
                             return;
-                          User.fetchUser("Reply Guy").then((user) {
-                            Answer.addToCollection(Answer(user, answerController.text, widget._question.reference));
-                            fetchAnswers();
-                          });
+                          this.addAnswer(answerController.text);
+                          fetchAnswers();
                           Navigator.pop(context);
                         },
                       )
@@ -142,5 +132,11 @@ class AnswersPageState extends State<AnswersPage> {
             ),
           );
         });
+  }
+
+  void addAnswer(String text) async {
+    User user = await FirebaseController().getCurrentUser();
+    await FirebaseController().addAnswer(Answer(user, text, widget._question.reference, null));
+    await fetchAnswers();
   }
 }

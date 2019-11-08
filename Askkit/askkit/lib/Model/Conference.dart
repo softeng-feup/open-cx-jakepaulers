@@ -13,12 +13,4 @@ class Conference {
         room = snapshot.data['room'],
         title = snapshot.data['title'],
         reference = snapshot.reference;
-
-  Map<String, dynamic> toMap() => {'name' : name, 'room': room, 'title' : title};
-
-  static void addToCollection(Conference conference) {
-    getCollection().add(conference.toMap());
-  }
-
-  static CollectionReference getCollection() => Firestore.instance.collection('conferences');
 }

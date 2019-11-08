@@ -7,17 +7,14 @@ class Auth {
   static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   static Future<String> signIn(String email, String password) async {
-    if (email == "" || password == "")
-      return null;
     AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
     FirebaseUser user = result.user;
     return user.uid;
   }
 
-  static Future<String> signUp(String email, String username, String password) async {
+  static Future<String> signUp(String email, String password) async {
       AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
-      result.user.updateProfile(UserUpdateInfo()..displayName = username);
       result.user.sendEmailVerification();
       return user.uid;
   }

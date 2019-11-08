@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 class Comment {
   User user;
   String content;
+  DocumentReference reference;
 
-  Comment(this.user, this.content);
+  Comment(this.user, this.content, this.reference);
 }
