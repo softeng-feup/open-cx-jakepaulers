@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/AuthListener.dart';
+import 'package:askkit/View/TextFieldValidators/LoginValidators.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,24 +29,15 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
   TextEditingController _newUsernameController = TextEditingController();
   TextEditingController _newEmailController = TextEditingController();
   TextEditingController _newPasswordController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
 
   static const Color signUpColor = primaryColor;
-  static const usernameMinLength = 8;
-  static const passwordMinLength = 6;
-
-  static const String emailRegex = "^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*\$";
 
   bool _hidePassword = true;
 
   @protected
   void initState() {
     super.initState();
-
-    //KeyboardVisibilityNotification().addNewListener(
-    //  onChange: (bool visible) {
-    //     this.keyboardvisible = visible;
-    //  },
-    //);
   }
 
 
@@ -66,48 +58,46 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
       DeviceOrientation.portraitDown,
     ]);
     return Scaffold(
-        body: Container(
-            color: backgroundColor,
-            child: Column(
+        backgroundColor: backgroundColor,
+        body: ListView(
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      titleText("Askkit", 34),
-                      titleText("Ask away!", 14)
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      switchSignButton("SIGN IN", () => setState(() => changeToSignIn()), _signInActive),
-                      switchSignButton("SIGN UP", () => setState(() => changeToSignUp()), _signUpActive)
-                    ],
-                  ),
+                titleText("Askkit", 38, EdgeInsets.only(top: 25.0)),
+                titleText("Ask away!", 16, EdgeInsets.only(bottom: 25.0)),
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    switchSignButton("SIGN IN", () => setState(() => changeToSignIn()), _signInActive),
+                    switchSignButton("SIGN UP", () => setState(() => changeToSignUp()), _signUpActive)
+                  ],
                 ),
                 Container(
-                    margin: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
+                    margin: EdgeInsets.all(15.0),
                     child: _signInActive ? _showSignIn() : _showSignUp()),
               ],
             )
+          ],
         )
     );
   }
 
-  Widget titleText(String text, double fontSize) {
-   // if (this.keyboardvisible)
-   //   return Container();
-    return Text(text, style: Theme
-            .of(context)
-            .textTheme
-            .title
-            .copyWith(fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            color: primaryColor)
+  Widget titleText(String text, double fontSize, EdgeInsets margin) {
+    return Container(
+      margin: margin,
+      child: Text(text, style: Theme
+          .of(context)
+          .textTheme
+          .title
+          .copyWith(fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+          color: primaryColor),
+    )
     );
   }
 
@@ -120,8 +110,11 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
             child: loginTextField("Username", Icons.person, _usernameController)
         ),
         Container(
-            margin: EdgeInsets.only(bottom: 25.0),
             child: loginTextField("Password", Icons.lock, _passwordController, isPasswordField: true)
+        ),
+        FlatButton(
+          onPressed: forgotPassword,
+          child: Text("Forgot password?", textAlign: TextAlign.left, style: TextStyle(decoration: TextDecoration.underline))
         ),
         Container(
             child: loginSubmitButton("Sign in", Icons.arrow_forward, () {
@@ -141,35 +134,20 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(bottom: 5.0),
-            child: loginTextField("Enter your email", Icons.email, _newEmailController,
-                validator: (String value) {
-                  RegExp regex = new RegExp(emailRegex, caseSensitive: false);
-                  if (regex.hasMatch(value))
-                    return null;
-                  return "Invalid email";
-                }
-            )
+            margin: EdgeInsets.only(bottom: 25.0),
+            child: loginTextField("Enter your email", Icons.email, _newEmailController, validator: LoginValidator.emailValidator())
           ),
           Container(
-            margin: EdgeInsets.only(bottom: 5.0),
-            child: loginTextField("Pick a username", Icons.person, _newUsernameController,
-                validator: (String value) {
-                  if (value.length < usernameMinLength)
-                    return "Username must be at least $usernameMinLength characters long";
-                  return null;
-                }
-            )
+            margin: EdgeInsets.only(bottom: 25.0),
+            child: loginTextField("Pick a username", Icons.person, _newUsernameController, validator: LoginValidator.usernameValidator())
           ),
           Container(
-            margin: EdgeInsets.only(bottom: 15.0),
-            child: loginTextField("Pick a password", Icons.lock, _newPasswordController, isPasswordField: true,
-                validator: (String value) {
-                  if (value.length < passwordMinLength)
-                    return "Password must be at least $passwordMinLength characters long";
-                  return null;
-                }
-            ),
+            margin: EdgeInsets.only(bottom: 25.0),
+            child: loginTextField("Pick a password", Icons.lock, _newPasswordController, isPasswordField: true, validator: LoginValidator.passwordValidator())
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 25.0),
+            child: loginTextField("Confirm password", Icons.lock, _confirmPasswordController, isPasswordField: true, validator: LoginValidator.confirmPasswordValidator(_newPasswordController))
           ),
           Container(
               child: loginSubmitButton("Sign up", Icons.arrow_upward, () {
@@ -182,7 +160,7 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
     );
   }
 
-  Widget loginTextField(String hint, IconData icon, TextEditingController controller, {bool isPasswordField : false, Function validator}) {
+  Widget loginTextField(String hint, IconData icon, TextEditingController controller, {bool isPasswordField : false, FormFieldValidator<String> validator}) {
     IconButton suffixIcon;
     if (isPasswordField)
       suffixIcon = IconButton(
@@ -261,13 +239,27 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
   }
 
   @override
-  void onSignUpDuplicate() {
+  void onSignUpDuplicateEmail() {
     OkDialog("Sign up failed", "There is already an account with this email.", context).show();
+  }
+
+  @override
+  void onSignUpDuplicateUsername() {
+    OkDialog("Sign up failed", "There is already an account with this username.", context).show();
   }
 
   @override
   void onSignUpSuccess() {
     OkDialog("Successfully signed up!", "Please check your email to verify your account.", context).show();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _newEmailController.clear());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _newUsernameController.clear());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _newPasswordController.clear());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _confirmPasswordController.clear());
   }
 
+
+  void forgotPassword() {
+    widget._dbcontroller.sendForgotPassword(_usernameController.text);
+    OkDialog("Email sent to ${_usernameController.text}!", "Check your inbox to reset your password.", context).show();
+  }
 }

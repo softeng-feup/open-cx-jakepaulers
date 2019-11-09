@@ -9,11 +9,13 @@ abstract class CardTemplate extends StatefulWidget {
 
   static const TextStyle contentStyle = TextStyle(color: Colors.black, fontSize: 15.0);
   static const TextStyle usernameStyle = TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold);
+  static const TextStyle dateStyle = TextStyle(color: Colors.black, fontSize: 10.0);
   static const TextStyle loadingStyle = TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold);
 
   static const double borderRadius = 10.0;
   static const EdgeInsets outerPadding = EdgeInsets.all(10.0);
   static const EdgeInsets contentPadding = EdgeInsets.only(top: 10.0);
+
 
 
   State<StatefulWidget> createState() {

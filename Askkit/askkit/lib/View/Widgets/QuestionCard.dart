@@ -19,11 +19,6 @@ class QuestionCard extends CardTemplate {
     QuestionCard(this._question, this._clickable, this._dbcontroller);
 
   @override
-  Comment getComment() {
-    return _question;
-  }
-
-  @override
   onClick(BuildContext context) {
     if (!_clickable)
       return;
@@ -37,21 +32,30 @@ class QuestionCard extends CardTemplate {
           Expanded(
               flex: 9,
               child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Row(
                       children: <Widget> [
                         CircleAvatar(
                             radius: 15.0,
-                            backgroundImage: getComment().user.getImage()
+                            backgroundImage: _question.user.getImage()
                         ),
-                        Text("  " + getComment().user.username, style: CardTemplate.usernameStyle)
+                        Text("  " + _question.user.username, style: CardTemplate.usernameStyle),
                       ],
                     ),
                     Container(
                       padding: CardTemplate.contentPadding,
-                      child: Text(getComment().content, style: CardTemplate.contentStyle),
+                      child: Text(_question.content, style: CardTemplate.contentStyle),
                       alignment: Alignment.centerLeft,
                     ),
+                    Divider(),
+                    Row (
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(_question.getAgeString(), style: CardTemplate.dateStyle),
+                        Text(_question.getCommentsString(), style: CardTemplate.dateStyle),
+                      ],
+                    )
                   ]
               )
           ),

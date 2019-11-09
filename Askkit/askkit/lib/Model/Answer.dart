@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Answer extends Comment {
   DocumentReference question;
-  DocumentReference reference;
 
-  Answer(User user, String answer, DocumentReference question, DocumentReference reference): this.question = question,
-        super(user, answer, reference);
+  Answer(User user, String answer, DateTime date, DocumentReference question, DocumentReference reference): this.question = question,
+        super(user, answer, date, reference);
 }

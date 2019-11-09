@@ -37,4 +37,8 @@ class Auth {
     FirebaseUser user = await _firebaseAuth.currentUser();
     return user.isEmailVerified;
   }
+
+  static Future<void> sendForgotPassword(String email) async {
+    return _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
 }

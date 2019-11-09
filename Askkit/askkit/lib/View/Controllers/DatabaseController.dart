@@ -8,6 +8,7 @@ abstract class DatabaseController {
   Future<void> signUp(String email, String username, String password, AuthListener listener);
   Future<void> signOut() {}
   Future<void> sendEmailVerification();
+  Future<void> sendForgotPassword(String username);
 
   Future<void> addQuestion(Question question);
   Future<void> addAnswer(Answer answer);
@@ -23,6 +24,7 @@ abstract class DatabaseController {
   Future<int> getUpvotes(Question question);
 
   Future<void> setVote(Question question, User user, int value);
+
 
 
 }
