@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'package:askkit/Controller/Authenticator.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/AuthListener.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../Controllers/DatabaseController.dart';
+import '../Theme.dart';
 import 'QuestionsPage.dart';
 
 class LogInPage extends StatefulWidget {
@@ -29,17 +29,13 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
   TextEditingController _newEmailController = TextEditingController();
   TextEditingController _newPasswordController = TextEditingController();
 
-  static const Color backgroundColor = Colors.white;
-  static const Color mainColor = Colors.blueAccent;
-  static const Color iconColor = Colors.black;
-  static const Color signUpColor = mainColor;
+  static const Color signUpColor = primaryColor;
   static const usernameMinLength = 8;
   static const passwordMinLength = 6;
 
   static const String emailRegex = "^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*\$";
 
   bool _hidePassword = true;
- // bool keyboardvisible = false;
 
   @protected
   void initState() {
@@ -111,7 +107,7 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
             .title
             .copyWith(fontSize: fontSize,
             fontWeight: FontWeight.bold,
-            color: mainColor)
+            color: primaryColor)
     );
   }
 
@@ -203,14 +199,14 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
       obscureText: isPasswordField && _hidePassword,
       controller: controller,
       validator: validator,
-      style: Theme.of(context).textTheme.title.copyWith(fontSize: 20.0, fontWeight: FontWeight.normal, color: mainColor),
+      style: Theme.of(context).textTheme.title.copyWith(fontSize: 20.0, fontWeight: FontWeight.normal, color: primaryColor),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: Theme.of(context).textTheme.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.blueAccent),
         enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1.0)),
         focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 2.0)),
         prefixIcon: Icon(icon, color: iconColor),
-        suffixIcon: suffixIcon
+        suffixIcon: suffixIcon,
       )
     );
   }
@@ -244,8 +240,8 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
       ),
       child: new Text(text,
           style: active ?
-              TextStyle(fontSize: 22, color: mainColor, fontWeight: FontWeight.bold) :
-              TextStyle(fontSize: 16, color: mainColor, fontWeight: FontWeight.normal)),
+              TextStyle(fontSize: 22, color: primaryColor, fontWeight: FontWeight.bold) :
+              TextStyle(fontSize: 16, color: primaryColor, fontWeight: FontWeight.normal)),
     );
   }
 

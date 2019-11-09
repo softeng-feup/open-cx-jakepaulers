@@ -6,6 +6,7 @@ import 'package:askkit/View/Controllers/AuthListener.dart';
 abstract class DatabaseController {
   Future<void> signIn(String username, String password, AuthListener listener);
   Future<void> signUp(String email, String username, String password, AuthListener listener);
+  Future<void> signOut() {}
   Future<void> sendEmailVerification();
 
   Future<void> addQuestion(Question question);
@@ -16,9 +17,12 @@ abstract class DatabaseController {
   Future<User> getCurrentUser();
   Future<List<Answer>> getAnswers(Question question);
   Future<List<Question>> getQuestions();
+  Future<Question> refreshQuestion(Question question);
 
   Future<int> getUserUpvote(Question question, User user);
   Future<int> getUpvotes(Question question);
 
   Future<void> setVote(Question question, User user, int value);
+
+
 }

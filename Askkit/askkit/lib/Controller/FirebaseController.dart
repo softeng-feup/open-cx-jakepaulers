@@ -5,15 +5,12 @@ import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import 'Authenticator.dart';
 
 class FirebaseController implements DatabaseController {
   static final Firestore firebase =  Firestore.instance;
-
-  static final String defaultAvatar = "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500";
 
   @override
   Future<void> addAnswer(Answer answer) {
@@ -30,16 +27,26 @@ class FirebaseController implements DatabaseController {
     firebase.collection("users").add({'username' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image});
   }
 
+  Future<Question> _makeQuestion(DocumentSnapshot document) async {
+    User user = await this.getUser(document.data['username']);
+    String content = document.data['content'];
+    Question question = Question(user, content, document.reference);
+    question.upvotes = await this.getUpvotes(question);
+    question.userVote = await this.getUserUpvote(question, user);
+    return question;
+  }
+
+  @override
+  Future<Question> refreshQuestion(Question question) async {
+    return await _makeQuestion(await question.reference.get());
+  }
+
   @override
   Future<List<Question>> getQuestions() async {
     List<Question> questions = new List();
     QuerySnapshot questionSnapshot = await firebase.collection("questions").getDocuments();
     for (DocumentSnapshot document in questionSnapshot.documents) {
-      User user = await this.getUser(document.data['username']);
-      String content = document.data['content'];
-      Question question = Question(user, content, document.reference);
-      question.upvotes = await this.getUpvotes(question);
-      questions.add(question);
+      questions.add(await _makeQuestion(document));
     }
     return questions;
   }
@@ -61,7 +68,7 @@ class FirebaseController implements DatabaseController {
   Future<User> getUser(String username) async {
     QuerySnapshot snapshot = await firebase.collection("users").where("username", isEqualTo: username).limit(1).getDocuments();
     if (snapshot.documents.length == 0)
-      return null;
+      return NullUser();
     Map data = snapshot.documents[0].data;
     return User(data['username'], data['email'], data['name'], data['image'], snapshot.documents[0].reference);
   }
@@ -70,7 +77,7 @@ class FirebaseController implements DatabaseController {
   Future<User> getUserByEmail(String email) async {
     QuerySnapshot snapshot = await firebase.collection("users").where("email", isEqualTo: email).limit(1).getDocuments();
     if (snapshot.documents.length == 0)
-      return null;
+      return NullUser();
     Map data = snapshot.documents[0].data;
     return User(data['username'], data['email'], data['name'], data['image'], snapshot.documents[0].reference);
   }
@@ -78,6 +85,8 @@ class FirebaseController implements DatabaseController {
   @override
   Future<User> getCurrentUser() async {
     FirebaseUser user = await Auth.getCurrentUser();
+    if (user == null)
+      return NullUser();
     return await getUserByEmail(user.email);
   }
 
@@ -114,6 +123,8 @@ class FirebaseController implements DatabaseController {
   @override
   Future<int> getUserUpvote(Question question, User user) async {
     DocumentSnapshot vote = await _getUserVote(question, user);
+    if (vote == null)
+      return 0;
     return vote.data['value'];
   }
 
@@ -121,7 +132,7 @@ class FirebaseController implements DatabaseController {
   Future<void> signIn(String username, String password, AuthListener listener) async {
     try {
       if (username == "" || password == "")
-        return listener.onSignInSuccess(User("Anonymous", "", "Anon Ymous", defaultAvatar, null));
+        return listener.onSignInSuccess(null);
       User user = await getUser(username);
       if (user == null)
         return listener.onSignInIncorrect();
@@ -142,7 +153,7 @@ class FirebaseController implements DatabaseController {
   Future<void> signUp(String email, String username, String password, AuthListener listener) async {
     try {
       await Auth.signUp(email,  password);
-      await addUser(User(username, email, "", defaultAvatar, null));
+      await addUser(User(username, email, "", User.defaultAvatar, null));
       listener.onSignUpSuccess();
     }
     on PlatformException catch (exception) {
@@ -154,6 +165,12 @@ class FirebaseController implements DatabaseController {
   Future<void> sendEmailVerification() {
     Auth.sendEmailVerification();
   }
+
+  @override
+  Future<void> signOut() {
+    Auth.signOut();
+  }
+
 
 
 }
