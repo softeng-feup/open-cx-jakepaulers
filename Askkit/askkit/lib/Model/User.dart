@@ -8,7 +8,7 @@ class User {
   String image;
   DocumentReference reference;
 
-  NetworkImage networkImage = null;
+  NetworkImage networkImage;
 
   User(this.username, this.email, this.name, this.image, this.reference);
 
