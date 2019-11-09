@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:askkit/View/Controllers/AuthListener.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/Model/Answer.dart';
@@ -14,12 +16,12 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<void> addAnswer(Answer answer) {
-    firebase.collection("answers").add({'username': answer.user.username, 'content': answer.content, 'question': answer.question});
+    firebase.collection("answers").add({'username': answer.user.username, 'content': answer.content, 'uploadDate' : Timestamp.fromDate(answer.date), 'question': answer.question});
   }
 
   @override
   Future<void> addQuestion(Question question) {
-    firebase.collection("questions").add({'username': question.user.username, 'content': question.content});
+    firebase.collection("questions").add({'username': question.user.username, 'content': question.content, 'uploadDate' : Timestamp.fromDate(question.date)});
   }
 
   @override
@@ -27,39 +29,52 @@ class FirebaseController implements DatabaseController {
     firebase.collection("users").add({'username' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image});
   }
 
-  Future<Question> _makeQuestion(DocumentSnapshot document) async {
+  Future<Question> _makeQuestion(DocumentSnapshot document, User currentUser) async {
     User user = await this.getUser(document.data['username']);
     String content = document.data['content'];
-    Question question = Question(user, content, document.reference);
+    Timestamp date = document.data['uploadDate'];
+    Question question = Question(user, content, date.toDate(), document.reference);
     question.upvotes = await this.getUpvotes(question);
-    question.userVote = await this.getUserUpvote(question, user);
+    print(currentUser.username);
+    question.userVote = await this.getUserUpvote(question, currentUser);
+    question.numComments = await this._getNumAnswers(question);
     return question;
   }
 
   @override
   Future<Question> refreshQuestion(Question question) async {
-    return await _makeQuestion(await question.reference.get());
+    User currentUser = await this.getCurrentUser();
+    return await _makeQuestion(await question.reference.get(), currentUser);
   }
 
   @override
   Future<List<Question>> getQuestions() async {
+    User currentUser = await this.getCurrentUser();
     List<Question> questions = new List();
-    QuerySnapshot questionSnapshot = await firebase.collection("questions").getDocuments();
+    QuerySnapshot questionSnapshot = await firebase.collection("questions").orderBy('uploadDate', descending: true).getDocuments();
     for (DocumentSnapshot document in questionSnapshot.documents) {
-      questions.add(await _makeQuestion(document));
+        questions.add(await _makeQuestion(document, currentUser));
     }
+
     return questions;
+  }
+
+
+  Future<int> _getNumAnswers(Question question) async {
+    QuerySnapshot answers = await firebase.collection("answers").where("question", isEqualTo: question.reference).getDocuments();
+    return answers.documents.length;
   }
 
   @override
   Future<List<Answer>> getAnswers(Question question) async {
     List<Answer> answers = new List();
-    QuerySnapshot questionSnapshot = await firebase.collection("answers").where("question", isEqualTo: question.reference).getDocuments();
-    for (DocumentSnapshot document in questionSnapshot.documents) {
+    QuerySnapshot answerSnapshot = await firebase.collection("answers").where("question", isEqualTo: question.reference).orderBy('uploadDate', descending: true).getDocuments();
+    for (DocumentSnapshot document in answerSnapshot.documents) {
       User user = await this.getUser(document.data['username']);
       DocumentReference question = document.data['question'];
       String content = document.data['content'];
-      answers.add(Answer(user, content, question, document.reference));
+      Timestamp date = document.data['uploadDate'];
+      answers.add(Answer(user, content, date.toDate(), question, document.reference));
     }
     return answers;
   }
@@ -142,22 +157,24 @@ class FirebaseController implements DatabaseController {
       else listener.onSignInUnverified();
     }
     on PlatformException catch (exception) {
-      print("ESXPEICOITN");
-      print(exception.code);
+      print("Exception " + exception.code);
       listener.onSignInIncorrect();
-
     }
   }
 
   @override
   Future<void> signUp(String email, String username, String password, AuthListener listener) async {
+    User user = await getUser(username);
+    if (!user.isNull())
+      return listener.onSignUpDuplicateUsername();
     try {
       await Auth.signUp(email,  password);
       await addUser(User(username, email, "", User.defaultAvatar, null));
       listener.onSignUpSuccess();
     }
     on PlatformException catch (exception) {
-      listener.onSignUpDuplicate();
+      print("Exception " + exception.code);
+      listener.onSignUpDuplicateEmail();
     }
   }
 
@@ -171,6 +188,15 @@ class FirebaseController implements DatabaseController {
     Auth.signOut();
   }
 
-
+  @override
+  Future<void> sendForgotPassword(String username) async {
+    User user = await this.getUser(username);
+    if (user.isNull())
+      return;
+    try {
+      Auth.sendForgotPassword(user.email);
+    }
+    catch (exception) {}
+  }
 
 }

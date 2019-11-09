@@ -12,11 +12,6 @@ class AnswerCard extends CardTemplate {
   AnswerCard(this._answer);
 
   @override
-  Comment getComment() {
-    return _answer;
-  }
-
-  @override
   onClick(BuildContext context) {
 
   }
@@ -29,14 +24,16 @@ class AnswerCard extends CardTemplate {
             children: <Widget>[
               CircleAvatar(
                   radius: 15.0,
-                  backgroundImage: getComment().user.getImage()
+                  backgroundImage: _answer.user.getImage()
               ),
-              Text("  " + getComment().user.username, style: CardTemplate.usernameStyle)
+              Text("  " + _answer.user.username, style: CardTemplate.usernameStyle),
+              Spacer(),
+              Text(_answer.getAgeString(), style: CardTemplate.dateStyle, textAlign: TextAlign.end),
             ],
           ),
           Container(
             padding: CardTemplate.contentPadding,
-            child: Text(getComment().content, style: CardTemplate.contentStyle),
+            child: Text(_answer.content, style: CardTemplate.contentStyle),
             alignment: Alignment.centerLeft,
           ),
         ]

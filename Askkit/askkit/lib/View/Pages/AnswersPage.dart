@@ -56,7 +56,7 @@ class AnswersPageState extends State<AnswersPage> {
             backgroundColor: primaryColor,
             actions: <Widget>[
               IconButton(icon: Icon(Icons.refresh), onPressed: fetchAnswers),
-              IconButton(icon: Icon(Icons.edit), onPressed: addAnswerForm),
+              IconButton(icon: Icon(Icons.add_circle), onPressed: addAnswerForm),
             ],
         ),
         backgroundColor: backgroundColor,
@@ -138,7 +138,7 @@ class AnswersPageState extends State<AnswersPage> {
 
   void addAnswer(String text) async {
     User user = await widget._dbcontroller.getCurrentUser();
-    await widget._dbcontroller.addAnswer(Answer(user, text, widget._question.reference, null));
+    await widget._dbcontroller.addAnswer(Answer(user, text, DateTime.now(), widget._question.reference, null));
     await fetchAnswers();
   }
 }

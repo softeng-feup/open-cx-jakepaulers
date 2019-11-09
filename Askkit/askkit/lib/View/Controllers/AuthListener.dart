@@ -6,5 +6,6 @@ abstract class AuthListener {
   void onSignInUnverified();
 
   void onSignUpSuccess();
-  void onSignUpDuplicate();
+  void onSignUpDuplicateEmail();
+  void onSignUpDuplicateUsername();
 }
