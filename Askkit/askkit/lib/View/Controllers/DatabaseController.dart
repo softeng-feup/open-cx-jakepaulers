@@ -13,13 +13,12 @@ abstract class DatabaseController {
   Future<void> addUser(User user);
 
   Future<User> getUser(String username);
+  Future<User> getCurrentUser();
   Future<List<Answer>> getAnswers(Question question);
   Future<List<Question>> getQuestions();
 
-  Future<int> getUserUpvote(String user);
+  Future<int> getUserUpvote(Question question, User user);
   Future<int> getUpvotes(Question question);
 
-  Future<void> upvote(Question question, User user);
-  Future<void> downvote(Question question, User user);
-
+  Future<void> setVote(Question question, User user, int value);
 }

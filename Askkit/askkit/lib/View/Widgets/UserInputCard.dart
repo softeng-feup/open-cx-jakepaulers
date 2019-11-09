@@ -10,6 +10,7 @@ import 'CardTemplate.dart';
 abstract class UserInputCard extends CardTemplate {
   Comment getComment();
 
+
   @override
   Widget buildCardContent(BuildContext context) {
     return Column(
