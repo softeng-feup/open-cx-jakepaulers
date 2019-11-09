@@ -5,13 +5,13 @@ import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Pages/AnswersPage.dart';
 import 'package:askkit/View/Theme.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
-import 'package:askkit/View/Widgets/UserInputCard.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class QuestionCard extends UserInputCard {
+import 'Borders.dart';
+
+class QuestionCard extends CardTemplate {
     final bool _clickable;
     final Question _question;
     final DatabaseController _dbcontroller;
@@ -30,7 +30,6 @@ class QuestionCard extends UserInputCard {
     Navigator.push(context, MaterialPageRoute(builder: (context) => AnswersPage(_question, _dbcontroller)));
   }
 
-  //TEMPORARIO
   @override
   Widget buildCardContent(BuildContext context) {
     return Row(
@@ -42,15 +41,15 @@ class QuestionCard extends UserInputCard {
                     Row(
                       children: <Widget> [
                         CircleAvatar(
-                            backgroundColor: lightGray,
+                            radius: 15.0,
                             backgroundImage: getComment().user.getImage()
                         ),
-                        Text(" "),
-                        Text(getComment().user.username)
+                        Text("  " + getComment().user.username, style: CardTemplate.usernameStyle)
                       ],
                     ),
                     Container(
-                      child: Text(getComment().content, textScaleFactor: 1.3),
+                      padding: CardTemplate.contentPadding,
+                      child: Text(getComment().content, style: CardTemplate.contentStyle),
                       alignment: Alignment.centerLeft,
                     ),
                   ]
@@ -77,22 +76,17 @@ class UpvoteColumn extends StatefulWidget {
 
 class UpvoteColumnState extends State<UpvoteColumn> {
   @override
-  void initState() {
-    updateUserVote();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         GestureDetector(
             onTap: () => upvote(),
-            child: Icon(Icons.keyboard_arrow_up, color: widget._question.userVote == 1 ? Colors.green : Colors.black)
+            child: Icon(Icons.keyboard_arrow_up, size: 30.0, color: widget._question.userVote == 1 ? Colors.green : Colors.black)
         ),
         Text("${widget._question.upvotes}"),
         GestureDetector(
             onTap: () => downvote(),
-            child: Icon(Icons.keyboard_arrow_down, color: widget._question.userVote == -1 ? Colors.red : Colors.black)
+            child: Icon(Icons.keyboard_arrow_down, size: 30.0, color: widget._question.userVote == -1 ? Colors.red : Colors.black)
         ),
       ],
     );
@@ -112,14 +106,5 @@ class UpvoteColumnState extends State<UpvoteColumn> {
     });
     User user = await widget._dbcontroller.getCurrentUser();
     widget._dbcontroller.setVote(widget._question, user, widget._question.userVote);
-  }
-
-  void updateUserVote() async {
-    User currentUser = await widget._dbcontroller.getCurrentUser();
-    print(currentUser.username);
-    print(currentUser.email);
-    widget._question.userVote = await widget._dbcontroller.getUserUpvote(widget._question, currentUser);
-    print(widget._question.content + " - " + widget._question.userVote.toString());
-    setState(() {});
   }
 }

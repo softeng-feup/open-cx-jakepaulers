@@ -1,11 +1,13 @@
-import 'package:askkit/Controller/FirebaseController.dart';
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
+import 'package:askkit/View/Pages/LogInPage.dart';
+import 'package:askkit/View/Theme.dart';
+import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
+import 'package:askkit/View/Widgets/TextAreaForm.dart';
 import 'package:flutter/material.dart';
 
-import '../Theme.dart';
 
 class QuestionsPage extends StatefulWidget {
   final DatabaseController _dbcontroller;
@@ -23,8 +25,6 @@ class QuestionsPageState extends State<QuestionsPage> {
   List<Question> questions = new List();
   bool loaded = false;
 
-  final int QUESTION_MAX_LEN = 64;
-
   @override
   void initState() {
     this.fetchQuestions();
@@ -32,9 +32,11 @@ class QuestionsPageState extends State<QuestionsPage> {
 
   void fetchQuestions() async {
     loaded = false;
-    questions = await FirebaseController().getQuestions();
-    loaded = true;
     setState(() { });
+    questions = await widget._dbcontroller.getQuestions();
+    loaded = true;
+    if (this.mounted)
+      setState(() { });
   }
 
   @override
@@ -42,78 +44,96 @@ class QuestionsPageState extends State<QuestionsPage> {
     return Scaffold(
       appBar: AppBar(
           title: Text("Conference Page"),
-          backgroundColor: Colors.indigo[400]
+          backgroundColor: primaryColor,
+          actions: <Widget>[
+            IconButton(icon: Icon(Icons.refresh), onPressed: fetchQuestions),
+            IconButton(icon: Icon(Icons.edit), onPressed: addQuestionForm),
+            IconButton(icon: Icon(Icons.exit_to_app), onPressed: signOut),
+          ],
       ),
+      backgroundColor: CardTemplate.cardMargin,
       body: getBody(),
-      floatingActionButton: RaisedButton(child: Icon(Icons.add), onPressed: addQuestionForm, color: gray),
     );
   }
 
   Widget getBody() {
-    if (!this.loaded)
-      return LinearProgressIndicator();
+    return Column(
+        children: <Widget>[
+          !this.loaded ? CardTemplate.loadingIndicator() : Container(),
+          Expanded(child: questionList())
+        ]
+    );
+  }
+
+
+  Widget questionList() {
     return ListView.builder(
         itemCount: this.questions.length,
         itemBuilder: (BuildContext context, int i) {
-          return QuestionCard(this.questions[i], true, widget._dbcontroller);
+          return Container(
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: CardTemplate.cardShadow,
+                        blurRadius: 0.0,
+                        spreadRadius: 1.0,
+                        offset: Offset(0.0, 1.0)
+                    ),
+                  ]
+              ),
+              margin: EdgeInsets.only(top: 10.0),
+              child: QuestionCard(this.questions[i], true, widget._dbcontroller)
+          );
         }
     );
   }
 
-  void addQuestionForm() {
-    final TextEditingController usernameController = TextEditingController();
-    final TextEditingController questionController = TextEditingController();
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  void addQuestionForm() {
+    TextAreaForm textarea = TextAreaForm("Type a question", "Question can't be empty");
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Form(
-              key: _formKey,
-              child: Column(
+            contentPadding: EdgeInsets.only(left: 15.0, right: 15.0, top: 5.0),
+              content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  TextFormField(
-                    controller: questionController,
-                    decoration: new InputDecoration(
-                        hintText: "Question",
-                        labelText: "Enter your question",
-                    ),
-                    validator: (String value) {
-                      if(value.length == 0)
-                        return 'Question can\'t be empty';
-                      else return value.length > QUESTION_MAX_LEN ? 'Question too big ($QUESTION_MAX_LEN character max)' : null;
-                    }
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: RaisedButton(
-                      child: Text(
-                          "Submit",
-                          style: new TextStyle(
-                            color: Colors.red
-                          )
+                  textarea,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      FlatButton(
+                        child: new Text("Cancel"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                       ),
-                      color: Colors.blue,
-                      onPressed: () {
-                        if(!_formKey.currentState.validate())
-                          return;
-                        this.addQuestion(questionController.text);
-                        Navigator.pop(context);
-                      },
-                    )
+                      FlatButton(
+                        child: new Text("Submit"),
+                        onPressed: () {
+                          if (!textarea.validate())
+                            return;
+                          this.addQuestion(textarea.getText());
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
                   )
                 ],
               ),
-            ),
           );
         });
   }
 
   void addQuestion(String text) async {
-    User user = await FirebaseController().getCurrentUser();
-    await FirebaseController().addQuestion(Question(user, text, null));
+    User user = await widget._dbcontroller.getCurrentUser();
+    await widget._dbcontroller.addQuestion(Question(user, text, null));
     await fetchQuestions();
+  }
+
+  void signOut() {
+    widget._dbcontroller.signOut();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage(widget._dbcontroller)));
   }
 }
