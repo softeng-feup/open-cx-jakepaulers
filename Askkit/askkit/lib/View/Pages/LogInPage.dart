@@ -193,16 +193,14 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
     return RaisedButton(
         padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Icon(icon, color: Colors.white),
-            Expanded(
-              child: Text(
+            Text(
                 text,
-                textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.title.copyWith(fontSize: 20, fontWeight: FontWeight.normal, color: Colors.white),
               ),
-            )
+            Icon(null, color: Colors.white),
           ],
         ),
         color: signUpColor,

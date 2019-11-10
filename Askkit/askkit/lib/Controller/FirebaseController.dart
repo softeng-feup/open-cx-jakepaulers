@@ -29,54 +29,56 @@ class FirebaseController implements DatabaseController {
     firebase.collection("users").add({'username' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image});
   }
 
-  Future<Question> _makeQuestion(DocumentSnapshot document, User currentUser) async {
+  Future<Question> _makeQuestionFromDoc(DocumentSnapshot document, Future<User> currentUser) async {
     User user = await this.getUser(document.data['username']);
     String content = document.data['content'];
     Timestamp date = document.data['uploadDate'];
     Question question = Question(user, content, date.toDate(), document.reference);
     question.upvotes = await this.getUpvotes(question);
-    print(currentUser.username);
-    question.userVote = await this.getUserUpvote(question, currentUser);
+    question.userVote = await this.getUserUpvote(question, await currentUser);
     question.numComments = await this._getNumAnswers(question);
     return question;
   }
 
+  Future<Answer> _makeAnswerFromDoc(DocumentSnapshot document) async {
+    User user = await this.getUser(document.data['username']);
+    DocumentReference question = document.data['question'];
+    String content = document.data['content'];
+    Timestamp date = document.data['uploadDate'];
+    return Answer(user, content, date.toDate(), question, document.reference);
+  }
+
   @override
   Future<Question> refreshQuestion(Question question) async {
-    User currentUser = await this.getCurrentUser();
-    return await _makeQuestion(await question.reference.get(), currentUser);
+    return await _makeQuestionFromDoc(await question.reference.get(), this.getCurrentUser());
   }
 
   @override
   Future<List<Question>> getQuestions() async {
-    User currentUser = await this.getCurrentUser();
-    List<Question> questions = new List();
+    Future<User> currentUser = this.getCurrentUser();
+    List<Future<Question>> questions = new List();
     QuerySnapshot questionSnapshot = await firebase.collection("questions").orderBy('uploadDate', descending: true).getDocuments();
     for (DocumentSnapshot document in questionSnapshot.documents) {
-        questions.add(await _makeQuestion(document, currentUser));
+        questions.add(_makeQuestionFromDoc(document, currentUser));
     }
 
-    return questions;
-  }
-
-
-  Future<int> _getNumAnswers(Question question) async {
-    QuerySnapshot answers = await firebase.collection("answers").where("question", isEqualTo: question.reference).getDocuments();
-    return answers.documents.length;
+    return await Future.wait(questions);
   }
 
   @override
   Future<List<Answer>> getAnswers(Question question) async {
-    List<Answer> answers = new List();
+    List<Future<Answer>> answers = new List();
     QuerySnapshot answerSnapshot = await firebase.collection("answers").where("question", isEqualTo: question.reference).orderBy('uploadDate', descending: true).getDocuments();
     for (DocumentSnapshot document in answerSnapshot.documents) {
-      User user = await this.getUser(document.data['username']);
-      DocumentReference question = document.data['question'];
-      String content = document.data['content'];
-      Timestamp date = document.data['uploadDate'];
-      answers.add(Answer(user, content, date.toDate(), question, document.reference));
+      answers.add(_makeAnswerFromDoc(document));
     }
-    return answers;
+
+    return await Future.wait(answers);
+  }
+
+  Future<int> _getNumAnswers(Question question) async {
+    QuerySnapshot answers = await firebase.collection("answers").where("question", isEqualTo: question.reference).getDocuments();
+    return answers.documents.length;
   }
 
   @override
@@ -106,6 +108,8 @@ class FirebaseController implements DatabaseController {
   }
 
   Future<DocumentSnapshot> _getUserVote(Question question, User user) async {
+    if (user.isNull())
+      return null;
     QuerySnapshot queryRes = await firebase.collection("upvotes").where("question", isEqualTo: question.reference).where("user", isEqualTo: user.reference).limit(1).getDocuments();
     if (queryRes.documents.length == 0)
       return null;
@@ -114,6 +118,8 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<void> setVote(Question question, User user, int value) async {
+    if (user.isNull())
+      return null;
     Map<String, dynamic> newData = {
       'question': question.reference,
       'user': user.reference,

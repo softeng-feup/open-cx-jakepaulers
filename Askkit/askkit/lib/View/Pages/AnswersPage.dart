@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
@@ -27,25 +29,37 @@ class AnswersPage extends StatefulWidget {
 }
 
 class AnswersPageState extends State<AnswersPage> {
+  Timer minuteTimer;
   List<Answer> answers = new List();
   bool loaded = false;
 
-  final int COMMENT_MAX_LEN = 80;
 
+  @override void initState() {
+    minuteTimer = Timer.periodic(Duration(minutes: 1), (t) { setState(() { }); });
+    this.refreshModel();
+  }
 
-  @override
-  void initState() {
+  @override void dispose() {
+    minuteTimer.cancel();
+    super.dispose();
+  }
+
+  void refreshModel() {
+    this.fetchQuestion();
     this.fetchAnswers();
   }
 
-  void fetchAnswers() async {
-    loaded = false;
-    setState(() { });
+  void fetchQuestion() async {
     widget._question = await widget._dbcontroller.refreshQuestion(widget._question);
+  }
+
+  void fetchAnswers() async {
+    Stopwatch sw = Stopwatch()..start();
+    setState(() { loaded = false; });
     answers = await widget._dbcontroller.getAnswers(widget._question);
-    loaded = true;
     if (this.mounted)
-      setState(() { });
+      setState(() { loaded = true; });
+    print("Answer fetch time: " + sw.elapsed.toString());
   }
 
   @override
@@ -55,7 +69,7 @@ class AnswersPageState extends State<AnswersPage> {
             title: Text("Question Page"),
             backgroundColor: primaryColor,
             actions: <Widget>[
-              IconButton(icon: Icon(Icons.refresh), onPressed: fetchAnswers),
+              IconButton(icon: Icon(Icons.refresh), onPressed: refreshModel),
               IconButton(icon: Icon(Icons.add_circle), onPressed: addAnswerForm),
             ],
         ),
@@ -139,6 +153,7 @@ class AnswersPageState extends State<AnswersPage> {
   void addAnswer(String text) async {
     User user = await widget._dbcontroller.getCurrentUser();
     await widget._dbcontroller.addAnswer(Answer(user, text, DateTime.now(), widget._question.reference, null));
-    await fetchAnswers();
+    refreshModel();
   }
+
 }
