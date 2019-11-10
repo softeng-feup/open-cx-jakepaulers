@@ -31,6 +31,9 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
   TextEditingController _newPasswordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
 
+  static final signUpFormKey = GlobalKey<FormState>();
+
+
   static const Color signUpColor = primaryColor;
 
   bool _hidePassword = true;
@@ -126,10 +129,8 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
   }
 
   Widget _showSignUp() {
-    final formKey = GlobalKey<FormState>();
-
     return Form (
-      key: formKey,
+      key: signUpFormKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -151,7 +152,7 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
           ),
           Container(
               child: loginSubmitButton("Sign up", Icons.arrow_upward, () {
-                if(!formKey.currentState.validate())
+                if(!signUpFormKey.currentState.validate())
                   return;
                 widget._dbcontroller.signUp(_newEmailController.text, _newUsernameController.text, _newPasswordController.text, this);
               })
