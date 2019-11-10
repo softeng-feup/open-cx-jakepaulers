@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
@@ -22,21 +24,28 @@ class QuestionsPage extends StatefulWidget {
 }
 
 class QuestionsPageState extends State<QuestionsPage> {
+  Timer minuteTimer;
   List<Question> questions = new List();
   bool loaded = false;
 
-  @override
-  void initState() {
+  @override void initState() {
+    minuteTimer = Timer.periodic(Duration(minutes: 1), (t) { setState(() { }); });
     this.fetchQuestions();
   }
 
+  @override void dispose() {
+    minuteTimer.cancel();
+    super.dispose();
+  }
+
   void fetchQuestions() async {
-    loaded = false;
-    setState(() { });
+    Stopwatch sw = Stopwatch()..start();
+    setState(() { loaded = false; });
     questions = await widget._dbcontroller.getQuestions();
-    loaded = true;
+    questions.sort((question1, question2) => question2.upvotes.compareTo(question1.upvotes));
     if (this.mounted)
-      setState(() { });
+      setState(() { loaded = true; });
+    print("Question fetch time: " + sw.elapsed.toString());
   }
 
   @override

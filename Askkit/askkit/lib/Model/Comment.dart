@@ -31,6 +31,8 @@ class Comment {
       return "Yesterday";
     if (inDays < 30)
       return inDays.toString() + " days ago";
+    if (inDays < 60)
+      return "A month ago";
     if (inDays < 365)
       return (inDays ~/ 30).toString() + " months ago";
     return "Over a year ago";
