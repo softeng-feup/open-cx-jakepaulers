@@ -118,8 +118,6 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<void> setVote(Question question, User user, int value) async {
-    if (user.isNull())
-      return null;
     Map<String, dynamic> newData = {
       'question': question.reference,
       'user': user.reference,
