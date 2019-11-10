@@ -1,14 +1,15 @@
 import 'dart:core';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/AuthListener.dart';
+import 'package:askkit/View/Pages/SigningInPage.dart';
 import 'package:askkit/View/TextFieldValidators/LoginValidators.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
+import 'package:askkit/View/Widgets/TitleText.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../Controllers/DatabaseController.dart';
 import '../Theme.dart';
-import 'QuestionsPage.dart';
 
 class LogInPage extends StatefulWidget {
   DatabaseController _dbcontroller;
@@ -22,7 +23,8 @@ class LogInPage extends StatefulWidget {
   State<StatefulWidget> createState() => _LogInPageState();
 }
 
-class _LogInPageState extends State<LogInPage> implements AuthListener {
+class _LogInPageState extends State<LogInPage> {
+  bool _hidePassword = true;
   bool _signInActive = true, _signUpActive = false;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -36,7 +38,6 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
 
   static const Color signUpColor = primaryColor;
 
-  bool _hidePassword = true;
 
   @protected
   void initState() {
@@ -67,8 +68,8 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                titleText("Askkit", 38, EdgeInsets.only(top: 25.0)),
-                titleText("Ask away!", 16, EdgeInsets.only(bottom: 25.0)),
+                TitleText(text: "Askkit", fontSize: 38, margin: EdgeInsets.only(top: 25.0)),
+                TitleText(text: "Ask away!", fontSize: 16, margin: EdgeInsets.only(bottom: 25.0)),
               ],
             ),
             Column(
@@ -90,20 +91,6 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
     );
   }
 
-  Widget titleText(String text, double fontSize, EdgeInsets margin) {
-    return Container(
-      margin: margin,
-      child: Text(text, style: Theme
-          .of(context)
-          .textTheme
-          .title
-          .copyWith(fontSize: fontSize,
-          fontWeight: FontWeight.bold,
-          color: primaryColor),
-    )
-    );
-  }
-
   Widget _showSignIn() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -121,7 +108,8 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
         ),
         Container(
             child: loginSubmitButton("Sign in", Icons.arrow_forward, () {
-              widget._dbcontroller.signIn(_usernameController.text, _passwordController.text, this);
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>  SigningInPage(widget._dbcontroller)));
+            //  widget._dbcontroller.signIn(_usernameController.text, _passwordController.text, state);
             })
         ),
       ],
@@ -154,7 +142,8 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
               child: loginSubmitButton("Sign up", Icons.arrow_upward, () {
                 if(!signUpFormKey.currentState.validate())
                   return;
-                widget._dbcontroller.signUp(_newEmailController.text, _newUsernameController.text, _newPasswordController.text, this);
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>  SigningInPage(widget._dbcontroller)));
+                //widget._dbcontroller.signUp(_newEmailController.text, _newUsernameController.text, _newPasswordController.text, this);
               })
           ),
         ])
@@ -220,40 +209,6 @@ class _LogInPageState extends State<LogInPage> implements AuthListener {
               TextStyle(fontSize: 22, color: primaryColor, fontWeight: FontWeight.bold) :
               TextStyle(fontSize: 16, color: primaryColor, fontWeight: FontWeight.normal)),
     );
-  }
-
-  @override
-  void onSignInIncorrect() {
-    OkDialog("Login failed", "The username or password is not correct.", context).show();
-  }
-
-  @override
-  void onSignInSuccess(User user) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage(widget._dbcontroller)));
-  }
-
-  @override
-  void onSignInUnverified() {
-    VerifyDialog("Email not verified", "Please check your email to verify your account.", context, widget._dbcontroller).show();
-  }
-
-  @override
-  void onSignUpDuplicateEmail() {
-    OkDialog("Sign up failed", "There is already an account with this email.", context).show();
-  }
-
-  @override
-  void onSignUpDuplicateUsername() {
-    OkDialog("Sign up failed", "There is already an account with this username.", context).show();
-  }
-
-  @override
-  void onSignUpSuccess() {
-    OkDialog("Successfully signed up!", "Please check your email to verify your account.", context).show();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _newEmailController.clear());
-    WidgetsBinding.instance.addPostFrameCallback((_) => _newUsernameController.clear());
-    WidgetsBinding.instance.addPostFrameCallback((_) => _newPasswordController.clear());
-    WidgetsBinding.instance.addPostFrameCallback((_) => _confirmPasswordController.clear());
   }
 
 

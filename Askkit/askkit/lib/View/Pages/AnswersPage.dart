@@ -51,6 +51,7 @@ class AnswersPageState extends State<AnswersPage> {
 
   void fetchQuestion() async {
     widget._question = await widget._dbcontroller.refreshQuestion(widget._question);
+    setState(() { });
   }
 
   void fetchAnswers() async {
