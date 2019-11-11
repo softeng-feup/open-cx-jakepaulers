@@ -1,6 +1,7 @@
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/AuthListener.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
+import 'package:askkit/View/Pages/LogInPage.dart';
 import 'package:askkit/View/Theme.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:askkit/View/Widgets/TitleText.dart';
@@ -9,17 +10,53 @@ import 'package:flutter/material.dart';
 
 import 'QuestionsPage.dart';
 
-class SigningInPage extends StatefulWidget {
-  String text = "Testerest";
-  DatabaseController _dbcontroller;
+abstract class SigningPage extends StatefulWidget {
+  final DatabaseController _dbcontroller;
 
-  SigningInPage(DatabaseController _dbcontroller);
+  SigningPage(this._dbcontroller);
 
-  @override
-  State<StatefulWidget> createState() => SigningInPageState();
 }
 
-class SigningInPageState extends State<SigningInPage> implements AuthListener{
+class SigningInPage extends SigningPage {
+  final SigningInPageState _state = SigningInPageState("Signing in...");
+
+  SigningInPage(DatabaseController dbcontroller) : super(dbcontroller) {
+    this._dbcontroller.signIn("username", "password", _state);
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    return _state;
+  }
+}
+
+class SigningUpPage extends SigningPage {
+  final SigningInPageState _state = SigningInPageState("Signing up...");
+
+  SigningUpPage(DatabaseController dbcontroller) : super(dbcontroller){
+    this._dbcontroller.signUp("email", "username", "password", _state);
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    return _state;
+  }
+
+}
+
+class SigningInPageState extends State<SigningPage> implements SignInListener, SignUpListener {
+  String _text;
+  SigningInPageState(this._text);
+
+  Widget _actions = Container();
+
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,8 +71,9 @@ class SigningInPageState extends State<SigningInPage> implements AuthListener{
                 child: CircularProgressIndicator()
             ),
             Center(
-                child: Text(this.widget.text, style: TextStyle(fontWeight: FontWeight.bold),)
+                child: Text(this._text, style: TextStyle(fontWeight: FontWeight.bold),)
             ),
+            _actions
           ],
         )
     );
@@ -43,7 +81,11 @@ class SigningInPageState extends State<SigningInPage> implements AuthListener{
 
   @override
   void onSignInIncorrect() {
-    OkDialog("Login failed", "The username or password is not correct.", context).show();
+    setState(() {
+      this._text = "Login failed\nThe username or password is not correct.";
+    });
+    // actions: go back...
+    //OkDialog("Login failed", "The username or password is not correct.", context).show();
   }
 
   @override
@@ -53,26 +95,39 @@ class SigningInPageState extends State<SigningInPage> implements AuthListener{
 
   @override
   void onSignInUnverified() {
-    VerifyDialog("Email not verified", "Please check your email to verify your account.", context, widget._dbcontroller).show();
+    setState(() {
+      this._text = "Email not verified\nPlease check your inbox to verify your account.";
+    });
+    // actions: resend, go back
+    //VerifyDialog("Email not verified", "Please check your email to verify your account.", context, widget._dbcontroller).show();
   }
 
   @override
   void onSignUpDuplicateEmail() {
-    OkDialog("Sign up failed", "There is already an account with this email.", context).show();
+    setState(() {
+      this._text = "Sign up failed\nThere is already an account with this email.";
+    });
+    // actions: back to register (pop)
+    //OkDialog("Sign up failed", "There is already an account with this email.", context).show();
   }
 
   @override
   void onSignUpDuplicateUsername() {
-    OkDialog("Sign up failed", "There is already an account with this username.", context).show();
+    setState(() {
+      this._text = "Sign up failed\nThere is already an account with this username.";
+    });
+    // actions: back to register (pop)
+    //OkDialog("Sign up failed", "There is already an account with this username.", context).show();
   }
 
   @override
   void onSignUpSuccess() {
-    OkDialog("Successfully signed up!", "Please check your email to verify your account.", context).show();
-    //WidgetsBinding.instance.addPostFrameCallback((_) => _newEmailController.clear());
-   // WidgetsBinding.instance.addPostFrameCallback((_) => _newUsernameController.clear());
-   // WidgetsBinding.instance.addPostFrameCallback((_) => _newPasswordController.clear());
-   // WidgetsBinding.instance.addPostFrameCallback((_) => _confirmPasswordController.clear());
+    setState(() {
+      this._text = "Successfully signed up!\nPlease check your email to verify your account.";
+    });
+    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage(widget._dbcontroller)));
+    // actions: back to login (push replacement)
+    // OkDialog("Successfully signed up!", "Please check your email to verify your account.", context).show();
   }
 
 
