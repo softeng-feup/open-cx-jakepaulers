@@ -4,8 +4,8 @@ import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/AuthListener.dart';
 
 abstract class DatabaseController {
-  Future<void> signIn(String username, String password, SignInListener listener);
-  Future<void> signUp(String email, String username, String password, SignUpListener listener);
+  Future<void> signIn(String username, String password, AuthListener listener);
+  Future<void> signUp(String email, String username, String password, AuthListener listener);
   Future<void> signOut() {}
   Future<void> sendEmailVerification();
   Future<void> sendForgotPassword(String username);

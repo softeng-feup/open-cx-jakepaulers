@@ -15,46 +15,56 @@ abstract class SigningPage extends StatefulWidget {
 
   SigningPage(this._dbcontroller);
 
+  performSign(AuthListener listener);
 }
 
 class SigningInPage extends SigningPage {
-  final SigningInPageState _state = SigningInPageState("Signing in...");
+  String password;
+  String username;
 
-  SigningInPage(DatabaseController dbcontroller) : super(dbcontroller) {
-    this._dbcontroller.signIn("username", "password", _state);
-  }
+  SigningInPage(DatabaseController dbcontroller, this.username, this.password) : super(dbcontroller);
 
   @override
-  State<StatefulWidget> createState() {
-    return _state;
-  }
+  State<StatefulWidget> createState() => SigningPageState("Signing in...");
+
+  @override
+  performSign(AuthListener listener) => this._dbcontroller.signIn(username, password, listener);
 }
 
 class SigningUpPage extends SigningPage {
-  final SigningInPageState _state = SigningInPageState("Signing up...");
+  String password;
+  String username;
+  String email;
 
-  SigningUpPage(DatabaseController dbcontroller) : super(dbcontroller){
-    this._dbcontroller.signUp("email", "username", "password", _state);
-  }
+  SigningUpPage(DatabaseController dbcontroller, this.email, this.username, this.password) : super(dbcontroller);
 
   @override
-  State<StatefulWidget> createState() {
-    return _state;
-  }
+  State<StatefulWidget> createState() => SigningPageState("Signing up...");
 
+  @override
+  performSign(AuthListener listener) => this._dbcontroller.signUp(email, username, password, listener);
 }
 
-class SigningInPageState extends State<SigningPage> implements SignInListener, SignUpListener {
-  String _text;
-  SigningInPageState(this._text);
+class SigningPageState extends State<SigningPage> implements AuthListener {
+  SigningPageState(String text) {
+    this.widgets = [
+      Container(
+          margin: EdgeInsets.only(bottom: 25.0),
+          child: CircularProgressIndicator()
+      ),
+      _defaultText(text, upperTextSize)
+    ];
+  }
 
-  Widget _actions = Container();
+  List<Widget> widgets;
 
-
+  static const double upperTextSize = 20.0;
+  static const double lowerTextSize = 15.0;
 
   @override
   void initState() {
     super.initState();
+    widget.performSign(this);
   }
 
   @override
@@ -66,69 +76,99 @@ class SigningInPageState extends State<SigningPage> implements SignInListener, S
           children: <Widget>[
             TitleText(text: "Askkit", fontSize: 38, margin: EdgeInsets.only(top: 25.0)),
             TitleText(text: "Ask away!", fontSize: 16, margin: EdgeInsets.only(bottom: 25.0)),
-            Container(
-                margin: EdgeInsets.only(bottom: 25.0),
-                child: CircularProgressIndicator()
-            ),
-            Center(
-                child: Text(this._text, style: TextStyle(fontWeight: FontWeight.bold),)
-            ),
-            _actions
+            Column (
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: widgets
+            )
           ],
         )
     );
   }
 
+  Widget _defaultText(String text, double fontSize) => Center(
+    child: Container(
+      margin: EdgeInsets.only(bottom: 15.0),
+      child: Text(text, style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize), textAlign: TextAlign.center)
+    )
+  );
+
+  Widget _backButton(BuildContext context) =>
+      FlatButton(
+        onPressed: () { Navigator.pop(context); },
+        child: Text("Back"),
+      );
+
+  Widget _toLoginButton(BuildContext context) =>
+      FlatButton(
+        onPressed: () { Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage(widget._dbcontroller))); },
+        child: Text("Back to login"),
+      );
+
+  Widget _resendVerifyButton(BuildContext context) =>
+      FlatButton(
+        onPressed: () {
+          widget._dbcontroller.sendEmailVerification();
+          setState(() {
+            this.widgets = [ _defaultText("Email sent!", upperTextSize), _backButton(context) ];
+          });
+        },
+        child: Text("Resend email"),
+      );
+
+
+
   @override
   void onSignInIncorrect() {
     setState(() {
-      this._text = "Login failed\nThe username or password is not correct.";
+      this.widgets = [ _defaultText("Login failed", upperTextSize), _defaultText("Username and password do not match.", lowerTextSize), _backButton(context) ];
     });
-    // actions: go back...
-    //OkDialog("Login failed", "The username or password is not correct.", context).show();
   }
 
   @override
   void onSignInSuccess(User user) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage(widget._dbcontroller)));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage(widget._dbcontroller)));
+    });
   }
 
   @override
   void onSignInUnverified() {
     setState(() {
-      this._text = "Email not verified\nPlease check your inbox to verify your account.";
+      this.widgets = [
+        _defaultText("Email not verified", upperTextSize),
+        _defaultText("Please check your inbox to verify your account.", lowerTextSize),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            _resendVerifyButton(context),
+            _backButton(context),
+          ],
+        )
+      ];
     });
-    // actions: resend, go back
-    //VerifyDialog("Email not verified", "Please check your email to verify your account.", context, widget._dbcontroller).show();
   }
 
   @override
   void onSignUpDuplicateEmail() {
     setState(() {
-      this._text = "Sign up failed\nThere is already an account with this email.";
+      this.widgets = [ _defaultText("Sign up failed", upperTextSize), _defaultText("There is already an account with this email.", lowerTextSize), _backButton(context) ];
     });
-    // actions: back to register (pop)
-    //OkDialog("Sign up failed", "There is already an account with this email.", context).show();
   }
 
   @override
   void onSignUpDuplicateUsername() {
     setState(() {
-      this._text = "Sign up failed\nThere is already an account with this username.";
+      this.widgets = [ _defaultText("Sign up failed", upperTextSize), _defaultText("There is already an account with this username.", lowerTextSize), _backButton(context) ];
     });
-    // actions: back to register (pop)
-    //OkDialog("Sign up failed", "There is already an account with this username.", context).show();
   }
 
   @override
   void onSignUpSuccess() {
     setState(() {
-      this._text = "Successfully signed up!\nPlease check your email to verify your account.";
+      this.widgets = [ _defaultText("Successfully signed up!", upperTextSize), _defaultText("Please check your email to verify your account.", lowerTextSize), _toLoginButton(context) ];
     });
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage(widget._dbcontroller)));
-    // actions: back to login (push replacement)
-    // OkDialog("Successfully signed up!", "Please check your email to verify your account.", context).show();
   }
+
 
 
 }

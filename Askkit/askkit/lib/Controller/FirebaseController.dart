@@ -148,7 +148,7 @@ class FirebaseController implements DatabaseController {
   }
 
   @override
-  Future<void> signIn(String username, String password, SignInListener listener) async {
+  Future<void> signIn(String username, String password, AuthListener listener) async {
     try {
       if (username == "" || password == "")
         return listener.onSignInSuccess(null);
@@ -167,7 +167,7 @@ class FirebaseController implements DatabaseController {
   }
 
   @override
-  Future<void> signUp(String email, String username, String password, SignUpListener listener) async {
+  Future<void> signUp(String email, String username, String password, AuthListener listener) async {
     User user = await getUser(username);
     if (!user.isNull())
       return listener.onSignUpDuplicateUsername();
