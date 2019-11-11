@@ -142,8 +142,7 @@ class _LogInPageState extends State<LogInPage> {
               child: loginSubmitButton("Sign up", Icons.arrow_upward, () {
                 if(!signUpFormKey.currentState.validate())
                   return;
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>  SigningInPage(widget._dbcontroller)));
-                //widget._dbcontroller.signUp(_newEmailController.text, _newUsernameController.text, _newPasswordController.text, this);
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>  SigningUpPage(widget._dbcontroller)));
               })
           ),
         ])
@@ -214,6 +213,6 @@ class _LogInPageState extends State<LogInPage> {
 
   void forgotPassword() {
     widget._dbcontroller.sendForgotPassword(_usernameController.text);
-    OkDialog("Email sent to ${_usernameController.text}!", "Check your inbox to reset your password.", context).show();
+    OkDialog("Email sent to ${_usernameController.text}", "Check your inbox to reset your password.", context).show();
   }
 }
