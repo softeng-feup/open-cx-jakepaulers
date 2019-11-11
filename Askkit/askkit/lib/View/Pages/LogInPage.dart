@@ -108,7 +108,7 @@ class _LogInPageState extends State<LogInPage> {
         ),
         Container(
             child: loginSubmitButton("Sign in", Icons.arrow_forward, () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) =>  SigningInPage(widget._dbcontroller)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SigningInPage(widget._dbcontroller, _usernameController.text, _passwordController.text)));
             //  widget._dbcontroller.signIn(_usernameController.text, _passwordController.text, state);
             })
         ),
@@ -142,7 +142,7 @@ class _LogInPageState extends State<LogInPage> {
               child: loginSubmitButton("Sign up", Icons.arrow_upward, () {
                 if(!signUpFormKey.currentState.validate())
                   return;
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>  SigningUpPage(widget._dbcontroller)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>  SigningUpPage(widget._dbcontroller, _newEmailController.text, _newUsernameController.text, _newPasswordController.text)));
               })
           ),
         ])

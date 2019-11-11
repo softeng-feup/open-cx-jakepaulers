@@ -45,27 +45,3 @@ class OkDialog extends CustomDialog {
       ]
   );
 }
-
-
-class VerifyDialog extends CustomDialog {
-  VerifyDialog(String title, String content, BuildContext context, DatabaseController dbcontroller) : super(
-      title: title,
-      content: content,
-      context: context,
-      actions: <Widget> [
-        new FlatButton(
-          child: new Text("Resend email"),
-          onPressed: () {
-            dbcontroller.sendEmailVerification();
-            Navigator.of(context).pop();
-          },
-        ),
-        new FlatButton(
-          child: new Text("Cancel"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ]
-  );
-}
