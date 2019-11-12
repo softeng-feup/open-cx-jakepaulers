@@ -3,9 +3,7 @@ import 'package:askkit/View/Controllers/AuthListener.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Pages/LogInPage.dart';
 import 'package:askkit/View/Theme.dart';
-import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:askkit/View/Widgets/TitleText.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'QuestionsPage.dart';
@@ -127,7 +125,8 @@ class SigningPageState extends State<SigningPage> implements AuthListener {
   @override
   void onSignInSuccess(User user) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => QuestionsPage(widget._dbcontroller)));
+      Navigator.pop(context);
+      Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => QuestionsPage(widget._dbcontroller)));
     });
   }
 

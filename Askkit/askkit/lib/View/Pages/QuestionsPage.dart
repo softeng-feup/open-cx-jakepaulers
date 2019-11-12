@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
@@ -6,9 +7,11 @@ import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Pages/LogInPage.dart';
 import 'package:askkit/View/Theme.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
+import 'package:askkit/View/Widgets/DynamicFAB.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/TextAreaForm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 
 class QuestionsPage extends StatefulWidget {
@@ -23,12 +26,15 @@ class QuestionsPage extends StatefulWidget {
 
 }
 
-class QuestionsPageState extends State<QuestionsPage> {
-  Timer minuteTimer;
+class QuestionsPageState extends State<QuestionsPage>  with TickerProviderStateMixin {
   List<Question> questions = new List();
-  bool loaded = false;
+
+  bool loading = false;
+  Timer minuteTimer;
+  ScrollController scrollController;
 
   @override void initState() {
+    scrollController = ScrollController();
     minuteTimer = Timer.periodic(Duration(minutes: 1), (t) { setState(() { }); });
     this.fetchQuestions();
   }
@@ -40,35 +46,39 @@ class QuestionsPageState extends State<QuestionsPage> {
 
   void fetchQuestions() async {
     Stopwatch sw = Stopwatch()..start();
-    setState(() { loaded = false; });
+    setState(() { loading = true; });
     questions = await widget._dbcontroller.getQuestions();
     questions.sort((question1, question2) => question2.upvotes.compareTo(question1.upvotes));
     if (this.mounted)
-      setState(() { loaded = true; });
+      setState(() { loading = false; });
     print("Question fetch time: " + sw.elapsed.toString());
+
+    if (scrollController.hasClients)
+      scrollController.animateTo(0, duration: Duration(seconds: 1), curve: Curves.ease);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
+          leading: IconButton(
+              icon: Icon(Icons.subdirectory_arrow_left), onPressed: signOut),
           title: Text("Conference Page"),
           backgroundColor: primaryColor,
           actions: <Widget>[
             IconButton(icon: Icon(Icons.refresh), onPressed: fetchQuestions),
-            IconButton(icon: Icon(Icons.add_circle), onPressed: addQuestionForm),
-            IconButton(icon: Icon(Icons.exit_to_app), onPressed: signOut),
           ],
-      ),
-      backgroundColor: CardTemplate.cardMargin,
-      body: getBody(),
+        ),
+        backgroundColor: CardTemplate.cardMargin,
+        body: getBody(),
+        floatingActionButton: DynamicFAB(scrollController, addQuestionForm)
     );
   }
 
   Widget getBody() {
     return Column(
         children: <Widget>[
-          !this.loaded ? CardTemplate.loadingIndicator() : Container(),
+          Visibility( visible: this.loading, child: CardTemplate.loadingIndicator()),
           Expanded(child: questionList())
         ]
     );
@@ -77,6 +87,7 @@ class QuestionsPageState extends State<QuestionsPage> {
 
   Widget questionList() {
     return ListView.builder(
+        controller: scrollController,
         itemCount: this.questions.length,
         itemBuilder: (BuildContext context, int i) {
           return Container(

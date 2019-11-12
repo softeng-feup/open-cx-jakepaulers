@@ -9,6 +9,7 @@ import 'package:askkit/View/Theme.dart' as prefix0;
 import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/Borders.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
+import 'package:askkit/View/Widgets/DynamicFAB.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/TextAreaForm.dart';
 import 'package:flutter/material.dart';
@@ -29,12 +30,14 @@ class AnswersPage extends StatefulWidget {
 }
 
 class AnswersPageState extends State<AnswersPage> {
-  Timer minuteTimer;
   List<Answer> answers = new List();
-  bool loaded = false;
 
+  bool loading = false;
+  Timer minuteTimer;
+  ScrollController scrollController;
 
   @override void initState() {
+    scrollController = ScrollController();
     minuteTimer = Timer.periodic(Duration(minutes: 1), (t) { setState(() { }); });
     this.refreshModel();
   }
@@ -47,6 +50,9 @@ class AnswersPageState extends State<AnswersPage> {
   void refreshModel() {
     this.fetchQuestion();
     this.fetchAnswers();
+
+    if (scrollController.hasClients)
+      scrollController.animateTo(0, duration: Duration(seconds: 1), curve: Curves.ease);
   }
 
   void fetchQuestion() async {
@@ -56,10 +62,10 @@ class AnswersPageState extends State<AnswersPage> {
 
   void fetchAnswers() async {
     Stopwatch sw = Stopwatch()..start();
-    setState(() { loaded = false; });
+    setState(() { loading = true; });
     answers = await widget._dbcontroller.getAnswers(widget._question);
     if (this.mounted)
-      setState(() { loaded = true; });
+      setState(() { loading = false; });
     print("Answer fetch time: " + sw.elapsed.toString());
   }
 
@@ -71,11 +77,11 @@ class AnswersPageState extends State<AnswersPage> {
             backgroundColor: primaryColor,
             actions: <Widget>[
               IconButton(icon: Icon(Icons.refresh), onPressed: refreshModel),
-              IconButton(icon: Icon(Icons.add_circle), onPressed: addAnswerForm),
             ],
         ),
         backgroundColor: backgroundColor,
         body: getBody(),
+        floatingActionButton: DynamicFAB(scrollController, addAnswerForm)
     );
   }
 
@@ -86,7 +92,7 @@ class AnswersPageState extends State<AnswersPage> {
         children: <Widget>[
           QuestionCard(widget._question, false, widget._dbcontroller),
           Divider(color: CardTemplate.cardShadow, thickness: 1.0, height: 1.0),
-          !this.loaded ? CardTemplate.loadingIndicator() : Container(),
+          Visibility( visible: this.loading, child: CardTemplate.loadingIndicator()),
           Expanded(child: answerList(widget._question))
         ]
     );
@@ -99,6 +105,7 @@ class AnswersPageState extends State<AnswersPage> {
          child: Text("No comments yet 😂😂😂", textScaleFactor: 1.5, )
       );
     return ListView.builder(
+        controller: scrollController,
         itemCount: answers.length,
         itemBuilder: (BuildContext context, int i) {
           return Container(
