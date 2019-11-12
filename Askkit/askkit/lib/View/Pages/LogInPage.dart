@@ -100,11 +100,8 @@ class _LogInPageState extends State<LogInPage> {
             child: loginTextField("Username", Icons.person, _usernameController)
         ),
         Container(
+            margin: EdgeInsets.only(bottom: 25.0),
             child: loginTextField("Password", Icons.lock, _passwordController, isPasswordField: true)
-        ),
-        FlatButton(
-          onPressed: forgotPassword,
-          child: Text("Forgot password?", textAlign: TextAlign.left, style: TextStyle(decoration: TextDecoration.underline))
         ),
         Container(
             child: loginSubmitButton("Sign in", Icons.arrow_forward, () {
@@ -112,6 +109,16 @@ class _LogInPageState extends State<LogInPage> {
             //  widget._dbcontroller.signIn(_usernameController.text, _passwordController.text, state);
             })
         ),
+        Row (
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FlatButton(
+                  onPressed: forgotPassword,
+                  child: Text("Forgot password?", textAlign: TextAlign.left, style: TextStyle(decoration: TextDecoration.underline))
+              ),
+            ]
+        ),
+
       ],
     );
   }
