@@ -35,10 +35,6 @@ class _LogInPageState extends State<LogInPage> {
 
   static final signUpFormKey = GlobalKey<FormState>();
 
-
-  static const Color signUpColor = primaryColor;
-
-
   @protected
   void initState() {
     super.initState();
@@ -62,14 +58,14 @@ class _LogInPageState extends State<LogInPage> {
       DeviceOrientation.portraitDown,
     ]);
     return Scaffold(
-        backgroundColor: backgroundColor,
+        backgroundColor: Colors.white,
         body: ListView(
           children: <Widget>[
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                TitleText(text: "Askkit", fontSize: 38, margin: EdgeInsets.only(top: 25.0)),
-                TitleText(text: "Ask away!", fontSize: 16, margin: EdgeInsets.only(bottom: 25.0)),
+                TitleText(text: "Askkit", margin: EdgeInsets.only(top: 25.0)),
+                SubtitleText(text: "Ask away!", margin: EdgeInsets.only(bottom: 25.0)),
               ],
             ),
             Column(
@@ -160,26 +156,26 @@ class _LogInPageState extends State<LogInPage> {
     IconButton suffixIcon;
     if (isPasswordField)
       suffixIcon = IconButton(
-          color: iconColor,
           icon: _hidePassword ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
-          onPressed: () { setState(() { _hidePassword = !_hidePassword; }); }
+          onPressed: () { setState(() { _hidePassword = !_hidePassword; }); },
+          color: Colors.black
       );
     else suffixIcon = IconButton(
         icon: Icon(Icons.clear),
         onPressed: () {  WidgetsBinding.instance.addPostFrameCallback((_) => controller.clear()); },
-        color: iconColor
+        color: Colors.black
     );
     return TextFormField(
       obscureText: isPasswordField && _hidePassword,
       controller: controller,
       validator: validator,
-      style: Theme.of(context).textTheme.title.copyWith(fontSize: 20.0, fontWeight: FontWeight.normal, color: primaryColor),
+      style: Theme.of(context).textTheme.title.copyWith(fontSize: 20.0, fontWeight: FontWeight.normal, color: Theme.of(context).primaryColor),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: Theme.of(context).textTheme.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.blueAccent),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1.0)),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 2.0)),
-        prefixIcon: Icon(icon, color: iconColor),
+        hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
+        enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
+        focusedBorder: Theme.of(context).inputDecorationTheme.focusedBorder,
+        prefixIcon: Icon(icon, color: Colors.black),
         suffixIcon: suffixIcon,
       )
     );
@@ -199,7 +195,7 @@ class _LogInPageState extends State<LogInPage> {
             Icon(null, color: Colors.white),
           ],
         ),
-        color: signUpColor,
+        color: Theme.of(context).primaryColor,
         onPressed: onPress
     );
   }
@@ -212,8 +208,8 @@ class _LogInPageState extends State<LogInPage> {
       ),
       child: new Text(text,
           style: active ?
-              TextStyle(fontSize: 22, color: primaryColor, fontWeight: FontWeight.bold) :
-              TextStyle(fontSize: 16, color: primaryColor, fontWeight: FontWeight.normal)),
+              TextStyle(fontSize: 22, color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold) :
+              TextStyle(fontSize: 16, color: Theme.of(context).primaryColor, fontWeight: FontWeight.normal)),
     );
   }
 

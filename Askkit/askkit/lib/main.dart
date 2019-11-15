@@ -1,3 +1,4 @@
+import 'package:askkit/View/Theme.dart';
 import 'package:flutter/material.dart';
 import 'Controller/FirebaseController.dart';
 import 'View/Pages/LogInPage.dart';
@@ -10,9 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'AskKit',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: AskkitThemes.lightTheme(),
       home: LogInPage(FirebaseController()),
     );
   }

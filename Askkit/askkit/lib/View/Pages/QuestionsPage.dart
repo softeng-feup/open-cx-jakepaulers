@@ -16,8 +16,9 @@ import 'package:flutter/rendering.dart';
 
 class QuestionsPage extends StatefulWidget {
   final DatabaseController _dbcontroller;
+  final _talk;
 
-  QuestionsPage(this._dbcontroller);
+  QuestionsPage(this._talk, this._dbcontroller);
 
   @override
   State<StatefulWidget> createState() {
@@ -26,7 +27,7 @@ class QuestionsPage extends StatefulWidget {
 
 }
 
-class QuestionsPageState extends State<QuestionsPage>  with TickerProviderStateMixin {
+class QuestionsPageState extends State<QuestionsPage> {
   List<Question> questions = new List();
 
   bool loading = false;
@@ -47,7 +48,7 @@ class QuestionsPageState extends State<QuestionsPage>  with TickerProviderStateM
   void fetchQuestions() async {
     Stopwatch sw = Stopwatch()..start();
     setState(() { loading = true; });
-    questions = await widget._dbcontroller.getQuestions();
+    questions = await widget._dbcontroller.getQuestions(widget._talk);
     questions.sort((question1, question2) => question2.upvotes.compareTo(question1.upvotes));
     if (this.mounted)
       setState(() { loading = false; });
@@ -61,15 +62,13 @@ class QuestionsPageState extends State<QuestionsPage>  with TickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-              icon: Icon(Icons.subdirectory_arrow_left), onPressed: signOut),
           title: Text("Conference Page"),
-          backgroundColor: primaryColor,
+          backgroundColor: Theme.of(context).primaryColor,
           actions: <Widget>[
             IconButton(icon: Icon(Icons.refresh), onPressed: fetchQuestions),
           ],
         ),
-        backgroundColor: CardTemplate.cardMargin,
+        backgroundColor: Theme.of(context).backgroundColor,
         body: getBody(),
         floatingActionButton: DynamicFAB(scrollController, addQuestionForm)
     );
@@ -78,7 +77,7 @@ class QuestionsPageState extends State<QuestionsPage>  with TickerProviderStateM
   Widget getBody() {
     return Column(
         children: <Widget>[
-          Visibility( visible: this.loading, child: CardTemplate.loadingIndicator()),
+          Visibility( visible: this.loading, child: CardTemplate.loadingIndicator(context)),
           Expanded(child: questionList())
         ]
     );
@@ -86,6 +85,8 @@ class QuestionsPageState extends State<QuestionsPage>  with TickerProviderStateM
 
 
   Widget questionList() {
+    if (questions.length == 0 && !this.loading)
+      return Center(child: Text("Feels lonely here 😔 \nBe the first to ask something!", textScaleFactor: 1.25, textAlign: TextAlign.center));
     return ListView.builder(
         controller: scrollController,
         itemCount: this.questions.length,
@@ -148,12 +149,7 @@ class QuestionsPageState extends State<QuestionsPage>  with TickerProviderStateM
 
   void addQuestion(String text) async {
     User user = await widget._dbcontroller.getCurrentUser();
-    await widget._dbcontroller.addQuestion(Question(user, text, DateTime.now(), null));
-    await fetchQuestions();
-  }
-
-  void signOut() {
-    widget._dbcontroller.signOut();
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage(widget._dbcontroller)));
+    await widget._dbcontroller.addQuestion(Question(widget._talk, user, text, DateTime.now(), null));
+    fetchQuestions();
   }
 }

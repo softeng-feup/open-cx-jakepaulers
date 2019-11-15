@@ -1,15 +1,11 @@
-import 'package:askkit/Model/Comment.dart';
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Pages/AnswersPage.dart';
-import 'package:askkit/View/Theme.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-
-import 'Borders.dart';
 
 class QuestionCard extends CardTemplate {
     final bool _clickable;
@@ -18,12 +14,12 @@ class QuestionCard extends CardTemplate {
 
     QuestionCard(this._question, this._clickable, this._dbcontroller);
 
-  @override
-  onClick(BuildContext context) {
-    if (!_clickable)
-      return;
-    Navigator.push(context, MaterialPageRoute(builder: (context) => AnswersPage(_question, _dbcontroller)));
-  }
+    @override
+    onClick(BuildContext context) {
+      if (!_clickable)
+        return;
+      Navigator.push(context, MaterialPageRoute(builder: (context) => AnswersPage(_question, _dbcontroller)));
+    }
 
   @override
   Widget buildCardContent(BuildContext context) {

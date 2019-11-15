@@ -18,7 +18,7 @@ class TextAreaForm extends StatelessWidget {
         child: Container(
             height: 150.0,
             child: TextFormField(
-                style: Theme.of(context).textTheme.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.normal, color: primaryColor),
+                style: Theme.of(context).textTheme.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.normal, color: Theme.of(context).primaryColor),
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 controller: controller,

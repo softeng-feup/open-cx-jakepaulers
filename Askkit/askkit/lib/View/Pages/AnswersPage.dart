@@ -4,8 +4,6 @@ import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
-import 'package:askkit/View/Theme.dart';
-import 'package:askkit/View/Theme.dart' as prefix0;
 import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/Borders.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
@@ -13,8 +11,6 @@ import 'package:askkit/View/Widgets/DynamicFAB.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/TextAreaForm.dart';
 import 'package:flutter/material.dart';
-
-import '../Theme.dart';
 
 class AnswersPage extends StatefulWidget {
   Question _question;
@@ -74,42 +70,37 @@ class AnswersPageState extends State<AnswersPage> {
     return Scaffold(
         appBar: AppBar(
             title: Text("Question Page"),
-            backgroundColor: primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
             actions: <Widget>[
               IconButton(icon: Icon(Icons.refresh), onPressed: refreshModel),
             ],
         ),
-        backgroundColor: backgroundColor,
+        backgroundColor: Theme.of(context).backgroundColor,
         body: getBody(),
-        floatingActionButton: DynamicFAB(scrollController, addAnswerForm)
+        floatingActionButton: DynamicFAB(scrollController, addAnswerForm),
     );
   }
-
-
 
   Widget getBody() {
     return Column(
         children: <Widget>[
           QuestionCard(widget._question, false, widget._dbcontroller),
           Divider(color: CardTemplate.cardShadow, thickness: 1.0, height: 1.0),
-          Visibility( visible: this.loading, child: CardTemplate.loadingIndicator()),
+          Visibility(visible: this.loading, child: CardTemplate.loadingIndicator(context)),
           Expanded(child: answerList(widget._question))
         ]
     );
   }
 
   Widget answerList(Question question) {
-    if (answers.length == 0)
-      return Container(
-        padding: EdgeInsets.all(10),
-         child: Text("No comments yet 😂😂😂", textScaleFactor: 1.5, )
-      );
+    if (answers.length == 0 && !this.loading)
+      return Center(child: Text("This human needs assistance!\nLet's help him! 😃", textScaleFactor: 1.25, textAlign: TextAlign.center));
     return ListView.builder(
         controller: scrollController,
         itemCount: answers.length,
         itemBuilder: (BuildContext context, int i) {
           return Container(
-              decoration: BoxDecoration(border: BorderLeft(primaryColor, 4.0)),
+              decoration: BoxDecoration(border: BorderLeft(Theme.of(context).primaryColor, 4.0)),
               child: Column(
                 children: <Widget>[
                   AnswerCard(answers[i]),

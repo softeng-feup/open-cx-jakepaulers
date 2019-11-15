@@ -7,7 +7,9 @@ class Question extends Comment {
   int userVote = 0;
   int numComments = 1;
 
-  Question(User user, String question, DateTime date, DocumentReference reference) : super(user, question, date, reference);
+  DocumentReference talk;
+
+  Question(this.talk, User user, String question, DateTime date, DocumentReference reference) : super(user, question, date, reference);
 
   void downvote() {
     if (userVote == 1)

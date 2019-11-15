@@ -1,6 +1,7 @@
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:askkit/Model/Talk.dart';
 import 'package:askkit/View/Controllers/AuthListener.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/Model/Answer.dart';
@@ -22,7 +23,7 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<void> addQuestion(Question question) {
-    firebase.collection("questions").add({'username': question.user.username, 'content': question.content, 'uploadDate' : Timestamp.fromDate(question.date)});
+    firebase.collection("questions").add({'talk': question.talk, 'username': question.user.username, 'content': question.content, 'uploadDate' : Timestamp.fromDate(question.date)});
   }
 
   @override
@@ -30,11 +31,17 @@ class FirebaseController implements DatabaseController {
     firebase.collection("users").add({'username' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image});
   }
 
+  @override
+  Future<void> addTalk(Talk talk) {
+    firebase.collection("talks").add({'title' : talk.title, 'room' : talk.room, 'description': talk.description, 'host': talk.host.username});
+  }
+
   Future<Question> _makeQuestionFromDoc(DocumentSnapshot document, Future<User> currentUser) async {
     User user = await this.getUser(document.data['username']);
     String content = document.data['content'];
     Timestamp date = document.data['uploadDate'];
-    Question question = Question(user, content, date.toDate(), document.reference);
+    DocumentReference talk = document.data['talk'];
+    Question question = Question(talk, user, content, date.toDate(), document.reference);
     question.upvotes = await this.getUpvotes(question);
     question.userVote = await this.getUserUpvote(question, await currentUser);
     question.numComments = await this._getNumAnswers(question);
@@ -49,31 +56,52 @@ class FirebaseController implements DatabaseController {
     return Answer(user, content, date.toDate(), question, document.reference);
   }
 
+  Future<Talk> _makeTalkFromDoc(DocumentSnapshot document) async {
+    User host = await this.getUser(document.data['host']);
+    return Talk(document.data['title'], host, document.data['room'], document.data['description'], document.reference);
+  }
+
+
+  @override
+  Future<List<Talk>> getTalks() async {
+    List<Future<Talk>> talks = new List();
+    QuerySnapshot snapshot = await firebase.collection("talks").getDocuments();
+    for (DocumentSnapshot document in snapshot.documents) {
+      talks.add(_makeTalkFromDoc(document));
+    }
+    if (snapshot.documents.length == 0)
+      return [];
+    return await Future.wait(talks);
+  }
+
+
+  @override
+  Future<List<Question>> getQuestions(Talk talk) async {
+    Future<User> currentUser = this.getCurrentUser();
+    List<Future<Question>> questions = new List();
+    QuerySnapshot snapshot = await firebase.collection("questions").where('talk', isEqualTo: talk.reference).getDocuments();
+    for (DocumentSnapshot document in snapshot.documents) {
+        questions.add(_makeQuestionFromDoc(document, currentUser));
+    }
+    if (snapshot.documents.length == 0)
+      return [];
+    return await Future.wait(questions);
+  }
+
   @override
   Future<Question> refreshQuestion(Question question) async {
     return await _makeQuestionFromDoc(await question.reference.get(), this.getCurrentUser());
   }
 
   @override
-  Future<List<Question>> getQuestions() async {
-    Future<User> currentUser = this.getCurrentUser();
-    List<Future<Question>> questions = new List();
-    QuerySnapshot questionSnapshot = await firebase.collection("questions").orderBy('uploadDate', descending: true).getDocuments();
-    for (DocumentSnapshot document in questionSnapshot.documents) {
-        questions.add(_makeQuestionFromDoc(document, currentUser));
-    }
-
-    return await Future.wait(questions);
-  }
-
-  @override
   Future<List<Answer>> getAnswers(Question question) async {
     List<Future<Answer>> answers = new List();
-    QuerySnapshot answerSnapshot = await firebase.collection("answers").where("question", isEqualTo: question.reference).orderBy('uploadDate', descending: true).getDocuments();
-    for (DocumentSnapshot document in answerSnapshot.documents) {
+    QuerySnapshot snapshot = await firebase.collection("answers").where("question", isEqualTo: question.reference).orderBy('uploadDate', descending: true).getDocuments();
+    for (DocumentSnapshot document in snapshot.documents) {
       answers.add(_makeAnswerFromDoc(document));
     }
-
+    if (snapshot.documents.length == 0)
+      return [];
     return await Future.wait(answers);
   }
 
@@ -174,7 +202,7 @@ class FirebaseController implements DatabaseController {
       return listener.onSignUpDuplicateUsername();
     try {
       await Auth.signUp(email,  password);
-      await addUser(User(username, email, "", User.defaultAvatar, null));
+      await addUser(User(username, email, username, User.defaultAvatar, null));
       listener.onSignUpSuccess();
     }
     on PlatformException catch (exception) {
@@ -203,5 +231,4 @@ class FirebaseController implements DatabaseController {
     }
     catch (exception) {}
   }
-
 }
