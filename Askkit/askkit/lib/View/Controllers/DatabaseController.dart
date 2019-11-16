@@ -1,5 +1,6 @@
 import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
+import 'package:askkit/Model/Talk.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/AuthListener.dart';
 
@@ -16,14 +17,16 @@ abstract class DatabaseController {
 
   Future<User> getUser(String username);
   Future<User> getCurrentUser();
+  Future<List<Talk>> getTalks();
   Future<List<Answer>> getAnswers(Question question);
-  Future<List<Question>> getQuestions();
+  Future<List<Question>> getQuestions(Talk talk);
   Future<Question> refreshQuestion(Question question);
 
   Future<int> getUserUpvote(Question question, User user);
   Future<int> getUpvotes(Question question);
 
   Future<void> setVote(Question question, User user, int value);
+
 
 
 

@@ -1,4 +1,6 @@
+import 'package:askkit/View/Theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'Controller/FirebaseController.dart';
 import 'View/Pages/LogInPage.dart';
 
@@ -8,11 +10,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Color(0xff1976D2)
+    ));
     return MaterialApp(
       title: 'AskKit',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: AskkitThemes.lightTheme(),
       home: LogInPage(FirebaseController()),
     );
   }

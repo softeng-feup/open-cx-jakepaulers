@@ -2,6 +2,7 @@ import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/AuthListener.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Pages/LogInPage.dart';
+import 'package:askkit/View/Pages/TalksPage.dart';
 import 'package:askkit/View/Theme.dart';
 import 'package:askkit/View/Widgets/TitleText.dart';
 import 'package:flutter/material.dart';
@@ -68,12 +69,12 @@ class SigningPageState extends State<SigningPage> implements AuthListener {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: backgroundColor,
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TitleText(text: "Askkit", fontSize: 38, margin: EdgeInsets.only(top: 25.0)),
-            TitleText(text: "Ask away!", fontSize: 16, margin: EdgeInsets.only(bottom: 25.0)),
+            TitleText(text: "Askkit", margin: EdgeInsets.only(top: 25.0)),
+            SubtitleText(text: "Ask away!", margin: EdgeInsets.only(bottom: 25.0)),
             Column (
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: widgets
@@ -126,7 +127,7 @@ class SigningPageState extends State<SigningPage> implements AuthListener {
   void onSignInSuccess(User user) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.pop(context);
-      Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => QuestionsPage(widget._dbcontroller)));
+      Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => TalksPage(widget._dbcontroller)));
     });
   }
 
