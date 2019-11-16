@@ -8,10 +8,8 @@ class CenterText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: Center(
-            child: Text(this.text, textScaleFactor: textScale, textAlign: TextAlign.center)
-        )
+    return Center(
+        child: Text(this.text, textScaleFactor: textScale, textAlign: TextAlign.center)
     );
   }
 }
