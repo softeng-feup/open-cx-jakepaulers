@@ -17,23 +17,23 @@ class FirebaseController implements DatabaseController {
   static final Firestore firebase =  Firestore.instance;
 
   @override
-  Future<void> addAnswer(Answer answer) {
-    firebase.collection("answers").add({'username': answer.user.username, 'content': answer.content, 'uploadDate' : Timestamp.fromDate(answer.date), 'question': answer.question});
+  Future<DocumentReference> addAnswer(Answer answer) {
+    return firebase.collection("answers").add({'username': answer.user.username, 'content': answer.content, 'uploadDate' : Timestamp.fromDate(answer.date), 'question': answer.question});
   }
 
   @override
-  Future<void> addQuestion(Question question) {
-    firebase.collection("questions").add({'talk': question.talk, 'username': question.user.username, 'content': question.content, 'uploadDate' : Timestamp.fromDate(question.date)});
+  Future<DocumentReference> addQuestion(Question question) {
+    return firebase.collection("questions").add({'talk': question.talk, 'username': question.user.username, 'content': question.content, 'uploadDate' : Timestamp.fromDate(question.date)});
   }
 
   @override
-  Future<void> addUser(User user) {
-    firebase.collection("users").add({'username' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image});
+  Future<DocumentReference> addUser(User user) {
+    return firebase.collection("users").add({'username' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image});
   }
 
   @override
-  Future<void> addTalk(Talk talk) {
-    firebase.collection("talks").add({'title' : talk.title, 'room' : talk.room, 'description': talk.description, 'host': talk.host.username});
+  Future<DocumentReference> addTalk(Talk talk) {
+    return firebase.collection("talks").add({'title' : talk.title, 'room' : talk.room, 'description': talk.description, 'host': talk.host.username});
   }
 
   Future<Question> _makeQuestionFromDoc(DocumentSnapshot document, Future<User> currentUser) async {

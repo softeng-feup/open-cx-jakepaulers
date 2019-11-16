@@ -11,6 +11,7 @@ import 'package:askkit/View/Widgets/DynamicFAB.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
 import 'package:askkit/View/Widgets/TextAreaForm.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -109,7 +110,10 @@ class QuestionsPageState extends State<QuestionsPage> {
     if (comment == null || comment == "")
       return;
     User user = await widget._dbcontroller.getCurrentUser();
-    await widget._dbcontroller.addQuestion(Question(widget._talk.reference, user, comment, DateTime.now(), null));
+    Question newQuestion = Question(widget._talk.reference, user, comment, DateTime.now(), null);
+    DocumentReference reference = await widget._dbcontroller.addQuestion(newQuestion);
+    newQuestion.reference = reference;
+    await widget._dbcontroller.setVote(newQuestion, user, 1);
     fetchQuestions();
   }
 

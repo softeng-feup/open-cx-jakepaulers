@@ -3,6 +3,7 @@ import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/Talk.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/AuthListener.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class DatabaseController {
   Future<void> signIn(String username, String password, AuthListener listener);
@@ -11,10 +12,11 @@ abstract class DatabaseController {
   Future<void> sendEmailVerification();
   Future<void> sendForgotPassword(String username);
 
-  Future<void> addQuestion(Question question);
-  Future<void> addAnswer(Answer answer);
-  Future<void> addUser(User user);
-
+  Future<DocumentReference> addQuestion(Question question);
+  Future<DocumentReference> addAnswer(Answer answer);
+  Future<DocumentReference> addUser(User user);
+  Future<DocumentReference> addTalk(Talk talk);
+  
   Future<User> getUser(String username);
   Future<User> getCurrentUser();
   Future<List<Talk>> getTalks();
