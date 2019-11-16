@@ -27,7 +27,7 @@ class TalkCard extends CardTemplate {
               children: [
                 Text("By " + _talk.host.name, style: CardTemplate.dateStyle),
                 Spacer(),
-                Text("Room " + _talk.room, style: CardTemplate.dateStyle),
+                Text(_talk.getStartDate() + ", Room " + _talk.room, style: CardTemplate.dateStyle),
               ]
           )
         ]

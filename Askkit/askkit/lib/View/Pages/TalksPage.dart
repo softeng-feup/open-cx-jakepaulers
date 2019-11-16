@@ -72,7 +72,7 @@ class TalksPageState extends State<TalksPage> {
 
 
   Widget talkList() {
-    if (talks.length == 0)
+    if (talks.length == 0 && !this.loading)
       return CenterText("No talks found.\nWhat if someone started one? 🤔", textScale: 1.25);
     return ListView.builder(
         controller: scrollController,

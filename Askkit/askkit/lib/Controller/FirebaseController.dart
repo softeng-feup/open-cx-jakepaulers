@@ -33,7 +33,7 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<DocumentReference> addTalk(Talk talk) {
-    return firebase.collection("talks").add({'title' : talk.title, 'room' : talk.room, 'description': talk.description, 'host': talk.host.username});
+    return firebase.collection("talks").add({'title' : talk.title, 'room' : talk.room, 'description': talk.description, 'host': talk.host.username, 'startDate' : talk.startDate});
   }
 
   Future<Question> _makeQuestionFromDoc(DocumentSnapshot document, Future<User> currentUser) async {
@@ -58,19 +58,20 @@ class FirebaseController implements DatabaseController {
 
   Future<Talk> _makeTalkFromDoc(DocumentSnapshot document) async {
     User host = await this.getUser(document.data['host']);
-    return Talk(document.data['title'], host, document.data['room'], document.data['description'], document.reference);
+    Timestamp date = document.data['startDate'];
+    return Talk(document.data['title'], document.data['description'], date.toDate(), host, document.data['room'],  document.reference);
   }
 
 
   @override
   Future<List<Talk>> getTalks() async {
     List<Future<Talk>> talks = new List();
-    QuerySnapshot snapshot = await firebase.collection("talks").getDocuments();
+    QuerySnapshot snapshot = await firebase.collection("talks").orderBy('startDate').getDocuments();
     for (DocumentSnapshot document in snapshot.documents) {
       talks.add(_makeTalkFromDoc(document));
     }
     if (snapshot.documents.length == 0)
-      return [];
+      return []; // firebase rebenta sem isto
     return await Future.wait(talks);
   }
 
