@@ -7,6 +7,7 @@ import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/Borders.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
+import 'package:askkit/View/Widgets/CenterText.dart';
 import 'package:askkit/View/Widgets/DynamicFAB.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/TextAreaForm.dart';
@@ -69,7 +70,7 @@ class AnswersPageState extends State<AnswersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text("Question Page"),
+            title: Text("Answers"),
             backgroundColor: Theme.of(context).primaryColor,
             actions: <Widget>[
               IconButton(icon: Icon(Icons.refresh), onPressed: refreshModel),
@@ -94,7 +95,7 @@ class AnswersPageState extends State<AnswersPage> {
 
   Widget answerList(Question question) {
     if (answers.length == 0 && !this.loading)
-      return Center(child: Text("This human needs assistance!\nLet's help him! 😃", textScaleFactor: 1.25, textAlign: TextAlign.center));
+      return CenterText("This human needs assistance!\nLet's help him! 😃", textScale: 1.25);
     return ListView.builder(
         controller: scrollController,
         itemCount: answers.length,

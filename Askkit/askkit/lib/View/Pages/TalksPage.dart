@@ -2,6 +2,7 @@ import 'package:askkit/Model/Talk.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Pages/LogInPage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
+import 'package:askkit/View/Widgets/CenterText.dart';
 import 'package:askkit/View/Widgets/TalkCard.dart';
 import 'package:flutter/material.dart';
 
@@ -72,12 +73,17 @@ class TalksPageState extends State<TalksPage> {
 
   Widget talkList() {
     if (talks.length == 0 && !this.loading)
-      return Center(child: Text("No talks found.\nWhat if someone started one? 🤔", textScaleFactor: 1.25, textAlign: TextAlign.center));
+      return CenterText("No talks found.\nWhat if someone started one? 🤔", textScale: 1.25);
     return ListView.builder(
         controller: scrollController,
         itemCount: this.talks.length,
         itemBuilder: (BuildContext context, int i) {
-          return TalkCard(this.talks[i], widget._dbcontroller);
+          return Column(
+            children: <Widget>[
+              TalkCard(this.talks[i], widget._dbcontroller),
+              Divider(height: 1, thickness: 1,),
+            ],
+          );
         }
     );
   }

@@ -17,7 +17,11 @@ abstract class CardTemplate extends StatelessWidget {
   static Widget loadingIndicator(BuildContext context) {
     return Column(
       children: <Widget>[
-        LinearProgressIndicator(backgroundColor: Theme.of(context).backgroundColor),
+        LinearProgressIndicator(
+            backgroundColor: Theme.of(context).backgroundColor,
+          valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+        ),
+
       ],
     );    LinearProgressIndicator();
   }

@@ -102,7 +102,6 @@ class _LogInPageState extends State<LogInPage> {
         Container(
             child: loginSubmitButton("Sign in", Icons.arrow_forward, () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SigningInPage(widget._dbcontroller, _usernameController.text, _passwordController.text)));
-            //  widget._dbcontroller.signIn(_usernameController.text, _passwordController.text, state);
             })
         ),
         Row (
@@ -110,7 +109,7 @@ class _LogInPageState extends State<LogInPage> {
             children: [
               FlatButton(
                   onPressed: forgotPassword,
-                  child: Text("Forgot password?", textAlign: TextAlign.left, style: TextStyle(decoration: TextDecoration.underline))
+                  child: Text("Forgot password?", textAlign: TextAlign.left, style: TextStyle(decoration: TextDecoration.underline, fontSize: 16.0))
               ),
             ]
         ),
@@ -169,7 +168,7 @@ class _LogInPageState extends State<LogInPage> {
       obscureText: isPasswordField && _hidePassword,
       controller: controller,
       validator: validator,
-      style: Theme.of(context).textTheme.title.copyWith(fontSize: 20.0, fontWeight: FontWeight.normal, color: Theme.of(context).primaryColor),
+      style: Theme.of(context).textTheme.subtitle,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
@@ -190,9 +189,9 @@ class _LogInPageState extends State<LogInPage> {
             Icon(icon, color: Colors.white),
             Text(
                 text,
-                style: Theme.of(context).textTheme.title.copyWith(fontSize: 20, fontWeight: FontWeight.normal, color: Colors.white),
+                style: Theme.of(context).textTheme.button
               ),
-            Icon(null, color: Colors.white),
+            Icon(null),
           ],
         ),
         color: Theme.of(context).primaryColor,
