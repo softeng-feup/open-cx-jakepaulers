@@ -15,24 +15,22 @@ class TextAreaForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Form(
         key: formkey,
-        child: Container(
-            height: 150.0,
-            child: TextFormField(
-                style: Theme.of(context).textTheme.subtitle,
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-                controller: controller,
-                decoration: new InputDecoration(
-                    hintText: _hintText,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                ),
-                validator: (String value) {
-                  if (value.length == 0)
-                    return _validatorError;
-                  return null;
-                }
-            )
+        child: TextFormField(
+            textCapitalization: TextCapitalization.sentences,
+            style: Theme.of(context).textTheme.body2.copyWith(fontWeight: FontWeight.normal),
+            maxLines: null,
+            keyboardType: TextInputType.multiline,
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: _hintText,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+            ),
+            validator: (String value) {
+              if (value.length == 0)
+                return _validatorError;
+              return null;
+            }
         )
     );
   }

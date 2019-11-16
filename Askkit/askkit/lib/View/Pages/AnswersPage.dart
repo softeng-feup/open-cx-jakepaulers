@@ -4,6 +4,7 @@ import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
+import 'package:askkit/View/Pages/NewCommentPage.dart';
 import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/Borders.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
@@ -78,7 +79,7 @@ class AnswersPageState extends State<AnswersPage> {
         ),
         backgroundColor: Theme.of(context).backgroundColor,
         body: getBody(),
-        floatingActionButton: DynamicFAB(scrollController, addAnswerForm),
+        floatingActionButton: DynamicFAB(scrollController, () => addAnswerForm(context)),
     );
   }
 
@@ -86,8 +87,8 @@ class AnswersPageState extends State<AnswersPage> {
     return Column(
         children: <Widget>[
           QuestionCard(widget._question, false, widget._dbcontroller),
-          Divider(color: CardTemplate.cardShadow, thickness: 1.0, height: 1.0),
-          Visibility(visible: this.loading, child: CardTemplate.loadingIndicator(context)),
+          Divider(color: CardTemplate.cardShadowColor, thickness: 1.0, height: 1.0),
+          Visibility(visible: this.loading, child: LinearProgressIndicator()),
           Expanded(child: answerList(widget._question))
         ]
     );
@@ -105,7 +106,7 @@ class AnswersPageState extends State<AnswersPage> {
               child: Column(
                 children: <Widget>[
                   AnswerCard(answers[i]),
-                  Divider(color: CardTemplate.cardShadow, thickness: 1.0, height: 1.0),
+                  Divider(color: CardTemplate.cardShadowColor, thickness: 1.0, height: 1.0),
                 ],
               )
           );
@@ -113,47 +114,13 @@ class AnswersPageState extends State<AnswersPage> {
     );
   }
 
-  void addAnswerForm() {
-    TextAreaForm textarea = TextAreaForm("Type a comment", "Comment can't be empty");
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.only(left: 15.0, right: 15.0, top: 5.0),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                textarea,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    FlatButton(
-                      child: new Text("Cancel"),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    FlatButton(
-                      child: new Text("Submit"),
-                      onPressed: () {
-                        if (!textarea.validate())
-                          return;
-                        this.addAnswer(textarea.getText());
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                )
-              ],
-            ),
-          );
-        });
-  }
-
-  void addAnswer(String text) async {
+  void addAnswerForm(BuildContext context) async {
+    TextAreaForm textarea = TextAreaForm("Type a reply", "Answer can't be empty");
+    String comment = await Navigator.push(context, MaterialPageRoute(builder: (context) => NewCommentPage("Add answer", widget._question.content, textarea)));
+    if (comment == null || comment == "")
+      return;
     User user = await widget._dbcontroller.getCurrentUser();
-    await widget._dbcontroller.addAnswer(Answer(user, text, DateTime.now(), widget._question.reference, null));
+    await widget._dbcontroller.addAnswer(Answer(user, comment, DateTime.now(), widget._question.reference, null));
     refreshModel();
   }
-
 }

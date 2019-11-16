@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/Talk.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
-import 'package:askkit/View/Pages/LogInPage.dart';
-import 'package:askkit/View/Theme.dart';
-import 'package:askkit/View/Widgets/Borders.dart';
+import 'package:askkit/View/Pages/NewCommentPage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CenterText.dart';
 import 'package:askkit/View/Widgets/DynamicFAB.dart';
@@ -40,7 +37,7 @@ class QuestionsPageState extends State<QuestionsPage> {
 
   @override void initState() {
     scrollController = ScrollController();
-    minuteTimer = Timer.periodic(Duration(minutes: 1), (t) { setState(() { }); });
+    minuteTimer = Timer.periodic(Duration(minutes: 1), (t) { setState(() { print(questions.length); }); });
     this.fetchQuestions();
   }
 
@@ -74,14 +71,14 @@ class QuestionsPageState extends State<QuestionsPage> {
         ),
         backgroundColor: Theme.of(context).backgroundColor,
         body: getBody(),
-        floatingActionButton: DynamicFAB(scrollController, addQuestionForm)
+        floatingActionButton: DynamicFAB(scrollController, () => addQuestionForm(context))
     );
   }
 
   Widget getBody() {
     return Column(
         children: <Widget>[
-          Visibility( visible: this.loading, child: CardTemplate.loadingIndicator(context)),
+          Visibility( visible: this.loading, child: LinearProgressIndicator()),
           Expanded(child: questionList())
         ]
     );
@@ -90,7 +87,7 @@ class QuestionsPageState extends State<QuestionsPage> {
 
   Widget questionList() {
     if (questions.length == 0 && !this.loading)
-      return Column(children: <Widget>[_talkHeader(), CenterText("Feels lonely here 😔\nBe the first to ask something!", textScale: 1.25)]);
+      return _emptyQuestionList();
     return ListView.builder(
         controller: scrollController,
         itemCount: this.questions.length + 1,
@@ -98,7 +95,7 @@ class QuestionsPageState extends State<QuestionsPage> {
           if (i == 0)
             return _talkHeader();
           return Container(
-              decoration: ShadowDecoration(shadowColor: CardTemplate.cardShadow, spreadRadius: 1.0, offset: Offset(0, 1)),
+              decoration: ShadowDecoration(shadowColor: CardTemplate.cardShadowColor, spreadRadius: 1.0, offset: Offset(0, 1)),
               margin: EdgeInsets.only(top: 10.0),
               child: QuestionCard(this.questions[i - 1], true, widget._dbcontroller)
           );
@@ -106,46 +103,13 @@ class QuestionsPageState extends State<QuestionsPage> {
     );
   }
 
-  void addQuestionForm() {
+  void addQuestionForm(BuildContext context) async {
     TextAreaForm textarea = TextAreaForm("Type a question", "Question can't be empty");
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.only(left: 15.0, right: 15.0, top: 5.0),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  textarea,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      FlatButton(
-                        child: new Text("Cancel"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      FlatButton(
-                        child: new Text("Submit"),
-                        onPressed: () {
-                          if (!textarea.validate())
-                            return;
-                          this.addQuestion(textarea.getText());
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  )
-                ],
-              ),
-          );
-        });
-  }
-
-  void addQuestion(String text) async {
+    String comment = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  NewCommentPage("Add question", widget._talk.title, textarea)));
+    if (comment == null || comment == "")
+      return;
     User user = await widget._dbcontroller.getCurrentUser();
-    await widget._dbcontroller.addQuestion(Question(widget._talk.reference, user, text, DateTime.now(), null));
+    await widget._dbcontroller.addQuestion(Question(widget._talk.reference, user, comment, DateTime.now(), null));
     fetchQuestions();
   }
 
@@ -175,6 +139,15 @@ class QuestionsPageState extends State<QuestionsPage> {
               ),
             ]
         )
+    );
+  }
+
+  Widget _emptyQuestionList() {
+    return Column(
+        children: <Widget>[
+          _talkHeader(),
+          Expanded(child: CenterText("Feels lonely here 😔\nBe the first to ask something!", textScale: 1.25))
+        ]
     );
   }
 }

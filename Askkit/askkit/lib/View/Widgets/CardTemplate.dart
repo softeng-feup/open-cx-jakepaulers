@@ -3,28 +3,14 @@ import 'package:flutter/material.dart';
 abstract class CardTemplate extends StatelessWidget {
   static const Color cardColor = Colors.white;
 
-  static const Color cardShadow = Color.fromARGB(255, 180, 180, 180);
+  static const Color cardShadowColor = Color.fromARGB(255, 180, 180, 180);
 
   static const TextStyle contentStyle = TextStyle(color: Colors.black, fontSize: 15.0);
   static const TextStyle usernameStyle = TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold);
   static const TextStyle dateStyle = TextStyle(color: Colors.black, fontSize: 10.0);
-  static const TextStyle loadingStyle = TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold);
 
-  static const double borderRadius = 10.0;
   static const EdgeInsets outerPadding = EdgeInsets.all(10.0);
   static const EdgeInsets contentPadding = EdgeInsets.only(top: 10.0);
-
-  static Widget loadingIndicator(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        LinearProgressIndicator(
-            backgroundColor: Theme.of(context).backgroundColor,
-          valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
-        ),
-
-      ],
-    );    LinearProgressIndicator();
-  }
 
   Widget buildCardContent(BuildContext context);
   onClick(BuildContext context);

@@ -64,7 +64,7 @@ class TalksPageState extends State<TalksPage> {
   Widget getBody() {
     return Column(
         children: <Widget>[
-          Visibility( visible: this.loading, child: CardTemplate.loadingIndicator(context)),
+          Visibility( visible: this.loading, child: LinearProgressIndicator()),
           Expanded(child: talkList())
         ]
     );
@@ -72,7 +72,7 @@ class TalksPageState extends State<TalksPage> {
 
 
   Widget talkList() {
-    if (talks.length == 0 && !this.loading)
+    if (talks.length == 0)
       return CenterText("No talks found.\nWhat if someone started one? 🤔", textScale: 1.25);
     return ListView.builder(
         controller: scrollController,
