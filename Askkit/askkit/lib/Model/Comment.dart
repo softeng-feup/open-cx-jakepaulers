@@ -12,7 +12,7 @@ class Comment {
   String getAgeString() {
     Duration diff = DateTime.now().difference(date);
     if (diff.inSeconds < 60)
-      return "Less than a minute ago";
+      return "<1 minute ago";
 
     int inMinutes = diff.inMinutes;
     if (inMinutes == 1)

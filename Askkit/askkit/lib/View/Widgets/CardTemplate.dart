@@ -1,6 +1,8 @@
+import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:flutter/material.dart';
 
 abstract class CardTemplate extends StatelessWidget {
+
   static const Color cardColor = Colors.white;
 
   static const Color cardShadowColor = Color.fromARGB(255, 180, 180, 180);
@@ -11,6 +13,10 @@ abstract class CardTemplate extends StatelessWidget {
 
   static const EdgeInsets outerPadding = EdgeInsets.all(10.0);
   static const EdgeInsets contentPadding = EdgeInsets.only(top: 10.0);
+
+  final ModelListener listener;
+
+  CardTemplate(this.listener);
 
   Widget buildCardContent(BuildContext context);
   onClick(BuildContext context);

@@ -4,21 +4,22 @@ import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
-import 'package:askkit/View/Pages/NewCommentPage.dart';
+import 'package:askkit/View/Controllers/ModelListener.dart';
+import 'package:askkit/View/Pages/ManageCommentPage.dart';
 import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/Borders.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CenterText.dart';
 import 'package:askkit/View/Widgets/DynamicFAB.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
-import 'package:askkit/View/Widgets/TextAreaForm.dart';
 import 'package:flutter/material.dart';
 
 class AnswersPage extends StatefulWidget {
   Question _question;
+  ModelListener _listener;
   final DatabaseController _dbcontroller;
 
-  AnswersPage(this._question, this._dbcontroller);
+  AnswersPage(this._question, this._listener, this._dbcontroller);
 
   @override
   State<StatefulWidget> createState() {
@@ -27,7 +28,7 @@ class AnswersPage extends StatefulWidget {
 
 }
 
-class AnswersPageState extends State<AnswersPage> {
+class AnswersPageState extends State<AnswersPage> implements ModelListener {
   List<Answer> answers = new List();
 
   bool loading = false;
@@ -54,8 +55,13 @@ class AnswersPageState extends State<AnswersPage> {
   }
 
   void fetchQuestion() async {
-    widget._question = await widget._dbcontroller.refreshQuestion(widget._question);
-    setState(() { });
+    try {
+      Question question = await widget._dbcontroller.refreshQuestion(widget._question);
+      setState(() { widget._question = question; });
+    } on Error {
+      Navigator.pop(context);
+      widget._listener.refreshModel();
+    }
   }
 
   void fetchAnswers() async {
@@ -86,7 +92,7 @@ class AnswersPageState extends State<AnswersPage> {
   Widget getBody() {
     return Column(
         children: <Widget>[
-          QuestionCard(widget._question, false, widget._dbcontroller),
+          QuestionCard(this, widget._question, false, widget._dbcontroller),
           Divider(color: CardTemplate.cardShadowColor, thickness: 1.0, height: 1.0),
           Visibility(visible: this.loading, child: LinearProgressIndicator()),
           Expanded(child: answerList(widget._question))
@@ -105,7 +111,7 @@ class AnswersPageState extends State<AnswersPage> {
               decoration: BoxDecoration(border: BorderLeft(Theme.of(context).primaryColor, 4.0)),
               child: Column(
                 children: <Widget>[
-                  AnswerCard(answers[i]),
+                  AnswerCard(this, answers[i], widget._dbcontroller),
                   Divider(color: CardTemplate.cardShadowColor, thickness: 1.0, height: 1.0),
                 ],
               )
@@ -115,9 +121,9 @@ class AnswersPageState extends State<AnswersPage> {
   }
 
   void addAnswerForm(BuildContext context) async {
-    TextAreaForm textarea = TextAreaForm("Type a reply", "Answer can't be empty");
-    String comment = await Navigator.push(context, MaterialPageRoute(builder: (context) => NewCommentPage("Add answer", widget._question.content, textarea)));
-    if (comment == null || comment == "")
+    Widget answerPage = NewAnswerPage(widget._question);
+    String comment = await Navigator.push(context, MaterialPageRoute(builder: (context) => answerPage));
+    if (comment == null)
       return;
     User user = await widget._dbcontroller.getCurrentUser();
     await widget._dbcontroller.addAnswer(Answer(user, comment, DateTime.now(), widget._question.reference, null));

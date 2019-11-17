@@ -4,13 +4,13 @@ import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/Talk.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
-import 'package:askkit/View/Pages/NewCommentPage.dart';
+import 'package:askkit/View/Controllers/ModelListener.dart';
+import 'package:askkit/View/Pages/ManageCommentPage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CenterText.dart';
 import 'package:askkit/View/Widgets/DynamicFAB.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
-import 'package:askkit/View/Widgets/TextAreaForm.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -29,7 +29,7 @@ class QuestionsPage extends StatefulWidget {
 
 }
 
-class QuestionsPageState extends State<QuestionsPage> {
+class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
   List<Question> questions = new List();
 
   bool loading = false;
@@ -38,8 +38,8 @@ class QuestionsPageState extends State<QuestionsPage> {
 
   @override void initState() {
     scrollController = ScrollController();
-    minuteTimer = Timer.periodic(Duration(minutes: 1), (t) { setState(() { print(questions.length); }); });
-    this.fetchQuestions();
+    minuteTimer = Timer.periodic(Duration(minutes: 1), (t) { setState(() { }); });
+    this.refreshModel();
   }
 
   @override void dispose() {
@@ -47,7 +47,7 @@ class QuestionsPageState extends State<QuestionsPage> {
     super.dispose();
   }
 
-  void fetchQuestions() async {
+  void refreshModel() async {
     Stopwatch sw = Stopwatch()..start();
     setState(() { loading = true; });
     questions = await widget._dbcontroller.getQuestions(widget._talk);
@@ -67,7 +67,7 @@ class QuestionsPageState extends State<QuestionsPage> {
           title: Text("Questions"),
           backgroundColor: Theme.of(context).primaryColor,
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.refresh), onPressed: fetchQuestions),
+            IconButton(icon: Icon(Icons.refresh), onPressed: refreshModel),
           ],
         ),
         backgroundColor: Theme.of(context).backgroundColor,
@@ -98,23 +98,23 @@ class QuestionsPageState extends State<QuestionsPage> {
           return Container(
               decoration: ShadowDecoration(shadowColor: CardTemplate.cardShadowColor, spreadRadius: 1.0, offset: Offset(0, 1)),
               margin: EdgeInsets.only(top: 10.0),
-              child: QuestionCard(this.questions[i - 1], true, widget._dbcontroller)
+              child: QuestionCard(this, this.questions[i - 1], true, widget._dbcontroller)
           );
         }
     );
   }
 
   void addQuestionForm(BuildContext context) async {
-    TextAreaForm textarea = TextAreaForm("Type a question", "Question can't be empty");
-    String comment = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  NewCommentPage("Add question", widget._talk.title, textarea)));
-    if (comment == null || comment == "")
+    Widget questionPage = NewQuestionPage(widget._talk);
+    String comment = await Navigator.push(context, MaterialPageRoute(builder: (context) => questionPage));
+    if (comment == null)
       return;
     User user = await widget._dbcontroller.getCurrentUser();
     Question newQuestion = Question(widget._talk.reference, user, comment, DateTime.now(), null);
     DocumentReference reference = await widget._dbcontroller.addQuestion(newQuestion);
     newQuestion.reference = reference;
     await widget._dbcontroller.setVote(newQuestion, user, 1);
-    fetchQuestions();
+    refreshModel();
   }
 
   Widget _talkHeader() {
