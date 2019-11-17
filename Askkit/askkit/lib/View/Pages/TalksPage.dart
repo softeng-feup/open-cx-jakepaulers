@@ -1,5 +1,6 @@
 import 'package:askkit/Model/Talk.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
+import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Pages/LogInPage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CenterText.dart';
@@ -18,7 +19,7 @@ class TalksPage extends StatefulWidget {
 
 }
 
-class TalksPageState extends State<TalksPage> {
+class TalksPageState extends State<TalksPage> implements ModelListener {
   List<Talk> talks = new List();
 
   bool loading = false;
@@ -26,14 +27,14 @@ class TalksPageState extends State<TalksPage> {
 
   @override void initState() {
     scrollController = ScrollController();
-    this.fetchTalks();
+    this.refreshModel();
   }
 
   @override void dispose() {
     super.dispose();
   }
 
-  void fetchTalks() async {
+  void refreshModel() async {
     Stopwatch sw = Stopwatch()..start();
     setState(() { loading = true; });
     talks = await widget._dbcontroller.getTalks();
@@ -53,7 +54,7 @@ class TalksPageState extends State<TalksPage> {
           title: Text("‹Programming› 2020"),
           backgroundColor: Theme.of(context).primaryColor,
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.refresh), onPressed: fetchTalks),
+            IconButton(icon: Icon(Icons.refresh), onPressed: refreshModel),
           ],
         ),
         backgroundColor: Theme.of(context).backgroundColor,
@@ -80,7 +81,7 @@ class TalksPageState extends State<TalksPage> {
         itemBuilder: (BuildContext context, int i) {
           return Column(
             children: <Widget>[
-              TalkCard(this.talks[i], widget._dbcontroller),
+              TalkCard(this, this.talks[i], widget._dbcontroller),
               Divider(height: 1, thickness: 1,),
             ],
           );

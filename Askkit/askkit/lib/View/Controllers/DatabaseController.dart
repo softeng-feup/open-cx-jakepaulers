@@ -18,7 +18,9 @@ abstract class DatabaseController {
   Future<DocumentReference> addTalk(Talk talk);
   
   Future<User> getUser(String username);
-  Future<User> getCurrentUser();
+
+  User getCurrentUser();
+
   Future<List<Talk>> getTalks();
   Future<List<Answer>> getAnswers(Question question);
   Future<List<Question>> getQuestions(Talk talk);
@@ -28,6 +30,13 @@ abstract class DatabaseController {
   Future<int> getUpvotes(Question question);
 
   Future<void> setVote(Question question, User user, int value);
+
+  Future<void> editQuestion(Question question, String newQuestion);
+  Future<void> deleteQuestion(Question question);
+
+  Future<void> editAnswer(Answer answer, String newAnswer);
+  Future<void> deleteAnswer(Answer answer);
+
 
 
 

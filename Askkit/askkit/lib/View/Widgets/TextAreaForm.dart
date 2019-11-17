@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 class TextAreaForm extends StatelessWidget {
   String _hintText;
   String _validatorError;
-  GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  TextEditingController controller = TextEditingController();
+  GlobalKey<FormState> formkey;
+  TextEditingController controller;
 
 
-  TextAreaForm(this._hintText, this._validatorError);
+  TextAreaForm(this.formkey, this.controller, this._hintText, this._validatorError);
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +34,4 @@ class TextAreaForm extends StatelessWidget {
         )
     );
   }
-
-  bool validate() {
-    return formkey.currentState.validate();
-  }
-
-  String getText() {
-    return controller.text;
-  }
-
 }

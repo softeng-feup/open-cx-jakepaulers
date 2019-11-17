@@ -1,5 +1,6 @@
 import 'package:askkit/Model/Talk.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
+import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Pages/QuestionsPage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ class TalkCard extends CardTemplate {
   final Talk _talk;
   final DatabaseController _dbcontroller;
 
-  TalkCard(this._talk, this._dbcontroller);
+  TalkCard(ModelListener listener, this._talk, this._dbcontroller) : super(listener);
 
   @override
   Widget buildCardContent(BuildContext context) {

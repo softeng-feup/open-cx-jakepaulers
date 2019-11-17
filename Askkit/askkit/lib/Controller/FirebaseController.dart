@@ -15,6 +15,7 @@ import 'Authenticator.dart';
 
 class FirebaseController implements DatabaseController {
   static final Firestore firebase =  Firestore.instance;
+  User _currentUser = NullUser();
 
   @override
   Future<DocumentReference> addAnswer(Answer answer) {
@@ -36,14 +37,14 @@ class FirebaseController implements DatabaseController {
     return firebase.collection("talks").add({'title' : talk.title, 'room' : talk.room, 'description': talk.description, 'host': talk.host.username, 'startDate' : talk.startDate});
   }
 
-  Future<Question> _makeQuestionFromDoc(DocumentSnapshot document, Future<User> currentUser) async {
+  Future<Question> _makeQuestionFromDoc(DocumentSnapshot document) async {
     User user = await this.getUser(document.data['username']);
     String content = document.data['content'];
     Timestamp date = document.data['uploadDate'];
     DocumentReference talk = document.data['talk'];
     Question question = Question(talk, user, content, date.toDate(), document.reference);
     question.upvotes = await this.getUpvotes(question);
-    question.userVote = await this.getUserUpvote(question, await currentUser);
+    question.userVote = await this.getUserUpvote(question, _currentUser);
     question.numComments = await this._getNumAnswers(question);
     return question;
   }
@@ -78,11 +79,10 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<List<Question>> getQuestions(Talk talk) async {
-    Future<User> currentUser = this.getCurrentUser();
     List<Future<Question>> questions = new List();
     QuerySnapshot snapshot = await firebase.collection("questions").where('talk', isEqualTo: talk.reference).getDocuments();
     for (DocumentSnapshot document in snapshot.documents) {
-        questions.add(_makeQuestionFromDoc(document, currentUser));
+        questions.add(_makeQuestionFromDoc(document));
     }
     if (snapshot.documents.length == 0)
       return [];
@@ -91,7 +91,7 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<Question> refreshQuestion(Question question) async {
-    return await _makeQuestionFromDoc(await question.reference.get(), this.getCurrentUser());
+    return await _makeQuestionFromDoc(await question.reference.get());
   }
 
   @override
@@ -130,11 +130,14 @@ class FirebaseController implements DatabaseController {
   }
 
   @override
-  Future<User> getCurrentUser() async {
+  User getCurrentUser() {
+    return _currentUser;
+    /*
     FirebaseUser user = await Auth.getCurrentUser();
     if (user == null)
       return NullUser();
     return await getUserByEmail(user.email);
+     */
   }
 
   Future<DocumentSnapshot> _getUserVote(Question question, User user) async {
@@ -180,14 +183,18 @@ class FirebaseController implements DatabaseController {
   @override
   Future<void> signIn(String username, String password, AuthListener listener) async {
     try {
-      if (username == "" || password == "")
-        return listener.onSignInSuccess(null);
+      if (username == "" || password == "") { // if temporario so para testamentos
+        _currentUser = await this.getUserByEmail((await Auth.getCurrentUser()).email);
+        return listener.onSignInSuccess(this._currentUser);
+      }
       User user = await getUser(username);
       if (user == null)
         return listener.onSignInIncorrect();
       await Auth.signIn(user.email, password);
-      if (await Auth.isEmailVerified())
-        listener.onSignInSuccess(await this.getUser(username));
+      if (await Auth.isEmailVerified()) {
+        this._currentUser = await this.getUser(username);
+        listener.onSignInSuccess(this._currentUser);
+      }
       else listener.onSignInUnverified();
     }
     on PlatformException catch (exception) {
@@ -219,6 +226,7 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<void> signOut() {
+    this._currentUser = NullUser();
     Auth.signOut();
   }
 
@@ -231,5 +239,32 @@ class FirebaseController implements DatabaseController {
       Auth.sendForgotPassword(user.email);
     }
     catch (exception) {}
+  }
+
+  @override
+  Future<void> deleteAnswer(Answer answer) async {
+    await answer.reference.delete();
+  }
+
+  Future<void> _deleteAnswers(Question question) async {
+    List<Answer> answers = await this.getAnswers(question);
+    for (Answer answer in answers)
+      answer.reference.delete();
+  }
+
+  @override
+  Future<void> deleteQuestion(Question question) async {
+    await question.reference.delete();
+    this._deleteAnswers(question);
+  }
+
+  @override
+  Future<void> editAnswer(Answer answer, String newAnswer) {
+    answer.reference.updateData({'content' : newAnswer});
+  }
+
+  @override
+  Future<void> editQuestion(Question question, String newQuestion) {
+    question.reference.updateData({'content' : newQuestion});
   }
 }
