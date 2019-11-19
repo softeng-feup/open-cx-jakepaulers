@@ -58,7 +58,7 @@ class _LogInPageState extends State<LogInPage> {
       DeviceOrientation.portraitDown,
     ]);
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).canvasColor,
         body: ListView(
           children: <Widget>[
             Column(
@@ -168,12 +168,9 @@ class _LogInPageState extends State<LogInPage> {
       obscureText: isPasswordField && _hidePassword,
       controller: controller,
       validator: validator,
-      style: Theme.of(context).textTheme.subtitle,
+      style: Theme.of(context).textTheme.subtitle.copyWith(fontWeight: FontWeight.normal),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
-        enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
-        focusedBorder: Theme.of(context).inputDecorationTheme.focusedBorder,
         prefixIcon: Icon(icon, color: Colors.black),
         suffixIcon: suffixIcon,
       )
@@ -187,7 +184,7 @@ class _LogInPageState extends State<LogInPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Icon(icon, color: Colors.white),
-            Text(text, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 20.0)),
+            Text(text, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 20.0)),
             Icon(null),
           ],
         ),

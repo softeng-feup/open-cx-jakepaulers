@@ -5,6 +5,7 @@ import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:askkit/View/Widgets/TextAreaForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 abstract class ManageCommentPage extends StatelessWidget {
   static final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
@@ -36,18 +37,21 @@ abstract class ManageCommentPage extends StatelessWidget {
           children: <Widget>[
             Container(
                 padding: EdgeInsets.all(10.0),
-                child: Row(
-                  children: <Widget>[
-                    Text(this.getHeaderPrefix(), style: titleStyle),
-                    Expanded(child: Text(this.getHeaderSuffix(), style: titleStyle.copyWith(color: Theme.of(context).primaryColor), overflow: TextOverflow.ellipsis))
-                  ],
+                child: RichText(
+                  text: TextSpan(
+                    style: titleStyle,
+                    children: [
+                      TextSpan(text: this.getHeaderPrefix()),
+                      TextSpan(text: this.getHeaderSuffix(), style: titleStyle.copyWith(color: Theme.of(context).primaryColor)),
+                    ]
+                  )
                 )
             ),
             Divider(height: 1.0, thickness: 1.0),
             Container(
                 padding: EdgeInsets.only(left: 10.0, right: 10.0),
                 constraints: BoxConstraints(minHeight: 200),
-                child: TextAreaForm(_formkey, _controller, hintText, emptyError)
+                child: TextAreaForm(_formkey, _controller, hintText, emptyError, autofocus: true)
             )
           ],
         )
@@ -107,22 +111,22 @@ class NewAnswerPage extends ManageCommentPage {
 
 class EditQuestionPage extends ManageCommentPage {
   final Question question;
-  EditQuestionPage(this.question) : super("Type question", "Question can't be empty", "New question") {
+  EditQuestionPage(this.question) : super("Type question", "Question can't be empty", "Edit question") {
     ManageCommentPage.setControllerText(this.question.content);
   }
 
-  @override String getHeaderPrefix() => "Editing question: ";
+  @override String getHeaderPrefix() => "Old question: ";
   @override String getHeaderSuffix() => this.question.content;
   @override String initialContent() => this.question.content;
 }
 
 class EditAnswerPage extends ManageCommentPage {
   final Answer answer;
-  EditAnswerPage(this.answer) : super("Type answer", "Answer can't be empty", "New answer") {
+  EditAnswerPage(this.answer) : super("Type answer", "Answer can't be empty", "Edit answer") {
     ManageCommentPage.setControllerText(this.answer.content);
   }
 
-  @override String getHeaderPrefix() => "Editing reply: ";
+  @override String getHeaderPrefix() => "Old reply: ";
   @override String getHeaderSuffix() => this.answer.content;
   @override String initialContent() => this.answer.content;
 }

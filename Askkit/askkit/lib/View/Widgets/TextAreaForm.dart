@@ -7,15 +7,17 @@ class TextAreaForm extends StatelessWidget {
   String _validatorError;
   GlobalKey<FormState> formkey;
   TextEditingController controller;
+  bool autofocus;
 
 
-  TextAreaForm(this.formkey, this.controller, this._hintText, this._validatorError);
+  TextAreaForm(this.formkey, this.controller, this._hintText, this._validatorError, {this.autofocus = false});
 
   @override
   Widget build(BuildContext context) {
     return Form(
         key: formkey,
         child: TextFormField(
+          autofocus: this.autofocus,
             textCapitalization: TextCapitalization.sentences,
             style: Theme.of(context).textTheme.body2.copyWith(fontWeight: FontWeight.normal),
             maxLines: null,

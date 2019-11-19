@@ -8,7 +8,9 @@ import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+
+import 'CustomPopupMenu.dart';
 
 class QuestionCard extends CardTemplate {
     final bool _clickable;
@@ -23,9 +25,25 @@ class QuestionCard extends CardTemplate {
         Navigator.push(context, MaterialPageRoute(builder: (context) => AnswersPage(_question, listener, _dbcontroller)));
     }
 
-  @override
+    @override
+    onHold(BuildContext context) {
+        if ( _dbcontroller.getCurrentUser() != _question.user)
+          return;
+        CustomPopupMenu.show(
+            context,
+            items: [
+              Row(children: <Widget>[Icon(Icons.edit), Text('  Edit', style: Theme.of(context).textTheme.body1)]),
+              Row(children: <Widget>[Icon(Icons.delete), Text('  Delete', style: Theme.of(context).textTheme.body1)]),
+            ],
+            actions: [
+                  () => editQuestion(context),
+                  () => deleteQuestion(context),
+            ]);
+    }
+
+
+    @override
   Widget buildCardContent(BuildContext context) {
-    bool enableActions = _dbcontroller.getCurrentUser().username == _question.user.username;
     return Row(
         children: <Widget>[
           Expanded(
@@ -39,23 +57,21 @@ class QuestionCard extends CardTemplate {
                             radius: 15.0,
                             backgroundImage: _question.user.getImage()
                         ),
-                        Text("  " + _question.user.username, style: CardTemplate.usernameStyle),
+                        Text("  " + _question.user.username, style: CardTemplate.usernameStyle(context, _question.user == _dbcontroller.getCurrentUser())),
                         Spacer(),
-                        Visibility(visible: enableActions, child: IconButton(icon: Icon(Icons.edit), onPressed: () => editQuestion(context))),
-                        Visibility(visible: enableActions, child: IconButton(icon: Icon(Icons.delete), onPressed: () => deleteQuestion(context)))
                       ],
                     ),
                     Container(
                       padding: CardTemplate.contentPadding,
-                      child: Text(_question.content, style: CardTemplate.contentStyle),
+                      child: MarkdownBody(data: _question.content),
                       alignment: Alignment.centerLeft,
                     ),
                     Divider(),
                     Row (
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(_question.getAgeString(), style: CardTemplate.dateStyle),
-                        Text(_question.getCommentsString(), style: CardTemplate.dateStyle),
+                        Text(_question.getAgeString(), style: CardTemplate.dateStyle(context)),
+                        Text(_question.getCommentsString(), style: CardTemplate.dateStyle(context)),
                       ],
                     )
                   ]

@@ -128,9 +128,9 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
                   padding: EdgeInsets.only(bottom: 10.0),
                   child: Row(
                     children: <Widget>[
-                      Text(widget._talk.host.name, style: Theme.of(context).textTheme.caption, textAlign: TextAlign.left),
+                      Text(widget._talk.host.name, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 11), textAlign: TextAlign.left),
                       Spacer(),
-                      Text("Room " + widget._talk.room, style: Theme.of(context).textTheme.caption, textAlign: TextAlign.left)
+                      Text("Room " + widget._talk.room, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 11), textAlign: TextAlign.left)
                     ],
                   )
               ),

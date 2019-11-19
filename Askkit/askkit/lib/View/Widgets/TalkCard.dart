@@ -5,6 +5,7 @@ import 'package:askkit/View/Pages/QuestionsPage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class TalkCard extends CardTemplate {
   final Talk _talk;
@@ -17,18 +18,18 @@ class TalkCard extends CardTemplate {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(_talk.title, style: CardTemplate.usernameStyle),
+          Text(_talk.title, style: CardTemplate.usernameStyle(context, false)),
           Container(
             padding: CardTemplate.contentPadding,
-            child: Text(_talk.description, style: CardTemplate.contentStyle),
+            child: MarkdownBody(data: _talk.description),
             alignment: Alignment.centerLeft,
           ),
           Divider(),
           Row(
               children: [
-                Text("By " + _talk.host.name, style: CardTemplate.dateStyle),
+                Text("By " + _talk.host.name, style: CardTemplate.dateStyle(context)),
                 Spacer(),
-                Text(_talk.getStartDate() + ", Room " + _talk.room, style: CardTemplate.dateStyle),
+                Text(_talk.getStartDate() + ", Room " + _talk.room, style: CardTemplate.dateStyle(context)),
               ]
           )
         ]
@@ -39,5 +40,8 @@ class TalkCard extends CardTemplate {
   onClick(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionsPage(_talk, _dbcontroller)));
   }
+
+  @override
+  onHold(BuildContext context) { }
 
 }

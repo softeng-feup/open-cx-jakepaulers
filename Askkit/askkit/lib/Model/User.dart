@@ -23,6 +23,8 @@ class User {
   bool isNull() {
     return false;
   }
+
+  bool operator==(covariant User other) => other.username == this.username;
 }
 
 class NullUser extends User {

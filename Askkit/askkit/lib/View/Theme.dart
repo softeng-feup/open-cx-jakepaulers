@@ -23,7 +23,6 @@ class AskkitThemes {
           subtitle: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold, color: Colors.blueAccent),
           headline: TextStyle(fontSize: 20.0, fontWeight: FontWeight.normal, color: Colors.white, height: 1.25),
           subhead: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal, color: Colors.white),
-          caption: TextStyle(fontSize: 11.0, fontWeight: FontWeight.normal, color: Colors.white),
           body1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black),
           body2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.black),
         )

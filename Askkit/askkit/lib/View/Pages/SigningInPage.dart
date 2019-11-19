@@ -69,7 +69,7 @@ class SigningPageState extends State<SigningPage> implements AuthListener {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme.of(context).canvasColor,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

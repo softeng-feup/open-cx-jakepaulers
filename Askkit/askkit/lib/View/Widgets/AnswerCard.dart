@@ -4,9 +4,11 @@ import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Pages/ManageCommentPage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
+import 'package:askkit/View/Widgets/CustomPopupMenu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import 'CustomDialog.dart';
 
@@ -19,8 +21,23 @@ class AnswerCard extends CardTemplate {
   @override onClick(BuildContext context) {}
 
   @override
+  onHold(BuildContext context) {
+    if ( _dbcontroller.getCurrentUser() != _answer.user)
+      return;
+    CustomPopupMenu.show(
+        context,
+        items: [
+          Row(children: <Widget>[Icon(Icons.edit), Text('  Edit', style: Theme.of(context).textTheme.body1)]),
+          Row(children: <Widget>[Icon(Icons.delete), Text('  Delete', style: Theme.of(context).textTheme.body1)]),
+        ],
+        actions: [
+          () => editAnswer(context),
+          () => deleteAnswer(context),
+        ]);
+  }
+
+  @override
   Widget buildCardContent(BuildContext context) {
-    bool enableActions = _dbcontroller.getCurrentUser().username == _answer.user.username;
     return Column(
         children: <Widget>[
           Row(
@@ -29,17 +46,15 @@ class AnswerCard extends CardTemplate {
                   radius: 15.0,
                   backgroundImage: _answer.user.getImage()
               ),
-              Text("  " + _answer.user.username, style: CardTemplate.usernameStyle),
+              Text("  " + _answer.user.username, style: CardTemplate.usernameStyle(context, _answer.user == _dbcontroller.getCurrentUser())),
               Spacer(),
-              Visibility(visible: enableActions, child: IconButton(icon: Icon(Icons.edit), onPressed: () => editAnswer(context))),
-              Visibility(visible: enableActions, child: IconButton(icon: Icon(Icons.delete), onPressed: () => deleteAnswer(context))),
-              Text(_answer.getAgeString(), style: CardTemplate.dateStyle, textAlign: TextAlign.end),
+              Text(_answer.getAgeString(), style: CardTemplate.dateStyle(context), textAlign: TextAlign.end),
 
             ],
           ),
           Container(
             padding: CardTemplate.contentPadding,
-            child: Text(_answer.content, style: CardTemplate.contentStyle),
+            child: MarkdownBody(data: _answer.content),
             alignment: Alignment.centerLeft,
           ),
         ]
@@ -64,4 +79,5 @@ class AnswerCard extends CardTemplate {
         noPressed: () {}
     ).show();
   }
+
 }

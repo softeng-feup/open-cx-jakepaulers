@@ -30,6 +30,7 @@ dependencies:
   cloud_firestore: ^0.12.9+5
   shared_preferences: ^0.4.2
   intl: ^0.15.8
+  flutter_markdown: ^0.3.0
 
 
 dev_dependencies:

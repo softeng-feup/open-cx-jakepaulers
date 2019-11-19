@@ -141,8 +141,6 @@ class FirebaseController implements DatabaseController {
   }
 
   Future<DocumentSnapshot> _getUserVote(Question question, User user) async {
-    if (user.isNull())
-      return null;
     QuerySnapshot queryRes = await firebase.collection("upvotes").where("question", isEqualTo: question.reference).where("user", isEqualTo: user.reference).limit(1).getDocuments();
     if (queryRes.documents.length == 0)
       return null;
@@ -183,10 +181,6 @@ class FirebaseController implements DatabaseController {
   @override
   Future<void> signIn(String username, String password, AuthListener listener) async {
     try {
-      if (username == "" || password == "") { // if temporario so para testamentos
-        _currentUser = await this.getUserByEmail((await Auth.getCurrentUser()).email);
-        return listener.onSignInSuccess(this._currentUser);
-      }
       User user = await getUser(username);
       if (user == null)
         return listener.onSignInIncorrect();
