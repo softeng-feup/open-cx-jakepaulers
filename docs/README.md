@@ -322,7 +322,7 @@ As an attendee, I want to be automatically entered into the forum corresponding 
 Scenario: Knowing which talks are happening nearby
   Given I am not near any talk room
   When I check the talks list
-  Then I expect too see no confereces
+  Then I expect too see no talks
 ```
 
 ```gherkin
@@ -330,7 +330,7 @@ Scenario: Talk is created nearby
   Given I am near 3 talk rooms
   When a new talk is created near me
   And I check the talks list
-  Then I expect too see 4 confereces
+  Then I expect too see 4 talks
 ```
 
 **Value and effort**
@@ -403,7 +403,7 @@ In this subsection please describe in more detail which, and how, user(s) story(
 
 -->
 
-For the second prototype we tackled our user stories #2, which states "As a conference host, I want my audience to be able to assist each other on questions they might have, so that I'll have more time to explain other harder questions.", as well as story #3 "As a user, I want to be able to upvote questions I find relevant, and downvote questions I find off-topic, so that the time is used to answer questions that people find the most important.".
+For the second prototype we tackled our user stories #2, which states "As a talk host, I want my audience to be able to assist each other on questions they might have, so that I'll have more time to explain other harder questions.", as well as story #3 "As a user, I want to be able to upvote questions I find relevant, and downvote questions I find off-topic, so that the time is used to answer questions that people find the most important.".
 
 In this increment, we've added the functionality to answer other users' questions, as well as the ability to up/downvote questions. Aside from that, we've moved the storage of questions and answers to a database ("Firebase"), instead of storing them client-side.
 
