@@ -32,7 +32,7 @@ Thank you!
 
 ## Product Vision
 
-The goal is to make host-atendee interaction simple. Users post relevant questions and the audience can vote and reply. The conference host may choose to answer the most popular ones.
+The goal is to make host-atendee interaction simple. Users post relevant questions and the audience can vote and reply. The talk's host may choose to answer the most popular ones.
 
 <!-- Start by defining a clear and concise vision for your module, to help members of the team, contributors, and users into focusing their often disparate views into a concise, visual, and short textual form. It provides a "high concept" of the product for marketers, developers, and managers.
 A product vision describes the essential of the product and sets the direction to where a product is headed, and what the product will deliver in the future.
@@ -94,7 +94,7 @@ Briefly describe each use case mentioning the following:
 
 *  **Description**. This use case exists so that the attendee can upload their questions into the database to later be answered.
 
-*  **Preconditions and Postconditions**.  In order to post a question, the attendee must first join a conference's forum. In the end, the user's question will be added to the database, and displayed on the forum.
+*  **Preconditions and Postconditions**.  In order to post a question, the attendee must first join a talk's page. In the end, the user's question will be added to the database, and displayed on the forum.
   
 *  **Normal Flow**. 
 	1. The attendee presses the button to add a question to a forum.
@@ -113,7 +113,7 @@ Briefly describe each use case mentioning the following:
 
 *  **Description**. This use case exists so that an attendee can answer other user's questions.
 
-*  **Preconditions and Postconditions**.  In order to answer a question, the attendee must first join a conference's forum. In the end, the user's answer will be added to the database, and displayed as a reply to the chosen question.
+*  **Preconditions and Postconditions**.  In order to answer a question, the attendee must first join a talk's page. In the end, the user's answer will be added to the database, and displayed as a reply to the chosen question.
 
 *  **Normal Flow**. 
 	1. The attendee selects a question he wants to answer.
@@ -145,9 +145,9 @@ Briefly describe each use case mentioning the following:
 
 #### Flag Questions:
 
-*  **Actor**. Conference host.
+*  **Actor**. Talk host.
 
-*  **Description**. This use case exists so conference hosts can flag questions as having received a satisfactory answer.
+*  **Description**. This use case exists so talk hosts can flag questions as having received a satisfactory answer.
 
 *  **Preconditions and Postconditions**.  In order to flag a question, the host must be logged in. In the end, the question will be marked as answered, with the answer in question highlighted.
 
@@ -168,9 +168,9 @@ Briefly describe each use case mentioning the following:
 	
 #### Delete Questions:
 
-*  **Actor**. Conference host.
+*  **Actor**. Talk host.
 
-*  **Description**. This use case exists so conference hosts can delete questions that are not relevant to the topic at hand.
+*  **Description**. This use case exists so talk hosts can delete questions that are not relevant to the topic at hand.
 
 *  **Preconditions and Postconditions**.  In order to delete a question, the host must be logged in. In the end, the selected question will be removed.
 
@@ -189,7 +189,7 @@ Briefly describe each use case mentioning the following:
 
 #### Story #1
 
-As a conference atendee, I want to be able to easily ask questions to the host, so that I get to understand the subject better and faster.
+As a conference atendee, I want to be able to easily ask questions to the hosts, so that I get to understand the subjects better and faster.
 
 **User interface mockup**
 
@@ -213,7 +213,7 @@ Effort: XL
 
 #### Story #2
 
-As a conference host, I want my audience to be able to assist each other on questions they might have, so that I'll have more time to explain other harder questions.
+As a talk host, I want my audience to be able to assist each other on questions they might have, so that I'll have more time to explain other harder questions.
 
 **User interface mockup**
 
@@ -297,7 +297,7 @@ Scenario: Being notified of an answer when
 ```gherkin
 Scenario: Being notified of an answer when on another page
   Given I have posted a question
-  And I am not on that conference's page
+  And I am not on that talk's page
   When My question is answered
   Then I expect to receive a notification
 ```
@@ -310,7 +310,7 @@ Effort: S
 
 #### Story #5
 
-As an attendee, I want to be automatically entered into the forum corresponding to the conference I'm currently attending, so that I don't need to waste time joining a room every time I open the app.
+As an attendee, I want to be automatically entered into the forum corresponding to the talk I'm currently attending, so that I don't need to waste time joining a room every time I open the app.
 
 **User interface mockup**
 
@@ -319,17 +319,17 @@ As an attendee, I want to be automatically entered into the forum corresponding 
 **Acceptance tests**
 
 ```gherkin
-Scenario: Knowing which conferences are happening nearby
-  Given I am not near any conference room
-  When I check the conference list
+Scenario: Knowing which talks are happening nearby
+  Given I am not near any talk room
+  When I check the talks list
   Then I expect too see no confereces
 ```
 
 ```gherkin
-Scenario: Conference is created nearby
-  Given I am near 3 conference rooms
-  When A new conference is created near me
-  And I check the conference list
+Scenario: Talk is created nearby
+  Given I am near 3 talk rooms
+  When a new talk is created near me
+  And I check the talks list
   Then I expect too see 4 confereces
 ```
 
