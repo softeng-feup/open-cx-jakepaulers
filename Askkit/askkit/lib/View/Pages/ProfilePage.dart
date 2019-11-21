@@ -24,6 +24,7 @@ class ProfilePage extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -110,7 +111,7 @@ class PostsTabState extends State<PostsTab> {
   Widget build(BuildContext context) {
     return Column(
         children: <Widget>[
-          Visibility( visible: this.loading, child: LinearProgressIndicator()),
+          Visibility(visible: this.loading, child: LinearProgressIndicator()),
           Expanded(child: questionList())
         ]
     );
@@ -118,12 +119,15 @@ class PostsTabState extends State<PostsTab> {
 
   questionList() {
     return ListView(
-      children: questions.map((question)=>
-          Container(
-            decoration: ShadowDecoration(shadowColor: CardTemplate.cardShadowColor, spreadRadius: 1.0, offset: Offset(0, 1)),
-            margin: EdgeInsets.only(top: 10.0),
-            child: QuestionCard(null, question, true, this._dbcontroller))
-          ).toList()
+        children: questions.map((question) =>
+            Container(
+                decoration: ShadowDecoration(
+                    shadowColor: CardTemplate.cardShadowColor,
+                    spreadRadius: 1.0,
+                    offset: Offset(0, 1)),
+                margin: EdgeInsets.only(top: 10.0),
+                child: QuestionCard(null, question, true, this._dbcontroller))
+        ).toList()
     );
   }
 
