@@ -24,6 +24,7 @@ abstract class DatabaseController {
   Future<List<Talk>> getTalks();
   Future<List<Answer>> getAnswers(Question question);
   Future<List<Question>> getQuestions(Talk talk);
+  Future<List<Question>> getQuestionsByUser(User user);
   Future<Question> refreshQuestion(Question question);
 
   Future<int> getUserUpvote(Question question, User user);

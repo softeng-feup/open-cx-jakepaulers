@@ -89,6 +89,18 @@ class FirebaseController implements DatabaseController {
     return await Future.wait(questions);
   }
 
+  Future<List<Question>> getQuestionsByUser(User user) async {
+    List<Future<Question>> questions = new List();
+    QuerySnapshot snapshot = await firebase.collection("questions").where('username', isEqualTo: user.username).getDocuments();
+    for (DocumentSnapshot document in snapshot.documents) {
+      questions.add(_makeQuestionFromDoc(document));
+    }
+    if (snapshot.documents.length == 0)
+      return [];
+    return await Future.wait(questions);
+  }
+
+
   @override
   Future<Question> refreshQuestion(Question question) async {
     return await _makeQuestionFromDoc(await question.reference.get());

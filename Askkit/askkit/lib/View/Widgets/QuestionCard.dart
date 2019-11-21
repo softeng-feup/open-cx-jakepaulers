@@ -4,6 +4,7 @@ import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Pages/AnswersPage.dart';
 import 'package:askkit/View/Pages/ManageCommentPage.dart';
+import 'package:askkit/View/Pages/ProfilePage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,15 +52,18 @@ class QuestionCard extends CardTemplate {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Row(
-                      children: <Widget> [
-                        CircleAvatar(
-                            radius: 15.0,
-                            backgroundImage: _question.user.getImage()
-                        ),
-                        Text("  " + _question.user.username, style: CardTemplate.usernameStyle(context, _question.user == _dbcontroller.getCurrentUser())),
-                        Spacer(),
-                      ],
+                    GestureDetector(
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(this._question.user, this._dbcontroller))),
+                      child: Row(
+                        children: <Widget> [
+                          CircleAvatar(
+                              radius: 15.0,
+                              backgroundImage: _question.user.getImage()
+                          ),
+                          Text("  " + _question.user.username, style: CardTemplate.usernameStyle(context, _question.user == _dbcontroller.getCurrentUser())),
+                          Spacer(),
+                        ],
+                      )
                     ),
                     Container(
                       padding: CardTemplate.contentPadding,
