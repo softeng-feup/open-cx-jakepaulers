@@ -3,6 +3,7 @@ import 'package:askkit/Model/Question.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Pages/AnswersPage.dart';
+import 'package:askkit/View/Pages/ProfilePage.dart';
 import 'package:askkit/View/Theme.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,9 +37,12 @@ class QuestionCard extends CardTemplate {
                   children: <Widget>[
                     Row(
                       children: <Widget> [
-                        CircleAvatar(
-                            radius: 15.0,
-                            backgroundImage: _question.user.getImage()
+                        GestureDetector(
+                          child: CircleAvatar(
+                              radius: 15.0,
+                              backgroundImage: _question.user.getImage()
+                          ),
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(_question.user)))
                         ),
                         Text("  " + _question.user.username, style: CardTemplate.usernameStyle),
                       ],
