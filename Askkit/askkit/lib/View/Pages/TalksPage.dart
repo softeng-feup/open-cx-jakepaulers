@@ -4,6 +4,7 @@ import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Pages/LogInPage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CenterText.dart';
+import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:askkit/View/Widgets/TalkCard.dart';
 import 'package:flutter/material.dart';
 
@@ -90,7 +91,15 @@ class TalksPageState extends State<TalksPage> implements ModelListener {
   }
 
   void signOut() {
-    widget._dbcontroller.signOut();
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage(widget._dbcontroller)));
+    ConfirmDialog(
+        title: "Signing out...",
+        content: "Are you sure you want to sign out?",
+        context: context,
+        yesPressed: () async {
+          await widget._dbcontroller.signOut();
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage(widget._dbcontroller)));
+        },
+        noPressed: () {}
+    ).show();
   }
 }
