@@ -1,6 +1,7 @@
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
+import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
@@ -8,14 +9,12 @@ import 'package:askkit/View/Widgets/TitleText.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../Theme.dart';
-
 class ProfilePage extends StatelessWidget {
   final DatabaseController _dbcontroller;
   final User _user;
   bool self;
   ProfilePage(this._user, this._dbcontroller) {
-    this.self = (_user == _dbcontroller.getCurrentUser());
+    this.self = (_user == this._dbcontroller.getCurrentUser());
   }
 
   @override
@@ -85,8 +84,8 @@ class ProfilePage extends StatelessWidget {
 }
 
 class PostsTab extends StatefulWidget{
-  DatabaseController _dbcontroller;
   User _user;
+  DatabaseController _dbcontroller;
 
   PostsTab(this._user, this._dbcontroller);
 
@@ -96,15 +95,14 @@ class PostsTab extends StatefulWidget{
   }
 }
 
-class PostsTabState extends State<PostsTab> {
+class PostsTabState extends State<PostsTab> implements ModelListener {
   DatabaseController _dbcontroller;
   User _user;
   bool loading = false;
   List<Question> questions = new List();
 
   PostsTabState(this._user, this._dbcontroller) {
-    this.loading = true;
-    getQuestions();
+    this.refreshModel();
   }
 
   @override
@@ -126,15 +124,20 @@ class PostsTabState extends State<PostsTab> {
                     spreadRadius: 1.0,
                     offset: Offset(0, 1)),
                 margin: EdgeInsets.only(top: 10.0),
-                child: QuestionCard(null, question, true, this._dbcontroller))
+                child: QuestionCard(this, question, true, widget._dbcontroller))
         ).toList()
     );
   }
 
-  Future getQuestions() async {
-    questions = await _dbcontroller.getQuestionsByUser(this._user);
-    setState(() {
-      this.loading = false;
-    });
+  @override
+  Future refreshModel() async {
+    Stopwatch sw = Stopwatch()..start();
+    if (this.mounted)
+      setState(() { loading = true; });
+    questions = await this._dbcontroller.getQuestionsByUser(this._user);
+    questions.sort((question1, question2) => question2.upvotes.compareTo(question1.upvotes));
+    if (this.mounted)
+      setState(() { loading = false; });
+    print("Question fetch time: " + sw.elapsed.toString());
   }
 }
