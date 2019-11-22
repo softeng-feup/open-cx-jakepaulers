@@ -444,6 +444,7 @@ For the purpose of ESOF, we will use a very simple approach, just to manage feat
 
 ## Project management
 
+<!--
 Software project management is an art and science of planning and leading software projects, in which software projects are planned, implemented, monitored and controlled.
 
 In the context of ESOF, we expect that each team adopts a project management tool capable of registering tasks, assign tasks to people, add estimations to tasks, monitor tasks progress, and therefore being able to track their projects.
@@ -455,3 +456,6 @@ Example of tools to do this are:
   * [Jira](https://www.atlassian.com/software/jira)
 
 We recommend to use the simplest tool that can possibly work for the team.
+-->
+To plan and manage our project we used the project management tool "Trello" and added an invite link to it below:
+https://trello.com/invite/b/vIoT8eVt/20ea176722fd13bed5c3cfeeff6aa53f/esofazer-o-projeto-jakepaulers
