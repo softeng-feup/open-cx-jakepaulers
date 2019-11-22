@@ -1,7 +1,9 @@
+import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
+import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
@@ -25,7 +27,7 @@ class ProfilePage extends StatelessWidget {
     ]);
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Profile'),
@@ -33,14 +35,16 @@ class ProfilePage extends StatelessWidget {
             isScrollable: false,
             tabs: [
               Tab(text: 'Info'),
-              Tab(text: 'Posts')
+              Tab(text: 'Questions'),
+              Tab(text: 'Answers')
             ]
           )
         ),
         body: TabBarView(
           children: [
             createProfileTab(),
-            createPostsTab()
+            createQuestionsTab(),
+            createAnswersTab()
           ]
         )
       )
@@ -60,8 +64,12 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget createPostsTab() {
-    return PostsTab(this._user, this._dbcontroller);
+  Widget createQuestionsTab() {
+    return QuestionsTab(this._user, this._dbcontroller);
+  }
+
+  createAnswersTab() {
+    return AnswersTab(this._user, this._dbcontroller);
   }
 
   changeUsername() {
@@ -83,25 +91,25 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-class PostsTab extends StatefulWidget{
+class QuestionsTab extends StatefulWidget{
   User _user;
   DatabaseController _dbcontroller;
 
-  PostsTab(this._user, this._dbcontroller);
+  QuestionsTab(this._user, this._dbcontroller);
 
   @override
   State<StatefulWidget> createState() {
-    return PostsTabState(this._user, this._dbcontroller);
+    return QuestionsTabState(this._user, this._dbcontroller);
   }
 }
 
-class PostsTabState extends State<PostsTab> implements ModelListener {
+class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
   DatabaseController _dbcontroller;
   User _user;
-  bool loading = false;
+  bool loading = true;
   List<Question> questions = new List();
 
-  PostsTabState(this._user, this._dbcontroller) {
+  QuestionsTabState(this._user, this._dbcontroller) {
     this.refreshModel();
   }
 
@@ -136,6 +144,64 @@ class PostsTabState extends State<PostsTab> implements ModelListener {
       setState(() { loading = true; });
     questions = await this._dbcontroller.getQuestionsByUser(this._user);
     questions.sort((question1, question2) => question2.upvotes.compareTo(question1.upvotes));
+    if (this.mounted)
+      setState(() { loading = false; });
+    print("Question fetch time: " + sw.elapsed.toString());
+  }
+}
+
+class AnswersTab extends StatefulWidget{
+  User _user;
+  DatabaseController _dbcontroller;
+
+  AnswersTab(this._user, this._dbcontroller);
+
+  @override
+  State<StatefulWidget> createState() {
+    return AnswersTabState(this._user, this._dbcontroller);
+  }
+}
+
+class AnswersTabState extends State<AnswersTab> implements ModelListener {
+  DatabaseController _dbcontroller;
+  User _user;
+  bool loading = true;
+  List<Answer> answers = new List();
+
+  AnswersTabState(this._user, this._dbcontroller) {
+    this.refreshModel();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        children: <Widget>[
+          Visibility(visible: this.loading, child: LinearProgressIndicator()),
+          Expanded(child: answerList())
+        ]
+    );
+  }
+
+  answerList() {
+    return ListView(
+        children: answers.map((answer) =>
+            Container(
+                decoration: ShadowDecoration(
+                    shadowColor: CardTemplate.cardShadowColor,
+                    spreadRadius: 1.0,
+                    offset: Offset(0, 1)),
+                margin: EdgeInsets.only(top: 10.0),
+                child: AnswerCard(this, answer, widget._dbcontroller))
+        ).toList()
+    );
+  }
+
+  @override
+  Future refreshModel() async {
+    Stopwatch sw = Stopwatch()..start();
+    if (this.mounted)
+      setState(() { loading = true; });
+    answers = await this._dbcontroller.getAnswersByUser(this._user);
     if (this.mounted)
       setState(() { loading = false; });
     print("Question fetch time: " + sw.elapsed.toString());
