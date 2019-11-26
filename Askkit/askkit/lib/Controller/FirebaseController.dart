@@ -19,17 +19,17 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<DocumentReference> addAnswer(Answer answer) {
-    return firebase.collection("answers").add({'username': answer.user.reference, 'content': answer.content, 'uploadDate' : Timestamp.fromDate(answer.date), 'question': answer.question});
+    return firebase.collection("answers").add({'user': answer.user.reference, 'content': answer.content, 'uploadDate' : Timestamp.fromDate(answer.date), 'question': answer.question});
   }
 
   @override
   Future<DocumentReference> addQuestion(Question question) {
-    return firebase.collection("questions").add({'talk': question.talk, 'username': question.user.reference, 'content': question.content, 'uploadDate' : Timestamp.fromDate(question.date)});
+    return firebase.collection("questions").add({'talk': question.talk, 'user': question.user.reference, 'content': question.content, 'uploadDate' : Timestamp.fromDate(question.date)});
   }
 
   @override
   Future<DocumentReference> addUser(User user) {
-    return firebase.collection("users").add({'username' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image});
+    return firebase.collection("users").add({'user' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image});
   }
 
   @override
@@ -39,6 +39,8 @@ class FirebaseController implements DatabaseController {
 
   Future<User> _makeUserFromDoc(DocumentSnapshot document) async {
     Map data = document.data;
+    if (data == null)
+      return NullUser();
     return User(data['username'], data['email'], data['name'], data['image'], document.reference);
   }
 
