@@ -30,7 +30,7 @@ class ProfilePage extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Profile'),
+            title:  Text(_user.username + "'s Profile"),
           bottom: TabBar(
             isScrollable: false,
             tabs: [

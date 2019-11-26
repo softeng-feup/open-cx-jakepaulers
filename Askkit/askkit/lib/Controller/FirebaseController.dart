@@ -19,26 +19,34 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<DocumentReference> addAnswer(Answer answer) {
-    return firebase.collection("answers").add({'username': answer.user.username, 'content': answer.content, 'uploadDate' : Timestamp.fromDate(answer.date), 'question': answer.question});
+    return firebase.collection("answers").add({'user': answer.user.reference, 'content': answer.content, 'uploadDate' : Timestamp.fromDate(answer.date), 'question': answer.question});
   }
 
   @override
   Future<DocumentReference> addQuestion(Question question) {
-    return firebase.collection("questions").add({'talk': question.talk, 'username': question.user.username, 'content': question.content, 'uploadDate' : Timestamp.fromDate(question.date)});
+    return firebase.collection("questions").add({'talk': question.talk, 'user': question.user.reference, 'content': question.content, 'uploadDate' : Timestamp.fromDate(question.date)});
   }
 
   @override
   Future<DocumentReference> addUser(User user) {
-    return firebase.collection("users").add({'username' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image});
+    return firebase.collection("users").add({'user' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image});
   }
 
   @override
   Future<DocumentReference> addTalk(Talk talk) {
-    return firebase.collection("talks").add({'title' : talk.title, 'room' : talk.room, 'description': talk.description, 'host': talk.host.username, 'startDate' : talk.startDate});
+    return firebase.collection("talks").add({'title' : talk.title, 'room' : talk.room, 'description': talk.description, 'host': talk.host.reference, 'startDate' : talk.startDate});
+  }
+
+  Future<User> _makeUserFromDoc(DocumentSnapshot document) async {
+    Map data = document.data;
+    if (data == null)
+      return NullUser();
+    return User(data['username'], data['email'], data['name'], data['image'], document.reference);
   }
 
   Future<Question> _makeQuestionFromDoc(DocumentSnapshot document) async {
-    User user = await this.getUser(document.data['username']);
+    DocumentReference userRef = document.data['user'];
+    User user = await _makeUserFromDoc(await userRef.get());
     String content = document.data['content'];
     Timestamp date = document.data['uploadDate'];
     DocumentReference talk = document.data['talk'];
@@ -50,7 +58,8 @@ class FirebaseController implements DatabaseController {
   }
 
   Future<Answer> _makeAnswerFromDoc(DocumentSnapshot document) async {
-    User user = await this.getUser(document.data['username']);
+    DocumentReference userRef = document.data['user'];
+    User user = await _makeUserFromDoc(await userRef.get());
     DocumentReference question = document.data['question'];
     String content = document.data['content'];
     Timestamp date = document.data['uploadDate'];
@@ -58,7 +67,8 @@ class FirebaseController implements DatabaseController {
   }
 
   Future<Talk> _makeTalkFromDoc(DocumentSnapshot document) async {
-    User host = await this.getUser(document.data['host']);
+    DocumentReference userRef = document.data['host'];
+    User host = await _makeUserFromDoc(await userRef.get());
     Timestamp date = document.data['startDate'];
     return Talk(document.data['title'], document.data['description'], date.toDate(), host, document.data['room'],  document.reference);
   }
@@ -135,13 +145,13 @@ class FirebaseController implements DatabaseController {
     return answers.documents.length;
   }
 
+
   @override
-  Future<User> getUser(String username) async {
+  Future<User> getUserByUsername(String username) async {
     QuerySnapshot snapshot = await firebase.collection("users").where("username", isEqualTo: username).limit(1).getDocuments();
     if (snapshot.documents.length == 0)
       return NullUser();
-    Map data = snapshot.documents[0].data;
-    return User(data['username'], data['email'], data['name'], data['image'], snapshot.documents[0].reference);
+    return await _makeUserFromDoc(snapshot.documents[0]);
   }
 
   @override
@@ -205,12 +215,12 @@ class FirebaseController implements DatabaseController {
   @override
   Future<void> signIn(String username, String password, AuthListener listener) async {
     try {
-      User user = await getUser(username);
+      User user = await getUserByUsername(username);
       if (user == null)
         return listener.onSignInIncorrect();
       await Auth.signIn(user.email, password);
       if (await Auth.isEmailVerified()) {
-        this._currentUser = await this.getUser(username);
+        this._currentUser = await this.getUserByUsername(username);
         listener.onSignInSuccess(this._currentUser);
       }
       else listener.onSignInUnverified();
@@ -223,7 +233,7 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<void> signUp(String email, String username, String password, AuthListener listener) async {
-    User user = await getUser(username);
+    User user = await getUserByUsername(username);
     if (!user.isNull())
       return listener.onSignUpDuplicateUsername();
     try {
@@ -250,7 +260,7 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<void> sendForgotPassword(String username) async {
-    User user = await this.getUser(username);
+    User user = await this.getUserByUsername(username);
     if (user.isNull())
       return;
     try {
