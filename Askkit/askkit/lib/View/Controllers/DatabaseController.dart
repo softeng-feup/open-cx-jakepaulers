@@ -16,8 +16,6 @@ abstract class DatabaseController {
   Future<DocumentReference> addAnswer(Answer answer);
   Future<DocumentReference> addUser(User user);
   Future<DocumentReference> addTalk(Talk talk);
-  
-  Future<User> getUser(String username);
 
   User getCurrentUser();
 
