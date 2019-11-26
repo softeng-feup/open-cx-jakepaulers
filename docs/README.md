@@ -458,4 +458,4 @@ Example of tools to do this are:
 We recommend to use the simplest tool that can possibly work for the team.
 -->
 To plan and manage our project we used the project management tool "Trello" and added an invite link to it below:
-https://trello.com/invite/b/vIoT8eVt/20ea176722fd13bed5c3cfeeff6aa53f/esofazer-o-projeto-jakepaulers
+https://trello.com/b/vIoT8eVt
