@@ -18,6 +18,7 @@ abstract class DatabaseController {
   Future<DocumentReference> addTalk(Talk talk);
 
   User getCurrentUser();
+  Future<bool> isAlreadyLoggedIn();
 
   Future<List<Talk>> getTalks();
   Future<List<Answer>> getAnswers(Question question);

@@ -10,6 +10,7 @@ import 'package:askkit/Model/User.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Authenticator.dart';
 
@@ -163,15 +164,17 @@ class FirebaseController implements DatabaseController {
     return User(data['username'], data['email'], data['name'], data['image'], snapshot.documents[0].reference);
   }
 
+  Future<bool> isAlreadyLoggedIn() async {
+    FirebaseUser user = await Auth.getCurrentUser();
+    if (user == null)
+      return false;
+    _currentUser = await getUserByEmail(user.email);
+    return !_currentUser.isNull();
+  }
+
   @override
   User getCurrentUser() {
     return _currentUser;
-    /*
-    FirebaseUser user = await Auth.getCurrentUser();
-    if (user == null)
-      return NullUser();
-    return await getUserByEmail(user.email);
-     */
   }
 
   Future<DocumentSnapshot> _getUserVote(Question question, User user) async {

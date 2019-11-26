@@ -1,6 +1,5 @@
 import 'dart:core';
-import 'package:askkit/Model/User.dart';
-import 'package:askkit/View/Controllers/AuthListener.dart';
+import 'package:askkit/View/Controllers/Preferences.dart';
 import 'package:askkit/View/Pages/SigningInPage.dart';
 import 'package:askkit/View/TextFieldValidators/LoginValidators.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
@@ -9,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../Controllers/DatabaseController.dart';
-import '../Theme.dart';
+import 'TalksPage.dart';
 
 class LogInPage extends StatefulWidget {
   DatabaseController _dbcontroller;
@@ -26,6 +25,7 @@ class LogInPage extends StatefulWidget {
 class _LogInPageState extends State<LogInPage> {
   bool _hidePassword = true;
   bool _signInActive = true, _signUpActive = false;
+  bool _rememberMe = true;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _newUsernameController = TextEditingController();
@@ -38,6 +38,7 @@ class _LogInPageState extends State<LogInPage> {
   @protected
   void initState() {
     super.initState();
+    this.checkIfLoggedIn();
   }
 
 
@@ -105,15 +106,27 @@ class _LogInPageState extends State<LogInPage> {
             })
         ),
         Row (
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              Row(
+                children: <Widget>[
+                  Checkbox(
+                    value: _rememberMe,
+                    onChanged: onRememberMeChanged,
+                  ),
+                  FlatButton(
+                    padding: EdgeInsets.all(0),
+                    child: Text("Remember me", style: Theme.of(context).textTheme.body1.copyWith(decoration: TextDecoration.underline)),
+                    onPressed: () { _rememberMe = !_rememberMe; onRememberMeChanged(_rememberMe); }
+                  ),
+                ],
+              ),
+              Spacer(),
               FlatButton(
-                  onPressed: forgotPassword,
-                  child: Text("Forgot password?", textAlign: TextAlign.left, style: TextStyle(decoration: TextDecoration.underline, fontSize: 16.0))
+                child: Text("Forgot password?", style: Theme.of(context).textTheme.body1.copyWith(decoration: TextDecoration.underline)),
+                onPressed: forgotPassword,
               ),
             ]
         ),
-
       ],
     );
   }
@@ -206,9 +219,35 @@ class _LogInPageState extends State<LogInPage> {
     );
   }
 
+  void checkIfLoggedIn() async {
+    bool shouldRememberMe = (await Preferences.getPreferences()).getBool('rememberMe') ?? false;
+    this.setState(() {
+      this._rememberMe = shouldRememberMe;
+    });
+    //print("GOT " + shouldRememberMe.toString());
+    if (!shouldRememberMe) {
+      widget._dbcontroller.signOut();
+      return;
+    }
+    if (await widget._dbcontroller.isAlreadyLoggedIn())
+      Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => TalksPage(widget._dbcontroller)));
+  }
+
+
+  void onRememberMeChanged(bool value) async {
+    (await Preferences.getPreferences()).setBool('rememberMe', value);
+    //print("ChANGED to "  + value.toString());
+    setState(() {
+      _rememberMe = value;
+    });
+   // await Preferences.refreshSharedPreferences();
+  }
 
   void forgotPassword() {
     widget._dbcontroller.sendForgotPassword(_usernameController.text);
     OkDialog("Email sent to ${_usernameController.text}", "Check your inbox to reset your password.", context).show();
   }
+
+
+
 }
