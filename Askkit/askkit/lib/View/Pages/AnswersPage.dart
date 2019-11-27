@@ -56,8 +56,8 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
 
   void fetchQuestion() async {
     try {
-      Question question = await widget._dbcontroller.refreshQuestion(widget._question);
-      setState(() { widget._question = question; });
+      await widget._dbcontroller.refreshQuestion(widget._question);
+      setState(() { });
     } on Error {
       Navigator.pop(context);
       widget._listener.refreshModel();
@@ -125,8 +125,7 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
     String comment = await Navigator.push(context, MaterialPageRoute(builder: (context) => answerPage));
     if (comment == null)
       return;
-    User user = await widget._dbcontroller.getCurrentUser();
-    await widget._dbcontroller.addAnswer(Answer(user, comment, DateTime.now(), widget._question.reference, null));
+    await widget._dbcontroller.addAnswer(widget._question, comment);
     refreshModel();
   }
 }

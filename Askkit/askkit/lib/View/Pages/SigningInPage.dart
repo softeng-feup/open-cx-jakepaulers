@@ -3,11 +3,8 @@ import 'package:askkit/View/Controllers/AuthListener.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Pages/LogInPage.dart';
 import 'package:askkit/View/Pages/TalksPage.dart';
-import 'package:askkit/View/Theme.dart';
 import 'package:askkit/View/Widgets/TitleText.dart';
 import 'package:flutter/material.dart';
-
-import 'QuestionsPage.dart';
 
 abstract class SigningPage extends StatefulWidget {
   final DatabaseController _dbcontroller;
@@ -103,18 +100,11 @@ class SigningPageState extends State<SigningPage> implements AuthListener {
         child: Text("Back to login"),
       );
 
-  Widget _resendVerifyButton(BuildContext context) =>
+  Widget _toTalksButton(BuildContext context) =>
       FlatButton(
-        onPressed: () {
-          widget._dbcontroller.sendEmailVerification();
-          setState(() {
-            this.widgets = [ _defaultText("Email sent!", upperTextSize), _backButton(context) ];
-          });
-        },
-        child: Text("Resend email"),
+        onPressed: () { Navigator.pop(context); Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TalksPage(widget._dbcontroller))); },
+        child: Text("Continue"),
       );
-
-
 
   @override
   void onSignInIncorrect() {
@@ -128,23 +118,6 @@ class SigningPageState extends State<SigningPage> implements AuthListener {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.pop(context);
       Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => TalksPage(widget._dbcontroller)));
-    });
-  }
-
-  @override
-  void onSignInUnverified() {
-    setState(() {
-      this.widgets = [
-        _defaultText("Email not verified", upperTextSize),
-        _defaultText("Please check your inbox to verify your account.", lowerTextSize),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _resendVerifyButton(context),
-            _backButton(context),
-          ],
-        )
-      ];
     });
   }
 
@@ -165,10 +138,7 @@ class SigningPageState extends State<SigningPage> implements AuthListener {
   @override
   void onSignUpSuccess() {
     setState(() {
-      this.widgets = [ _defaultText("Successfully signed up!", upperTextSize), _defaultText("Please check your email to verify your account.", lowerTextSize), _toLoginButton(context) ];
+      this.widgets = [ _defaultText("Successfully signed up!", upperTextSize), _toTalksButton(context) ];
     });
   }
-
-
-
 }

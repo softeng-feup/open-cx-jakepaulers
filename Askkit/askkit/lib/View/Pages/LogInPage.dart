@@ -231,6 +231,7 @@ class _LogInPageState extends State<LogInPage> {
     }
     if (await widget._dbcontroller.isAlreadyLoggedIn())
       Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => TalksPage(widget._dbcontroller)));
+
   }
 
 

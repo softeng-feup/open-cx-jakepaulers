@@ -1,3 +1,4 @@
+import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/Preferences.dart';
 import 'package:askkit/View/Theme.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'View/Pages/LogInPage.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  DatabaseController controller = FirebaseController();
 
   // This widget is the root of your application.
   @override
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'AskKit',
       theme: AskkitThemes.lightTheme(),
-      home: LogInPage(FirebaseController()),
+      home: LogInPage(controller),
     );
   }
 }
