@@ -9,8 +9,8 @@ abstract class CardTemplate extends StatelessWidget {
 
   static TextStyle usernameStyle(BuildContext context, bool highlight) {
     if (highlight)
-      return Theme.of(context).textTheme.body1.copyWith(fontWeight: FontWeight.bold, fontSize: 20.0, color: Theme.of(context).primaryColor);
-    return Theme.of(context).textTheme.body1.copyWith(fontWeight: FontWeight.bold, fontSize: 20.0);
+      return Theme.of(context).textTheme.body2.copyWith(fontSize: 20.0, color: Theme.of(context).primaryColor);
+    return Theme.of(context).textTheme.body2.copyWith(fontSize: 20.0);
   }
 
   static TextStyle dateStyle(BuildContext context) => Theme.of(context).textTheme.body1.copyWith(fontSize: 10.0);
@@ -31,7 +31,7 @@ abstract class CardTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: InkWell(
-        highlightColor: Theme.of(context).dialogBackgroundColor,
+        highlightColor: Theme.of(context).primaryColorLight,
         onLongPress: () => onHold(context),
         onTap: () => onClick(context),
         child: Container(

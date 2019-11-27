@@ -20,7 +20,6 @@ class CustomDialog {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-            backgroundColor: Theme.of(context).dialogBackgroundColor,
             titleTextStyle: Theme.of(context).textTheme.body2,
             contentTextStyle: Theme.of(context).textTheme.body1,
             title: new Text(title),

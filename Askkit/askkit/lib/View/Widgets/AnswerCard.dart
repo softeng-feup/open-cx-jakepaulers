@@ -6,6 +6,7 @@ import 'package:askkit/View/Pages/ManageCommentPage.dart';
 import 'package:askkit/View/Pages/ProfilePage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CustomPopupMenu.dart';
+import 'package:askkit/View/Widgets/UserAvatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -45,14 +46,9 @@ class AnswerCard extends CardTemplate {
             children: <Widget>[
               GestureDetector(
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(this._answer.user, this._dbcontroller))),
-                child: Row(
-                  children: <Widget>[
-                    CircleAvatar(
-                        radius: 15.0,
-                        backgroundImage: _answer.user.getImage()
-                    ),
-                    Text("  " + _answer.user.username, style: CardTemplate.usernameStyle(context, _answer.user == _dbcontroller.getCurrentUser()))
-                  ],
+                child: UserAvatar(_dbcontroller.getCurrentUser(),
+                    avatarRadius: 15.0,
+                    textStyle: CardTemplate.usernameStyle(context, _answer.user == _dbcontroller.getCurrentUser())
                 )
               ),
               Spacer(),

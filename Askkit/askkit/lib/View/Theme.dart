@@ -5,7 +5,7 @@ class AskkitThemes {
     return ThemeData(
         primaryColor: Colors.blueAccent,
         primaryColorDark: Color(0xFF1976D2),
-        primaryColorLight: Color(0xFF448aff),
+        primaryColorLight: Color(0xFFe3f2fd),
         dialogBackgroundColor: Color(0xFFe3f2fd),
         backgroundColor: Color(0xFFEBEBEB),
         canvasColor: Colors.white,
@@ -13,6 +13,10 @@ class AskkitThemes {
         accentColor: Color(0xFFE64A19),
         dividerColor: Color(0xFFBDBDBD),
         highlightColor: Colors.blueAccent,
+      brightness: Brightness.light,
+      iconTheme: IconThemeData(
+        color: Colors.black
+      ),
 
       inputDecorationTheme: InputDecorationTheme(
         hintStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.blueAccent),

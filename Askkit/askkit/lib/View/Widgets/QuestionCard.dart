@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import 'CustomPopupMenu.dart';
+import 'UserAvatar.dart';
 
 class QuestionCard extends CardTemplate {
     final bool _clickable;
@@ -54,16 +55,10 @@ class QuestionCard extends CardTemplate {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(this._question.user, this._dbcontroller))),
-                      child: Row(
-                        children: <Widget> [
-                          CircleAvatar(
-                              radius: 15.0,
-                              backgroundImage: _question.user.getImage()
-                          ),
-                          Text("  " + _question.user.username, style: CardTemplate.usernameStyle(context, _question.user == _dbcontroller.getCurrentUser())),
-                          Spacer(),
-                        ],
-                      )
+                        child: UserAvatar(_dbcontroller.getCurrentUser(),
+                            avatarRadius: 15.0,
+                            textStyle: CardTemplate.usernameStyle(context, _question.user == _dbcontroller.getCurrentUser())
+                        )
                     ),
                     Container(
                       padding: CardTemplate.contentPadding,

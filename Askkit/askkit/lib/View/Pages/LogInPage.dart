@@ -170,12 +170,12 @@ class _LogInPageState extends State<LogInPage> {
       suffixIcon = IconButton(
           icon: _hidePassword ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
           onPressed: () { setState(() { _hidePassword = !_hidePassword; }); },
-          color: Colors.black
+          color: Theme.of(context).iconTheme.color
       );
     else suffixIcon = IconButton(
         icon: Icon(Icons.clear),
         onPressed: () {  WidgetsBinding.instance.addPostFrameCallback((_) => controller.clear()); },
-        color: Colors.black
+        color: Theme.of(context).iconTheme.color
     );
     return TextFormField(
       obscureText: isPasswordField && _hidePassword,
@@ -184,7 +184,7 @@ class _LogInPageState extends State<LogInPage> {
       style: Theme.of(context).textTheme.subtitle.copyWith(fontWeight: FontWeight.normal),
       decoration: InputDecoration(
         hintText: hint,
-        prefixIcon: Icon(icon, color: Colors.black),
+        prefixIcon: Icon(icon, color: Theme.of(context).iconTheme.color),
         suffixIcon: suffixIcon,
       )
     );
@@ -196,7 +196,7 @@ class _LogInPageState extends State<LogInPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Icon(icon, color: Colors.white),
+            Icon(icon, color: Theme.of(context).canvasColor),
             Text(text, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 20.0)),
             Icon(null),
           ],
@@ -224,7 +224,6 @@ class _LogInPageState extends State<LogInPage> {
     this.setState(() {
       this._rememberMe = shouldRememberMe;
     });
-    //print("GOT " + shouldRememberMe.toString());
     if (!shouldRememberMe) {
       widget._dbcontroller.signOut();
       return;
@@ -237,11 +236,9 @@ class _LogInPageState extends State<LogInPage> {
 
   void onRememberMeChanged(bool value) async {
     (await Preferences.getPreferences()).setBool('rememberMe', value);
-    //print("ChANGED to "  + value.toString());
     setState(() {
       _rememberMe = value;
     });
-   // await Preferences.refreshSharedPreferences();
   }
 
   void forgotPassword() {

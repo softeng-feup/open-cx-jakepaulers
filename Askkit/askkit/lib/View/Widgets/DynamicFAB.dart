@@ -60,7 +60,7 @@ class DynamicFABState extends State<DynamicFAB> with TickerProviderStateMixin {
         child: FloatingActionButton(
             backgroundColor: Theme.of(context).accentColor,
             onPressed: widget.onPressed,
-            child: Icon(Icons.add, color: Colors.white) //, size: size / 2),
+            child: Icon(Icons.add, color: Theme.of(context).canvasColor) //, size: size / 2),
         )
     );
   }

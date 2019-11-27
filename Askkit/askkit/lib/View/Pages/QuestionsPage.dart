@@ -109,7 +109,7 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
 
   Widget _talkHeader() {
     return Container(
-        decoration: ShadowDecoration(color: Theme.of(context).primaryColorLight, shadowColor: Colors.black, spreadRadius: 0.25, blurRadius: 7.5),
+        decoration: ShadowDecoration(color: Theme.of(context).primaryColor, shadowColor: Colors.black, spreadRadius: 0.25, blurRadius: 7.5),
         padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 15.0, bottom: 15.0),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
