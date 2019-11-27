@@ -12,6 +12,10 @@ class User {
 
   NetworkImage networkImage;
 
+  User.empty() {
+    this.image = "https://cdn0.iconfinder.com/data/icons/handdrawn-ui-elements/512/Question_Mark-512.png";
+    this.username = "--User_Not_Found--";
+  }
   User(this.username, this.email, this.name, this.image, this.reference);
 
   NetworkImage getImage() {
@@ -20,20 +24,5 @@ class User {
     return this.networkImage;
   }
 
-  bool isNull() {
-    return false;
-  }
-
   bool operator==(covariant User other) => other.username == this.username;
-}
-
-class NullUser extends User {
-  static final String nullAvatar = "https://cdn0.iconfinder.com/data/icons/handdrawn-ui-elements/512/Question_Mark-512.png";
-
-  NullUser() : super("--User_Not_Found--", "null", "null", NullUser.nullAvatar, null);
-
-  bool isNull() {
-    return true;
-  }
-
 }

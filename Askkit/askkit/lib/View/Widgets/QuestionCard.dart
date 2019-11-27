@@ -141,15 +141,13 @@ class UpvoteColumnState extends State<UpvoteColumn> {
     setState(() {
       widget._question.upvote();
     });
-    User user = await widget._dbcontroller.getCurrentUser();
-    widget._dbcontroller.setVote(widget._question, user, widget._question.userVote);
+    widget._dbcontroller.setUserUpvote(widget._question.reference, widget._question.userVote);
   }
 
   void downvote() async {
     setState(() {
       widget._question.downvote();
     });
-    User user = await widget._dbcontroller.getCurrentUser();
-    widget._dbcontroller.setVote(widget._question, user, widget._question.userVote);
+    widget._dbcontroller.setUserUpvote(widget._question.reference, widget._question.userVote);
   }
 }

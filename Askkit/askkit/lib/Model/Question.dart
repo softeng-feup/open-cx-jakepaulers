@@ -11,6 +11,17 @@ class Question extends Comment {
 
   Question(this.talk, User user, String question, DateTime date, DocumentReference reference) : super(user, question, date, reference);
 
+  void copyFrom(Question newQuestion) {
+    this.talk = newQuestion.talk;
+    this.user = newQuestion.user;
+    this.date = newQuestion.date;
+    this.reference = newQuestion.reference;
+    this.numComments = newQuestion.numComments;
+    this.userVote = newQuestion.userVote;
+    this.upvotes = newQuestion.upvotes;
+    this.content = newQuestion.content;
+  }
+
   void downvote() {
     if (userVote == 1)
       upvotes -= 2;

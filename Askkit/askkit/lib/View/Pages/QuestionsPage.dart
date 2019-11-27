@@ -109,11 +109,8 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
     String comment = await Navigator.push(context, MaterialPageRoute(builder: (context) => questionPage));
     if (comment == null)
       return;
-    User user = await widget._dbcontroller.getCurrentUser();
-    Question newQuestion = Question(widget._talk.reference, user, comment, DateTime.now(), null);
-    DocumentReference reference = await widget._dbcontroller.addQuestion(newQuestion);
-    newQuestion.reference = reference;
-    await widget._dbcontroller.setVote(newQuestion, user, 1);
+    DocumentReference reference = await widget._dbcontroller.addQuestion(widget._talk, comment);
+    await widget._dbcontroller.setUserUpvote(reference, 1);
     refreshModel();
   }
 

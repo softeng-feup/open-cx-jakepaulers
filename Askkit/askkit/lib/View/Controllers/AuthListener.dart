@@ -7,6 +7,4 @@ abstract class AuthListener {
 
   void onSignInSuccess(User user);
   void onSignInIncorrect();
-  void onSignInUnverified();
-
 }

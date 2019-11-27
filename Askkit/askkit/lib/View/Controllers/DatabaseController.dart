@@ -8,13 +8,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 abstract class DatabaseController {
   Future<void> signIn(String username, String password, AuthListener listener);
   Future<void> signUp(String email, String username, String password, AuthListener listener);
-  Future<void> signOut() {}
-  Future<void> sendEmailVerification();
+  Future<void> signOut();
   Future<void> sendForgotPassword(String username);
 
-  Future<DocumentReference> addQuestion(Question question);
-  Future<DocumentReference> addAnswer(Answer answer);
-  Future<DocumentReference> addUser(User user);
+  Future<DocumentReference> addQuestion(Talk talk, String content);
+  Future<DocumentReference> addAnswer(Question question, String content);
   Future<DocumentReference> addTalk(Talk talk);
 
   User getCurrentUser();
@@ -25,12 +23,12 @@ abstract class DatabaseController {
   Future<List<Answer>> getAnswersByUser(User user);
   Future<List<Question>> getQuestions(Talk talk);
   Future<List<Question>> getQuestionsByUser(User user);
-  Future<Question> refreshQuestion(Question question);
+  Future<void> refreshQuestion(Question question);
 
-  Future<int> getUserUpvote(Question question, User user);
+
+  Future<void> setUserUpvote(DocumentReference question, int value);
+  Future<int> getUserUpvote(DocumentReference question);
   Future<int> getUpvotes(Question question);
-
-  Future<void> setVote(Question question, User user, int value);
 
   Future<void> editQuestion(Question question, String newQuestion);
   Future<void> deleteQuestion(Question question);
