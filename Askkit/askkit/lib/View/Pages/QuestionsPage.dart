@@ -8,6 +8,7 @@ import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Pages/ManageCommentPage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CenterText.dart';
+import 'package:askkit/View/Widgets/CustomListView.dart';
 import 'package:askkit/View/Widgets/DynamicFAB.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
@@ -32,7 +33,7 @@ class QuestionsPage extends StatefulWidget {
 class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
   List<Question> questions = new List();
 
-  bool loading = false;
+  bool loaded = false;
   Timer minuteTimer;
   ScrollController scrollController;
 
@@ -47,17 +48,13 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
     super.dispose();
   }
 
-  void refreshModel() async {
+  Future<void> refreshModel() async {
     Stopwatch sw = Stopwatch()..start();
-    setState(() { loading = true; });
     questions = await widget._dbcontroller.getQuestions(widget._talk);
     questions.sort((question1, question2) => question2.upvotes.compareTo(question1.upvotes));
     if (this.mounted)
-      setState(() { loading = false; });
+      setState(() { loaded = true; });
     print("Question fetch time: " + sw.elapsed.toString());
-
-    if (scrollController.hasClients)
-      scrollController.animateTo(0, duration: Duration(seconds: 1), curve: Curves.ease);
   }
 
   @override
@@ -65,10 +62,7 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
     return Scaffold(
         appBar: AppBar(
           title: Text("Questions"),
-          backgroundColor: Theme.of(context).primaryColor,
-          actions: <Widget>[
-            IconButton(icon: Icon(Icons.refresh), onPressed: refreshModel),
-          ],
+          backgroundColor: Theme.of(context).primaryColor
         ),
         backgroundColor: Theme.of(context).backgroundColor,
         body: getBody(),
@@ -77,19 +71,17 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
   }
 
   Widget getBody() {
-    return Column(
-        children: <Widget>[
-          Visibility( visible: this.loading, child: LinearProgressIndicator()),
-          Expanded(child: questionList())
-        ]
-    );
+    if (!this.loaded)
+      return LinearProgressIndicator();
+    return questionList();
   }
 
 
   Widget questionList() {
-    if (questions.length == 0 && !this.loading)
+    if (questions.length == 0 && this.loaded)
       return _emptyQuestionList();
-    return ListView.builder(
+    return CustomListView(
+        onRefresh: refreshModel,
         controller: scrollController,
         itemCount: this.questions.length + 1,
         itemBuilder: (BuildContext context, int i) {
@@ -111,6 +103,7 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
       return;
     DocumentReference reference = await widget._dbcontroller.addQuestion(widget._talk, comment);
     await widget._dbcontroller.setUserUpvote(reference, 1);
+
     refreshModel();
   }
 
