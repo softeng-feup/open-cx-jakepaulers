@@ -9,26 +9,12 @@ abstract class CardTemplate extends StatelessWidget {
 
   static TextStyle usernameStyle(BuildContext context, bool highlight) {
     if (highlight)
-      return Theme
-          .of(context)
-          .textTheme
-          .body1
-          .copyWith(fontWeight: FontWeight.bold, fontSize: 20.0, color: Theme
-          .of(context)
-          .primaryColor);
-    return Theme
-        .of(context)
-        .textTheme
-        .body1
-        .copyWith(fontWeight: FontWeight.bold, fontSize: 20.0);
+      return Theme.of(context).textTheme.body1.copyWith(fontWeight: FontWeight.bold, fontSize: 20.0, color: Theme.of(context).primaryColor);
+    return Theme.of(context).textTheme.body1.copyWith(fontWeight: FontWeight.bold, fontSize: 20.0);
   }
 
-  static TextStyle dateStyle(BuildContext context) =>
-      Theme
-          .of(context)
-          .textTheme
-          .body1
-          .copyWith(fontSize: 10.0);
+  static TextStyle dateStyle(BuildContext context) => Theme.of(context).textTheme.body1.copyWith(fontSize: 10.0);
+  static TextStyle editedStyle(BuildContext context) => Theme.of(context).textTheme.body1.copyWith(fontSize: 8.0);
 
   static const EdgeInsets contentPadding = EdgeInsets.only(top: 10.0);
 

@@ -52,6 +52,8 @@ class FirebaseController implements DatabaseController {
     question.upvotes = await this.getUpvotes(question);
     question.userVote = await this.getUserUpvote(question.reference);
     question.numComments = await this._getNumAnswers(question);
+    if (document.data['edited'])
+      question.setEdited();
     return question;
   }
 
@@ -61,7 +63,10 @@ class FirebaseController implements DatabaseController {
     DocumentReference question = document.data['question'];
     String content = document.data['content'];
     Timestamp date = document.data['uploadDate'];
-    return Answer(user, content, date.toDate(), question, document.reference);
+    Answer answer =  Answer(user, content, date.toDate(), question, document.reference);
+    if (document.data['edited'])
+      answer.setEdited();
+    return answer;
   }
 
   Future<Talk> _makeTalkFromDoc(DocumentSnapshot document) async {
@@ -286,11 +291,11 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<void> editAnswer(Answer answer, String newAnswer) {
-    answer.reference.updateData({'content' : newAnswer});
+    answer.reference.updateData({'content' : newAnswer, 'edited' : true});
   }
 
   @override
   Future<void> editQuestion(Question question, String newQuestion) {
-    question.reference.updateData({'content' : newQuestion});
+    question.reference.updateData({'content' : newQuestion, 'edited' : true});
   }
 }

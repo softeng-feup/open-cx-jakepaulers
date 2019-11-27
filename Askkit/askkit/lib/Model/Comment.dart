@@ -6,8 +6,13 @@ class Comment {
   String content;
   DateTime date;
   DocumentReference reference;
+  bool edited = false;
 
   Comment(this.user, this.content, this.date, this.reference);
+
+  void setEdited() {
+    this.edited = true;
+  }
 
   String getAgeString() {
     Duration diff = DateTime.now().difference(date);

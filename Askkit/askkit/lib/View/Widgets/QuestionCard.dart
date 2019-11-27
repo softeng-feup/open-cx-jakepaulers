@@ -74,7 +74,9 @@ class QuestionCard extends CardTemplate {
                     Row (
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(_question.getAgeString(), style: CardTemplate.dateStyle(context)),
+                        Text(_question.getAgeString() , style: CardTemplate.dateStyle(context)),
+                        Text(_question.edited ? " (edited)" : "", style: CardTemplate.editedStyle(context).copyWith(fontStyle: FontStyle.italic)),
+                        Spacer(),
                         Text(_question.getCommentsString(), style: CardTemplate.dateStyle(context)),
                       ],
                     )

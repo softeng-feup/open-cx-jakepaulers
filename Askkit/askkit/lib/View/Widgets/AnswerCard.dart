@@ -56,8 +56,8 @@ class AnswerCard extends CardTemplate {
                 )
               ),
               Spacer(),
-              Text(_answer.getAgeString(), style: CardTemplate.dateStyle(context), textAlign: TextAlign.end),
-
+              Text(_answer.getAgeString() , style: CardTemplate.dateStyle(context)),
+              Text(_answer.edited ? " (edited)" : "", style: CardTemplate.editedStyle(context).copyWith(fontStyle: FontStyle.italic)),
             ],
           ),
           Container(
