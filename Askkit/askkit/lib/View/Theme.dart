@@ -12,6 +12,7 @@ class AskkitThemes {
         buttonColor: Colors.blueAccent,
         accentColor: Color(0xFFE64A19),
         dividerColor: Color(0xFFBDBDBD),
+        highlightColor: Colors.blueAccent,
 
       inputDecorationTheme: InputDecorationTheme(
         hintStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.blueAccent),

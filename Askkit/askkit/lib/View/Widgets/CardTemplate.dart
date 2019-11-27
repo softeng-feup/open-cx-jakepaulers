@@ -31,6 +31,7 @@ abstract class CardTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: InkWell(
+        highlightColor: Theme.of(context).dialogBackgroundColor,
         onLongPress: () => onHold(context),
         onTap: () => onClick(context),
         child: Container(

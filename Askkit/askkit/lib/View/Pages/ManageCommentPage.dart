@@ -60,6 +60,8 @@ abstract class ManageCommentPage extends StatelessWidget {
   }
 
   void _onSubmitPressed(BuildContext context) {
+    if (!_formkey.currentState.validate())
+      return;
     if (_controller.text == this.initialContent())
       Navigator.pop(context, null);
     else Navigator.pop(context, _controller.text);

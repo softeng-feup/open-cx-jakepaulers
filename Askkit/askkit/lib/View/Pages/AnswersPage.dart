@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
-import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Pages/ManageCommentPage.dart';
@@ -10,6 +9,7 @@ import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/Borders.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CenterText.dart';
+import 'package:askkit/View/Widgets/CustomListView.dart';
 import 'package:askkit/View/Widgets/DynamicFAB.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +31,7 @@ class AnswersPage extends StatefulWidget {
 class AnswersPageState extends State<AnswersPage> implements ModelListener {
   List<Answer> answers = new List();
 
-  bool loading = false;
+  bool loaded = false;
   Timer minuteTimer;
   ScrollController scrollController;
 
@@ -46,31 +46,25 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
     super.dispose();
   }
 
-  void refreshModel() {
-    this.fetchQuestion();
-    this.fetchAnswers();
-
-    if (scrollController.hasClients)
-      scrollController.animateTo(0, duration: Duration(seconds: 1), curve: Curves.ease);
+  Future<void> refreshModel() async {
+    Stopwatch sw = Stopwatch()..start();
+    await Future.wait([this.fetchQuestion(), this.fetchAnswers()]);
+    if (this.mounted)
+      setState(() { loaded = true; });
+    print("Answer fetch time: " + sw.elapsed.toString());
   }
 
-  void fetchQuestion() async {
+  Future<void> fetchQuestion() async {
     try {
       await widget._dbcontroller.refreshQuestion(widget._question);
-      setState(() { });
     } on Error {
       Navigator.pop(context);
       widget._listener.refreshModel();
     }
   }
 
-  void fetchAnswers() async {
-    Stopwatch sw = Stopwatch()..start();
-    setState(() { loading = true; });
+  Future<void> fetchAnswers() async {
     answers = await widget._dbcontroller.getAnswers(widget._question);
-    if (this.mounted)
-      setState(() { loading = false; });
-    print("Answer fetch time: " + sw.elapsed.toString());
   }
 
   @override
@@ -79,9 +73,6 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
         appBar: AppBar(
             title: Text("Answers"),
             backgroundColor: Theme.of(context).primaryColor,
-            actions: <Widget>[
-              IconButton(icon: Icon(Icons.refresh), onPressed: refreshModel),
-            ],
         ),
         backgroundColor: Theme.of(context).backgroundColor,
         body: getBody(),
@@ -94,16 +85,17 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
         children: <Widget>[
           QuestionCard(this, widget._question, false, widget._dbcontroller),
           Divider(color: CardTemplate.cardShadowColor, thickness: 1.0, height: 1.0),
-          Visibility(visible: this.loading, child: LinearProgressIndicator()),
+          Visibility(visible: !this.loaded, child: LinearProgressIndicator()),
           Expanded(child: answerList(widget._question))
         ]
     );
   }
 
   Widget answerList(Question question) {
-    if (answers.length == 0 && !this.loading)
+    if (answers.length == 0 && this.loaded)
       return CenterText("This human needs assistance!\nLet's help him! 😃", textScale: 1.25);
-    return ListView.builder(
+    return CustomListView(
+        onRefresh: refreshModel,
         controller: scrollController,
         itemCount: answers.length,
         itemBuilder: (BuildContext context, int i) {
@@ -116,7 +108,7 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
                 ],
               )
           );
-        }
+       }
     );
   }
 
