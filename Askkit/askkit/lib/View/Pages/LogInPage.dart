@@ -185,6 +185,7 @@ class _LogInPageState extends State<LogInPage> {
       decoration: InputDecoration(
         hintText: hint,
         prefixIcon: Icon(icon, color: Theme.of(context).iconTheme.color),
+        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.blueAccent, width: 1.0)),
         suffixIcon: suffixIcon,
       )
     );

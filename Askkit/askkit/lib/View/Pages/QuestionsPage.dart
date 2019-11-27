@@ -126,7 +126,7 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
               ),
               Container(
                   margin: EdgeInsets.only(bottom: 10.0),
-                  child: Text(widget._talk.title, style: Theme.of(context).textTheme.headline, textAlign: TextAlign.center)
+                  child: Text(widget._talk.title, style: Theme.of(context).textTheme.headline.copyWith(height: 1.25), textAlign: TextAlign.center)
               ),
               Container(
                   child: Text(widget._talk.description, style: Theme.of(context).textTheme.subhead, textAlign: TextAlign.center)
