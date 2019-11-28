@@ -67,7 +67,7 @@ class TalkSearchDelegate extends SearchDelegate<Talk> implements ModelListener {
       return LinearProgressIndicator();
     if (query.isEmpty)
       return Container();
-    return talkList(allTalks.where((talk) => match(talk, query)).toList());
+    return talkList(allTalks.where((talk) => match(talk, query)).toList(), context);
   }
 
   @override
@@ -78,34 +78,38 @@ class TalkSearchDelegate extends SearchDelegate<Talk> implements ModelListener {
     if (query.isEmpty)
       suggestions = allTalks;
     else suggestions = allTalks.where((talk) => match(talk, query)).toList();
-    return stringList(suggestions.sublist(0, min(suggestions.length, maxSuggestions)).map((suggestion) => suggestion.title).toList(), context);
+    return talkList(suggestions.sublist(0, min(suggestions.length, maxSuggestions)), context);
   }
 
-  Widget stringList(List<String> strings, BuildContext context) {
-    if (strings.isEmpty)
+  // -- Unused -- //
+  Widget talkPreviewList(List<Talk> talks, BuildContext context) {
+    if (talks.isEmpty)
       return Container();
     return Container(
         decoration: ShadowDecoration(color: Theme.of(context).canvasColor, blurRadius: 2.0, spreadRadius: 1.0),
         child: ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
-            itemCount: strings.length,
+            itemCount: talks.length,
             itemBuilder: (BuildContext context, int i) {
-              return ListTile(
-                onTap: () {
-                  showResults(context);
-                  query = strings[i];
-                },
-                title: Text(strings[i], style: TextStyle(color: Colors.black),),
-              );
+              return Column(
+                children: <Widget>[
+                  i != 0 ? Divider() : Container(padding: EdgeInsets.all(5.0)),
+                  ListTile(
+                      onTap: () {
+                        showResults(context);
+                        query = talks[i].title;
+                      },
+                      title: Text(talks[i].title, style: TextStyle(color: Colors.black)),
+                      trailing: Text(talks[i].room, style: TextStyle(color: Colors.black))
+                  ),
+              ]);
             }
         )
-    //  height: 100,
-     // decoration: ShadowDecoration(color: Theme.of(context).canvasColor, blurRadius: 5.0, spreadRadius: 5.0, offset: Offset(0, 1)),
     );
   }
 
-  Widget talkList(List<Talk> talks) {
+  Widget talkList(List<Talk> talks, BuildContext context) {
     if (talks.isEmpty)
       return Container();
     return ListView.builder(
