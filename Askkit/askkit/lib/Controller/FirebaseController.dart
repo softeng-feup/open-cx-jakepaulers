@@ -12,6 +12,21 @@ import 'Authenticator.dart';
 class FirebaseController implements DatabaseController {
   static final Firestore firebase =  Firestore.instance;
   static User _currentUser;
+  static Future<User> _currentUserFuture;
+
+  Future<User> _loadCurrentUser() async {
+    FirebaseUser user =  await Auth.getCurrentUser();
+    if (user == null)
+      return null;
+    _currentUser = await getUserByEmail(user.email);
+    if (_currentUser == null)
+      await Auth.signOut();
+    return _currentUser;
+  }
+  
+  FirebaseController() {
+    _currentUserFuture = _loadCurrentUser();
+  }
 
   @override
   Future<DocumentReference> addAnswer(Question question, String content) {
@@ -168,13 +183,8 @@ class FirebaseController implements DatabaseController {
   }
 
   Future<bool> isAlreadyLoggedIn() async {
-    FirebaseUser user = await Auth.getCurrentUser();
-    if (user == null)
-      return false;
-    _currentUser = await getUserByEmail(user.email);
-    if (_currentUser == null)
-      Auth.signOut();
-    return _currentUser != null;
+    User user = await _currentUserFuture;
+    return user != null;
   }
 
   @override
