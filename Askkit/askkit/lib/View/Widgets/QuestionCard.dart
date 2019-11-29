@@ -7,6 +7,7 @@ import 'package:askkit/View/Pages/ManageCommentPage.dart';
 import 'package:askkit/View/Pages/ProfilePage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -36,10 +37,13 @@ class QuestionCard extends CardTemplate {
             items: [
               Row(children: <Widget>[Icon(Icons.edit), Text('  Edit', style: Theme.of(context).textTheme.body1)]),
               Row(children: <Widget>[Icon(Icons.delete), Text('  Delete', style: Theme.of(context).textTheme.body1)]),
+              Row(children: <Widget>[Icon(Icons.remove_red_eye), Text('  Mark as answered', style: Theme.of(context).textTheme.body1)]),
             ],
             actions: [
-                  () => editQuestion(context),
-                  () => deleteQuestion(context),
+              () => editQuestion(context),
+              () => deleteQuestion(context),
+              () => markQuestion(context),
+
             ]);
     }
 
@@ -53,9 +57,16 @@ class QuestionCard extends CardTemplate {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Visibility(
+                      visible: this._question.answered,
+                      child: Container(
+                        padding: EdgeInsets.only(top:5.0, bottom: 10.0),
+                        child: Text("Answered!", style: TextStyle(fontSize: 16, color: Theme.of(context).accentColor, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
                     GestureDetector(
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(this._question.user, this._dbcontroller))),
-                        child: UserAvatar(_dbcontroller.getCurrentUser(),
+                        child: UserAvatar(_question.user,
                             avatarRadius: 15.0,
                             textStyle: CardTemplate.usernameStyle(context, _question.user == _dbcontroller.getCurrentUser())
                         )
@@ -92,6 +103,7 @@ class QuestionCard extends CardTemplate {
     if (comment == null)
       return;
     this._dbcontroller.editQuestion(this._question, comment);
+    this._question.content = comment;
     this.listener.refreshModel();
   }
 
@@ -100,7 +112,24 @@ class QuestionCard extends CardTemplate {
         title: "Are you sure?",
         content: "This will delete your comment.",
         context: context,
-        yesPressed: () async { await _dbcontroller.deleteQuestion(_question); this.listener.refreshModel(); } ,
+        yesPressed: () async {
+          await this._dbcontroller.deleteQuestion(_question);
+          this.listener.refreshModel();
+        } ,
+        noPressed: () {}
+    ).show();
+  }
+
+  void markQuestion(BuildContext context) async {
+    ConfirmDialog(
+        title: "Mark question as answered?",
+        content: "This will notify every user who upvoted it.",
+        context: context,
+        yesPressed: () {
+          this._dbcontroller.flagQuestionAsAnswered(_question);
+          this._question.markAnswered();
+          this.listener.refreshModel();
+        },
         noPressed: () {}
     ).show();
   }

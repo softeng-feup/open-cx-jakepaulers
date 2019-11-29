@@ -48,6 +48,7 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
 
   Future<void> refreshModel() async {
     Stopwatch sw = Stopwatch()..start();
+    setState(() { });
     await Future.wait([this.fetchQuestion(), this.fetchAnswers()]);
     if (this.mounted)
       setState(() { loaded = true; });

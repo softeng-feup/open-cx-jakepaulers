@@ -47,6 +47,7 @@ class TalksPageState extends State<TalksPage> implements ModelListener {
 
   Future<void> refreshModel() async {
     Stopwatch sw = Stopwatch()..start();
+    setState(() { });
     talks = await widget._dbcontroller.getTalks();
     if (this.mounted)
       setState(() { loaded = true; });

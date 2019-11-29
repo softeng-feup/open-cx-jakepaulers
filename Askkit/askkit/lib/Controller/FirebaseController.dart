@@ -54,6 +54,8 @@ class FirebaseController implements DatabaseController {
     question.numComments = await this._getNumAnswers(question);
     if (document.data['edited'])
       question.setEdited();
+    if (document.data['answered'])
+      question.markAnswered();
     return question;
   }
 
@@ -285,17 +287,21 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<void> deleteQuestion(Question question) async {
-    await question.reference.delete();
-    this._deleteAnswers(question);
+    await Future.wait([question.reference.delete(),  _deleteAnswers(question)]);
   }
 
   @override
-  Future<void> editAnswer(Answer answer, String newAnswer) {
-    answer.reference.updateData({'content' : newAnswer, 'edited' : true});
+  Future<void> editAnswer(Answer answer, String newAnswer) async {
+    await answer.reference.updateData({'content' : newAnswer, 'edited' : true});
   }
 
   @override
-  Future<void> editQuestion(Question question, String newQuestion) {
-    question.reference.updateData({'content' : newQuestion, 'edited' : true});
+  Future<void> editQuestion(Question question, String newQuestion) async {
+    await question.reference.updateData({'content' : newQuestion, 'edited' : true});
+  }
+
+  @override
+  Future<void> flagQuestionAsAnswered(Question question) async {
+    await question.reference.updateData({'answered' : true});
   }
 }

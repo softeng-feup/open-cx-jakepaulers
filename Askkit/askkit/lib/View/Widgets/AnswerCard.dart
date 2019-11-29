@@ -34,7 +34,7 @@ class AnswerCard extends CardTemplate {
         ],
         actions: [
           () => editAnswer(context),
-          () => deleteAnswer(context),
+          () => deleteAnswer(context)
         ]);
   }
 
@@ -46,7 +46,7 @@ class AnswerCard extends CardTemplate {
             children: <Widget>[
               GestureDetector(
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(this._answer.user, this._dbcontroller))),
-                  child: UserAvatar(_dbcontroller.getCurrentUser(),
+                  child: UserAvatar(_answer.user,
                       avatarRadius: 15.0,
                       textStyle: CardTemplate.usernameStyle(context, _answer.user == _dbcontroller.getCurrentUser())
                   )
@@ -72,6 +72,7 @@ class AnswerCard extends CardTemplate {
     if (comment == null)
       return;
     this._dbcontroller.editAnswer(this._answer, comment);
+    this._answer.content = comment;
     this.listener.refreshModel();
   }
 
@@ -80,7 +81,10 @@ class AnswerCard extends CardTemplate {
         title: "Are you sure?",
         content: "This will delete your comment.",
         context: context,
-        yesPressed: () async { await _dbcontroller.deleteAnswer(_answer); this.listener.refreshModel(); } ,
+        yesPressed: () async {
+          await this._dbcontroller.deleteAnswer(_answer);
+          this.listener.refreshModel();
+        } ,
         noPressed: () {}
     ).show();
   }

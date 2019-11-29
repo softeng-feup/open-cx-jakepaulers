@@ -7,9 +7,15 @@ class Question extends Comment {
   int userVote = 0;
   int numComments = 1;
 
+  bool answered = false;
+
   DocumentReference talk;
 
   Question(this.talk, User user, String question, DateTime date, DocumentReference reference) : super(user, question, date, reference);
+
+  void markAnswered() {
+    this.answered = true;
+  }
 
   void copyFrom(Question newQuestion) {
     this.talk = newQuestion.talk;

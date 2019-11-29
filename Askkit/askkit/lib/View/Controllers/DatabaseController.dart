@@ -36,6 +36,8 @@ abstract class DatabaseController {
   Future<void> editAnswer(Answer answer, String newAnswer);
   Future<void> deleteAnswer(Answer answer);
 
+  Future<void> flagQuestionAsAnswered(Question question);
+
 
 
 

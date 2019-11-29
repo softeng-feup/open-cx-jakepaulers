@@ -50,6 +50,7 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
 
   Future<void> refreshModel() async {
     Stopwatch sw = Stopwatch()..start();
+    setState(() { });
     questions = await widget._dbcontroller.getQuestions(widget._talk);
     questions.sort((question1, question2) => question2.upvotes.compareTo(question1.upvotes));
     if (this.mounted)
