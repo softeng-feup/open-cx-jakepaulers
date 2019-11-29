@@ -2,6 +2,7 @@ import 'package:askkit/Icons/custom_icons.dart';
 import 'package:askkit/Model/Talk.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
+import 'package:askkit/View/Controllers/TalkSearchDelegate.dart';
 import 'package:askkit/View/Pages/LogInPage.dart';
 import 'package:askkit/View/Pages/ProfilePage.dart';
 import 'package:askkit/View/Widgets/CenterText.dart';
@@ -15,8 +16,9 @@ import 'package:flutter/material.dart';
 
 class TalksPage extends StatefulWidget {
   final DatabaseController _dbcontroller;
+  final SearchDelegate talkSearchDelegate;
 
-  TalksPage(this._dbcontroller);
+  TalksPage(this._dbcontroller) : talkSearchDelegate = TalkSearchDelegate(_dbcontroller);
 
   @override
   State<StatefulWidget> createState() {
@@ -174,8 +176,11 @@ class TalksPageState extends State<TalksPage> implements ModelListener {
     Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(widget._dbcontroller.getCurrentUser(), widget._dbcontroller)));
   }
 
-  void search() {
-
+  void search() async {
+    await showSearch<Talk>(
+      context: context,
+      delegate: widget.talkSearchDelegate
+    );
   }
 
   void switchMode() {
