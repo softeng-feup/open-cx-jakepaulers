@@ -146,6 +146,7 @@ class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
     questions.sort((question1, question2) => question2.upvotes.compareTo(question1.upvotes));
     if (this.mounted)
       setState(() { loading = false; });
+    print(questions.length);
     print("Question fetch time: " + sw.elapsed.toString());
   }
 }

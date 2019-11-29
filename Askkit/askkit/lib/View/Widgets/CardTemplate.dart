@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 abstract class CardTemplate extends StatelessWidget {
 
-  static const Color cardColor = Colors.white;
 
   static const Color cardShadowColor = Color.fromARGB(255, 180, 180, 180);
 
@@ -39,7 +38,7 @@ abstract class CardTemplate extends StatelessWidget {
             child: buildCardContent(context)
         ),
       ),
-      color: CardTemplate.cardColor,
+      color: Theme.of(context).canvasColor,
     );
   }
 }

@@ -104,7 +104,7 @@ class FirebaseController implements DatabaseController {
 
   Future<List<Question>> getQuestionsByUser(User user) async {
     List<Future<Question>> questions = new List();
-    QuerySnapshot snapshot = await firebase.collection("questions").where('username', isEqualTo: user.username).getDocuments();
+    QuerySnapshot snapshot = await firebase.collection("questions").where('user', isEqualTo: user.reference).getDocuments();
     for (DocumentSnapshot document in snapshot.documents) {
       questions.add(_makeQuestionFromDoc(document));
     }
@@ -135,7 +135,7 @@ class FirebaseController implements DatabaseController {
   @override
   Future<List<Answer>> getAnswersByUser(User user) async {
     List<Future<Answer>> answers = new List();
-    QuerySnapshot snapshot = await firebase.collection("answers").where("username", isEqualTo: user.username).orderBy('uploadDate', descending: true).getDocuments();
+    QuerySnapshot snapshot = await firebase.collection("answers").where("user", isEqualTo: user.reference).orderBy('uploadDate', descending: true).getDocuments();
     for (DocumentSnapshot document in snapshot.documents) {
       answers.add(_makeAnswerFromDoc(document));
     }

@@ -123,12 +123,12 @@ class UpvoteColumnState extends State<UpvoteColumn> {
       children: <Widget>[
         GestureDetector(
             onTap: () => upvote(),
-            child: Icon(Icons.keyboard_arrow_up, size: 30.0, color: widget._question.userVote == 1 ? Colors.green : Colors.black)
+            child: Icon(Icons.keyboard_arrow_up, size: 30.0, color: widget._question.userVote == 1 ? Colors.green : Theme.of(context).iconTheme.color)
         ),
         Text("${widget._question.upvotes}"),
         GestureDetector(
             onTap: () => downvote(),
-            child: Icon(Icons.keyboard_arrow_down, size: 30.0, color: widget._question.userVote == -1 ? Colors.red : Colors.black)
+            child: Icon(Icons.keyboard_arrow_down, size: 30.0, color: widget._question.userVote == -1 ? Colors.red : Theme.of(context).iconTheme.color)
         ),
       ],
     );

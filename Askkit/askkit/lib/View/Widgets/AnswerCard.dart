@@ -45,12 +45,13 @@ class AnswerCard extends CardTemplate {
           Row(
             children: <Widget>[
               GestureDetector(
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(this._answer.user, this._dbcontroller))),
-                child: UserAvatar(_dbcontroller.getCurrentUser(),
-                    avatarRadius: 15.0,
-                    textStyle: CardTemplate.usernameStyle(context, _answer.user == _dbcontroller.getCurrentUser())
-                )
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(this._answer.user, this._dbcontroller))),
+                  child: UserAvatar(_dbcontroller.getCurrentUser(),
+                      avatarRadius: 15.0,
+                      textStyle: CardTemplate.usernameStyle(context, _answer.user == _dbcontroller.getCurrentUser())
+                  )
               ),
+
               Spacer(),
               Text(_answer.getAgeString() , style: CardTemplate.dateStyle(context)),
               Text(_answer.edited ? " (edited)" : "", style: CardTemplate.editedStyle(context).copyWith(fontStyle: FontStyle.italic)),
