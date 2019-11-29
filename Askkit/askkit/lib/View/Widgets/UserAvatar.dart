@@ -25,12 +25,7 @@ class UserAvatar extends StatelessWidget {
               shape: BoxShape.circle,
             )
         ),
-        Expanded(
-            child: Text(user.username,
-              style: textStyle,
-              overflow: TextOverflow.ellipsis
-            )
-        )
+        Text(user.username, style: textStyle)
       ],
     );
   }

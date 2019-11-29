@@ -12,21 +12,6 @@ import 'Authenticator.dart';
 class FirebaseController implements DatabaseController {
   static final Firestore firebase =  Firestore.instance;
   static User _currentUser;
-  static Future<User> _currentUserFuture;
-
-  Future<User> _loadCurrentUser() async {
-    FirebaseUser user =  await Auth.getCurrentUser();
-    if (user == null)
-      return null;
-    _currentUser = await getUserByEmail(user.email);
-    if (_currentUser == null)
-      await Auth.signOut();
-    return _currentUser;
-  }
-  
-  FirebaseController() {
-    _currentUserFuture = _loadCurrentUser();
-  }
 
   @override
   Future<DocumentReference> addAnswer(Question question, String content) {
@@ -119,7 +104,7 @@ class FirebaseController implements DatabaseController {
 
   Future<List<Question>> getQuestionsByUser(User user) async {
     List<Future<Question>> questions = new List();
-    QuerySnapshot snapshot = await firebase.collection("questions").where('username', isEqualTo: user.username).getDocuments();
+    QuerySnapshot snapshot = await firebase.collection("questions").where('user', isEqualTo: user.reference).getDocuments();
     for (DocumentSnapshot document in snapshot.documents) {
       questions.add(_makeQuestionFromDoc(document));
     }
@@ -150,7 +135,7 @@ class FirebaseController implements DatabaseController {
   @override
   Future<List<Answer>> getAnswersByUser(User user) async {
     List<Future<Answer>> answers = new List();
-    QuerySnapshot snapshot = await firebase.collection("answers").where("username", isEqualTo: user.username).orderBy('uploadDate', descending: true).getDocuments();
+    QuerySnapshot snapshot = await firebase.collection("answers").where("user", isEqualTo: user.reference).orderBy('uploadDate', descending: true).getDocuments();
     for (DocumentSnapshot document in snapshot.documents) {
       answers.add(_makeAnswerFromDoc(document));
     }
@@ -183,8 +168,13 @@ class FirebaseController implements DatabaseController {
   }
 
   Future<bool> isAlreadyLoggedIn() async {
-    User user = await _currentUserFuture;
-    return user != null;
+    FirebaseUser user = await Auth.getCurrentUser();
+    if (user == null)
+      return false;
+    _currentUser = await getUserByEmail(user.email);
+    if (_currentUser == null)
+      Auth.signOut();
+    return _currentUser != null;
   }
 
   @override
