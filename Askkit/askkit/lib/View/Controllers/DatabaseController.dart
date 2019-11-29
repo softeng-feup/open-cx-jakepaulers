@@ -37,6 +37,7 @@ abstract class DatabaseController {
   Future<void> deleteAnswer(Answer answer);
 
   Future<void> flagQuestionAsAnswered(Question question);
+  Future<void> flagAnswerAsBest(Answer answer, bool isBest);
 
 
 

@@ -1,5 +1,6 @@
 import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Comment.dart';
+import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Pages/ManageCommentPage.dart';
@@ -15,33 +16,48 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'CustomDialog.dart';
 
 class AnswerCard extends CardTemplate {
+  final User _questionPoster;
   final Answer _answer;
   final DatabaseController _dbcontroller;
 
-  AnswerCard(ModelListener listener, this._answer, this._dbcontroller) : super(listener);
+  AnswerCard(ModelListener listener, this._answer, this._questionPoster, this._dbcontroller) : super(listener);
 
   @override onClick(BuildContext context) {}
 
   @override
   onHold(BuildContext context) {
-    if ( _dbcontroller.getCurrentUser() != _answer.user)
+    User currentUser = _dbcontroller.getCurrentUser();
+    List<Widget> items = [];
+    List<VoidCallback> actions = [];
+    if (currentUser != _answer.user && currentUser != _questionPoster)
       return;
-    CustomPopupMenu.show(
-        context,
-        items: [
-          Row(children: <Widget>[Icon(Icons.edit), Text('  Edit', style: Theme.of(context).textTheme.body1)]),
-          Row(children: <Widget>[Icon(Icons.delete), Text('  Delete', style: Theme.of(context).textTheme.body1)]),
-        ],
-        actions: [
-          () => editAnswer(context),
-          () => deleteAnswer(context)
-        ]);
+    if (currentUser == _questionPoster) {
+      String verb = _answer.bestAnswer ? 'Unmark' : 'Mark';
+      IconData icon =  _answer.bestAnswer ? Icons.clear : Icons.check;
+      items.add(Row(children: <Widget>[Icon(icon), Text('  $verb as best', style: Theme.of(context).textTheme.body1)]));
+      actions.add(() => markBestAnswer(context));
+    }
+    if (currentUser == _answer.user) {
+      items.add(Row(children: <Widget>[Icon(Icons.edit), Text('  Edit', style: Theme.of(context).textTheme.body1)]));
+      items.add(Row(children: <Widget>[Icon(Icons.delete), Text('  Delete', style: Theme.of(context).textTheme.body1)]));
+      actions.add(() => editAnswer(context));
+      actions.add(() => deleteAnswer(context));
+    }
+    CustomPopupMenu.show(context, items: items, actions: actions);
   }
 
   @override
   Widget buildCardContent(BuildContext context) {
     return Column(
         children: <Widget>[
+          Visibility(
+            visible: this._answer.bestAnswer,
+            child: Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(bottom: 7.5),
+              child: Icon(Icons.check, color: Colors.green),
+            ),
+          ),
           Row(
             children: <Widget>[
               GestureDetector(
@@ -89,4 +105,9 @@ class AnswerCard extends CardTemplate {
     ).show();
   }
 
+  void markBestAnswer(BuildContext context) async {
+    this._answer.bestAnswer = !this._answer.bestAnswer;
+    this._dbcontroller.flagAnswerAsBest(_answer, _answer.bestAnswer);
+    this.listener.refreshModel();
+  }
 }

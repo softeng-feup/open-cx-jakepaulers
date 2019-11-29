@@ -68,6 +68,8 @@ class FirebaseController implements DatabaseController {
     Answer answer =  Answer(user, content, date.toDate(), question, document.reference);
     if (document.data['edited'])
       answer.setEdited();
+    if (document.data['bestanswer'])
+      answer.markAsBest(true);
     return answer;
   }
 
@@ -125,7 +127,7 @@ class FirebaseController implements DatabaseController {
   @override
   Future<List<Answer>> getAnswers(Question question) async {
     List<Future<Answer>> answers = new List();
-    QuerySnapshot snapshot = await firebase.collection("answers").where("question", isEqualTo: question.reference).orderBy('uploadDate', descending: false).getDocuments();
+    QuerySnapshot snapshot = await firebase.collection("answers").where("question", isEqualTo: question.reference).orderBy('bestanswer', descending: true).orderBy('uploadDate').getDocuments();
     for (DocumentSnapshot document in snapshot.documents) {
       answers.add(_makeAnswerFromDoc(document));
     }
@@ -303,5 +305,10 @@ class FirebaseController implements DatabaseController {
   @override
   Future<void> flagQuestionAsAnswered(Question question) async {
     await question.reference.updateData({'answered' : true});
+  }
+
+  @override
+  Future<void> flagAnswerAsBest(Answer answer, bool isBest) async {
+    await answer.reference.updateData({'bestanswer' : isBest});
   }
 }

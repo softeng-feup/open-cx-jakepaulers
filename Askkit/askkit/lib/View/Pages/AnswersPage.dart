@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
+import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Pages/ManageCommentPage.dart';
@@ -15,11 +16,12 @@ import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:flutter/material.dart';
 
 class AnswersPage extends StatefulWidget {
-  Question _question;
-  ModelListener _listener;
+  final User _talkhost;
+  final Question _question;
+  final ModelListener _listener;
   final DatabaseController _dbcontroller;
 
-  AnswersPage(this._question, this._listener, this._dbcontroller);
+  AnswersPage(this._question, this._listener, this._talkhost, this._dbcontroller);
 
   @override
   State<StatefulWidget> createState() {
@@ -84,7 +86,7 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
   Widget getBody() {
     return Column(
         children: <Widget>[
-          QuestionCard(this, widget._question, false, widget._dbcontroller),
+          QuestionCard(this, widget._question, false, widget._talkhost, widget._dbcontroller),
           Divider(color: CardTemplate.cardShadowColor, thickness: 1.0, height: 1.0),
           Visibility(visible: !this.loaded, child: LinearProgressIndicator()),
           Expanded(child: answerList(widget._question))
@@ -104,7 +106,7 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
               decoration: BoxDecoration(border: BorderLeft(Theme.of(context).primaryColor, 4.0)),
               child: Column(
                 children: <Widget>[
-                  AnswerCard(this, answers[i], widget._dbcontroller),
+                  AnswerCard(this, answers[i], widget._question.user, widget._dbcontroller),
                   Divider(color: CardTemplate.cardShadowColor, thickness: 1.0, height: 1.0),
                 ],
               )

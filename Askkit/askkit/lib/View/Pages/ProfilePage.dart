@@ -132,7 +132,7 @@ class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
                     spreadRadius: 1.0,
                     offset: Offset(0, 1)),
                 margin: EdgeInsets.only(top: 10.0),
-                child: QuestionCard(this, question, true, widget._dbcontroller))
+                child: QuestionCard(this, question, true, null, widget._dbcontroller))
         ).toList()
     );
   }
@@ -192,7 +192,7 @@ class AnswersTabState extends State<AnswersTab> implements ModelListener {
                     spreadRadius: 1.0,
                     offset: Offset(0, 1)),
                 margin: EdgeInsets.only(top: 10.0),
-                child: AnswerCard(this, answer, widget._dbcontroller))
+                child: AnswerCard(this, answer, null, widget._dbcontroller))
         ).toList()
     );
   }

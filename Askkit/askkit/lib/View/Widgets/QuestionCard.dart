@@ -16,35 +16,37 @@ import 'CustomPopupMenu.dart';
 import 'UserAvatar.dart';
 
 class QuestionCard extends CardTemplate {
+    final User _talkHost;
     final bool _clickable;
     final Question _question;
     final DatabaseController _dbcontroller;
 
-    QuestionCard(ModelListener listener, this._question, this._clickable, this._dbcontroller) : super(listener);
+    QuestionCard(ModelListener listener, this._question, this._clickable, this._talkHost, this._dbcontroller) : super(listener);
 
     @override
     onClick(BuildContext context) {
       if (_clickable)
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AnswersPage(_question, listener, _dbcontroller)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AnswersPage(_question, listener, _talkHost, _dbcontroller)));
     }
 
     @override
     onHold(BuildContext context) {
-        if ( _dbcontroller.getCurrentUser() != _question.user)
-          return;
-        CustomPopupMenu.show(
-            context,
-            items: [
-              Row(children: <Widget>[Icon(Icons.edit), Text('  Edit', style: Theme.of(context).textTheme.body1)]),
-              Row(children: <Widget>[Icon(Icons.delete), Text('  Delete', style: Theme.of(context).textTheme.body1)]),
-              Row(children: <Widget>[Icon(Icons.remove_red_eye), Text('  Mark as answered', style: Theme.of(context).textTheme.body1)]),
-            ],
-            actions: [
-              () => editQuestion(context),
-              () => deleteQuestion(context),
-              () => markQuestion(context),
-
-            ]);
+      User currentUser = _dbcontroller.getCurrentUser();
+      List<Widget> items = [];
+      List<VoidCallback> actions = [];
+      if (currentUser != _question.user && currentUser != _talkHost)
+        return;
+      if (!_question.answered) {
+        items.add(Row(children: <Widget>[Icon(Icons.check), Text('  Mark as answered', style: Theme.of(context).textTheme.body1)]));
+        actions.add(() => markQuestion(context));
+      }
+      if (currentUser == _question.user) {
+        items.add(Row(children: <Widget>[Icon(Icons.edit), Text('  Edit', style: Theme.of(context).textTheme.body1)]));
+        items.add(Row(children: <Widget>[Icon(Icons.delete), Text('  Delete', style: Theme.of(context).textTheme.body1)]));
+        actions.add(() => editQuestion(context));
+        actions.add(() => deleteQuestion(context));
+      }
+      CustomPopupMenu.show(context, items: items, actions: actions);
     }
 
 
@@ -60,8 +62,8 @@ class QuestionCard extends CardTemplate {
                     Visibility(
                       visible: this._question.answered,
                       child: Container(
-                        padding: EdgeInsets.only(top:5.0, bottom: 10.0),
-                        child: Text("Answered!", style: TextStyle(fontSize: 16, color: Theme.of(context).accentColor, fontWeight: FontWeight.bold)),
+                        padding: EdgeInsets.only(bottom: 7.5),
+                        child: Icon(Icons.check_circle, color: Colors.green),
                       ),
                     ),
                     GestureDetector(
@@ -82,6 +84,7 @@ class QuestionCard extends CardTemplate {
                       children: <Widget>[
                         Text(_question.getAgeString() , style: CardTemplate.dateStyle(context)),
                         Text(_question.edited ? " (edited)" : "", style: CardTemplate.editedStyle(context).copyWith(fontStyle: FontStyle.italic)),
+
                         Spacer(),
                         Text(_question.getCommentsString(), style: CardTemplate.dateStyle(context)),
                       ],

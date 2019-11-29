@@ -91,7 +91,7 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
           return Container(
               decoration: ShadowDecoration(shadowColor: CardTemplate.cardShadowColor, spreadRadius: 1.0, offset: Offset(0, 1)),
               margin: EdgeInsets.only(top: 10.0),
-              child: QuestionCard(this, this.questions[i - 1], true, widget._dbcontroller)
+              child: QuestionCard(this, this.questions[i - 1], true, widget._talk.host, widget._dbcontroller)
           );
         }
     );
