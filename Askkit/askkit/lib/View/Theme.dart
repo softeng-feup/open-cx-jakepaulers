@@ -13,7 +13,6 @@ class AskkitThemes {
         accentColor: Color(0xFFE64A19),
         dividerColor: Color(0xFFBDBDBD),
         highlightColor: Colors.blueAccent,
-        brightness: Brightness.light,
         iconTheme: IconThemeData(
             color: Colors.black
         ),
@@ -44,7 +43,6 @@ class AskkitThemes {
         accentColor: Color(0xFFE64A19),
         dividerColor: Colors.indigo.shade300,
         highlightColor: Colors.indigo,
-        brightness: Brightness.dark,
         iconTheme: IconThemeData(
             color: Colors.black
         ),

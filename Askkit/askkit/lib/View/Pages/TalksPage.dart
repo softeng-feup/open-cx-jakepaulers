@@ -11,6 +11,7 @@ import 'package:askkit/View/Widgets/CustomListView.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
 import 'package:askkit/View/Widgets/TalkCard.dart';
 import 'package:askkit/View/Widgets/UserAvatar.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 
 
@@ -36,6 +37,7 @@ class TalksPageState extends State<TalksPage> implements ModelListener {
 
   @override void initState() {
     scrollController = ScrollController();
+    dayTheme = DynamicTheme.of(context).brightness == Brightness.light;
     this.refreshModel();
   }
 
@@ -188,5 +190,7 @@ class TalksPageState extends State<TalksPage> implements ModelListener {
       this.dayTheme = !this.dayTheme;
     });
 
+
+    DynamicTheme.of(context).setBrightness(this.dayTheme? Brightness.light: Brightness.dark);
   }
 }
