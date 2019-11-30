@@ -4,12 +4,16 @@ import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Widgets/AnswerCard.dart';
+<<<<<<< HEAD
 import 'package:askkit/View/Widgets/CardTemplate.dart';
+=======
+import 'package:askkit/View/Widgets/CustomListView.dart';
+>>>>>>> added support for changing image, username, password, email, bios
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
-import 'package:askkit/View/Widgets/TitleText.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatelessWidget {
   final DatabaseController _dbcontroller;
@@ -28,6 +32,7 @@ class ProfilePage extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
             title:  Text(_user.username + "'s Profile"),
           bottom: TabBar(
@@ -37,58 +42,78 @@ class ProfilePage extends StatelessWidget {
               Tab(text: 'Questions'),
               Tab(text: 'Answers')
             ]
-          )
+          ),
+          actions: <Widget>[
+            Visibility(visible: self, child: IconButton(icon: Icon(Icons.edit), onPressed: () => editProfile(context))),
+          ],
         ),
-        body: TabBarView(
-          children: [
-            createProfileTab(),
-            createQuestionsTab(),
-            createAnswersTab()
-          ]
-        )
+        body: Container(
+          decoration: new BoxDecoration(
+            image: new DecorationImage(image: _user.getImage(), fit: BoxFit.cover,),
+          ),
+          child: TabBarView(
+              children: [
+                createProfileTab(context),
+                createQuestionsTab(context),
+                createAnswersTab(context)
+              ]
+          )
+
+        ),
       )
     );
   }
 
-  Widget createProfileTab() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        CircleAvatar(
-            radius: 45.0,
-            backgroundImage: _user.getImage()
-        ),
-        getUsernameLine(),
-      ],
+  Widget createProfileTab(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.all(50),
+        decoration: ShadowDecoration(color: Theme.of(context).canvasColor, blurRadius: 5.0, spreadRadius: 1),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                  child: new CircleAvatar(radius: 45.0, backgroundImage: _user.getImage()),
+                  padding: EdgeInsets.all(1.0),
+                  decoration: new BoxDecoration(
+                    color: Theme.of(context).iconTheme.color, // border color
+                    shape: BoxShape.circle,
+                  )
+              ),
+              Container(
+                  child: Text(_user.username, style: Theme.of(context).textTheme.body2.copyWith(fontSize: 35)),
+                  margin: EdgeInsets.all(15)
+              ),
+              Text("Also known as: " + _user.name),
+              SizedBox(height: 10),
+              Text(_user.bios),
+
+            ],
+        )
     );
   }
 
-  Widget createQuestionsTab() {
+  Widget createQuestionsTab(BuildContext context) {
     return QuestionsTab(this._user, this._dbcontroller);
   }
 
+<<<<<<< HEAD
   createAnswersTab() {
+=======
+  Widget createAnswersTab(BuildContext context) {
+>>>>>>> added support for changing image, username, password, email, bios
     return AnswersTab(this._user, this._dbcontroller);
   }
 
-  changeUsername() {
-    print("Lmao, culpa o Moás");
-  }
+  Future editProfile(BuildContext context) {
+    print("ta aqi para testar");
 
-  Widget getUsernameLine() {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          TitleText(text: _user.username, margin: EdgeInsets.only(top: 10.0)),
-          Visibility(
-              visible: this.self,
-              child: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: changeUsername
-              )
-          )
-        ]
-    );
+    ImagePicker.pickImage(source: ImageSource.gallery).then((image) async {
+      await _dbcontroller.changeImage(image);
+    });
+    //Scaffold.of(context).showSnackBar(SnackBar(content: Text('Yay! A SnackBar!')));
+
   }
 }
 
@@ -127,6 +152,7 @@ class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
   }
 
   questionList() {
+<<<<<<< HEAD
     return ListView(
         children: questions.map((question) =>
             Container(
@@ -138,6 +164,19 @@ class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
                 margin: EdgeInsets.only(top: 10.0),
                 child: QuestionCard(this, question, true, null, widget._dbcontroller))
         ).toList()
+=======
+    return CustomListView(
+      onRefresh: () => refreshModel(false),
+      controller: scrollController,
+      itemCount: this.questions.length,
+      itemBuilder: (BuildContext context, int i) {
+        return Container(
+            decoration: ShadowDecoration(shadowColor: Colors.black.withAlpha(150), spreadRadius: 1.0, offset: Offset(0, 1)),
+            margin: EdgeInsets.only(top: 10.0),
+            child: QuestionCard(this, questions[i], true, null, widget._dbcontroller)
+        );
+      },
+>>>>>>> added support for changing image, username, password, email, bios
     );
   }
 
@@ -187,6 +226,7 @@ class AnswersTabState extends State<AnswersTab> implements ModelListener {
   }
 
   answerList() {
+<<<<<<< HEAD
     return ListView(
         children: answers.map((answer) =>
             Container(
@@ -197,6 +237,19 @@ class AnswersTabState extends State<AnswersTab> implements ModelListener {
                 margin: EdgeInsets.only(top: 10.0),
                 child: AnswerCard(this, answer, null, widget._dbcontroller))
         ).toList()
+=======
+    return CustomListView(
+        onRefresh: () => refreshModel(false),
+        controller: scrollController,
+        itemCount: this.answers.length,
+        itemBuilder: (BuildContext context, int i) {
+          return Container(
+              decoration: ShadowDecoration(shadowColor: Colors.black.withAlpha(150), spreadRadius: 1.0, offset: Offset(0, 1)),
+              margin: EdgeInsets.only(top: 10.0),
+              child: AnswerCard(this, answers[i], null, widget._dbcontroller)
+          );
+        }
+>>>>>>> added support for changing image, username, password, email, bios
     );
   }
 
