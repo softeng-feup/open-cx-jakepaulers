@@ -8,7 +8,6 @@ import 'package:askkit/View/Pages/ManageCommentPage.dart';
 import 'package:askkit/View/Pages/ProfilePage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -140,8 +139,8 @@ class QuestionCard extends CardTemplate {
 }
 
 class UpvoteColumn extends StatefulWidget {
-  Question _question;
-  DatabaseController _dbcontroller;
+  final Question _question;
+  final DatabaseController _dbcontroller;
 
   UpvoteColumn(this._question, this._dbcontroller);
 

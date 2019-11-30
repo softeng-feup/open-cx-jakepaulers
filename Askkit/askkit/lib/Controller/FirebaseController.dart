@@ -35,7 +35,6 @@ class FirebaseController implements DatabaseController {
     return firebase.collection("questions").add({'talk': talk.reference, 'user': _currentUser.reference, 'content': content, 'edited': false, 'answered' : false, 'uploadDate' : Timestamp.fromDate(DateTime.now())});
   }
 
-  @override
   Future<DocumentReference> addUser(User user) {
     return firebase.collection("users").add({'username' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image});
   }
@@ -274,9 +273,9 @@ class FirebaseController implements DatabaseController {
   }
 
   @override
-  Future<void> signOut() {
+  Future<void> signOut() async {
     _currentUser = null;
-    Auth.signOut();
+    return await Auth.signOut();
   }
 
   @override

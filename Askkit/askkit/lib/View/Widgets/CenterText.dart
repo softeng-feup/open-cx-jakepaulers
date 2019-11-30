@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
 class CenterText extends StatelessWidget {
-  String text;
-  double textScale;
+  final String text;
+  final double textScale;
 
   CenterText(this.text, {this.textScale = 1.0});
 

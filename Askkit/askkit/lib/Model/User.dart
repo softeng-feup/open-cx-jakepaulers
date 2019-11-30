@@ -25,4 +25,6 @@ class User {
   }
 
   bool operator==(covariant User other) => other.username == this.username;
+
+  @override int get hashCode => username.hashCode;
 }

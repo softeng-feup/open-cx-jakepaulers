@@ -3,10 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class UserAvatar extends StatelessWidget {
-  double avatarRadius;
-  User user;
-
-  TextStyle textStyle;
+  final double avatarRadius;
+  final User user;
+  final TextStyle textStyle;
 
   UserAvatar(this.user, {this.avatarRadius = 10.0, this.textStyle});
   @override

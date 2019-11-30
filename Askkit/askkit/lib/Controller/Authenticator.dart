@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 
 class Auth {
   static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;

@@ -3,10 +3,7 @@ import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:askkit/View/Widgets/CustomTextForm.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-//import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class NewTalkPage extends StatelessWidget {
   static final GlobalKey<FormState> _formkey1 = GlobalKey<FormState>();
@@ -20,7 +17,7 @@ class NewTalkPage extends StatelessWidget {
   static final TextEditingController _usernameController = TextEditingController();
   static final TextEditingController _dateController = TextEditingController();
 
-  DatabaseController dbcontroller;
+  final DatabaseController dbcontroller;
 
   NewTalkPage(this.dbcontroller);
   @override

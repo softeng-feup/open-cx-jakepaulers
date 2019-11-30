@@ -11,11 +11,9 @@ import '../Controllers/DatabaseController.dart';
 import 'TalksPage.dart';
 
 class LogInPage extends StatefulWidget {
-  DatabaseController _dbcontroller;
+  final DatabaseController _dbcontroller;
 
-  LogInPage(DatabaseController controller) {
-    this._dbcontroller = controller;
-  }
+  LogInPage(this._dbcontroller);
 
   @protected
   @override

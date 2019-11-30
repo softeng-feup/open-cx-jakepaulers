@@ -1,15 +1,14 @@
-import 'package:askkit/View/Theme.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TextAreaForm extends StatelessWidget {
-  String _hintText;
-  String _validatorError;
-  GlobalKey<FormState> formkey;
-  TextEditingController controller;
-  bool autofocus;
+  final String _hintText;
+  final String _validatorError;
+  final GlobalKey<FormState> formkey;
+  final TextEditingController controller;
+  final bool autofocus;
 
 
   TextAreaForm(this.formkey, this.controller, this._hintText, this._validatorError, {this.autofocus = false});
@@ -41,11 +40,11 @@ class TextAreaForm extends StatelessWidget {
 }
 
 class CustomTextField extends StatelessWidget {
-  String _hintText;
-  String _validatorError;
-  GlobalKey<FormState> formkey;
-  TextEditingController controller;
-  bool autofocus;
+  final String _hintText;
+  final String _validatorError;
+  final GlobalKey<FormState> formkey;
+  final TextEditingController controller;
+  final bool autofocus;
 
 
   CustomTextField(this.formkey, this.controller, this._hintText, this._validatorError, {this.autofocus = false});
@@ -75,8 +74,8 @@ class CustomTextField extends StatelessWidget {
 }
 
 class CustomDateTimeField extends StatelessWidget {
-  GlobalKey<FormState> formkey;
-  TextEditingController controller;
+  final GlobalKey<FormState> formkey;
+  final TextEditingController controller;
 
   CustomDateTimeField(this.formkey, this.controller);
 

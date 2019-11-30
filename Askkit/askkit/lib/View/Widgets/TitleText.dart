@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../Theme.dart';
-
 class TitleText extends StatelessWidget {
-  EdgeInsets padding;
-  EdgeInsets margin;
-  String text;
+  final EdgeInsets padding;
+  final EdgeInsets margin;
+  final String text;
 
   TitleText({this.text = "", this.margin, this.padding});
 
@@ -21,9 +19,9 @@ class TitleText extends StatelessWidget {
 }
 
 class SubtitleText extends StatelessWidget {
-  EdgeInsets padding;
-  EdgeInsets margin;
-  String text;
+  final EdgeInsets padding;
+  final EdgeInsets margin;
+  final String text;
 
   SubtitleText({this.text = "", this.margin, this.padding});
 

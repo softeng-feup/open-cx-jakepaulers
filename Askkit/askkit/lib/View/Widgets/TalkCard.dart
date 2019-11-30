@@ -5,7 +5,6 @@ import 'package:askkit/View/Controllers/UrlLauncher.dart';
 import 'package:askkit/View/Pages/QuestionsPage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class TalkCard extends CardTemplate {

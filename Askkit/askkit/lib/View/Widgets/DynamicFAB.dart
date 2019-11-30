@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class DynamicFAB extends StatefulWidget {
-  ScrollController scrollController;
-  VoidCallback onPressed;
+  final ScrollController scrollController;
+  final VoidCallback onPressed;
 
   DynamicFAB(this.scrollController, this.onPressed);
 

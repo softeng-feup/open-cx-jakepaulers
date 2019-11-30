@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
 import 'package:glob/glob.dart';
 import 'acceptance_testing//hooks/hook_example.dart';
-import 'acceptance_testing/steps/expect_n_questions.dart';
-import 'acceptance_testing/steps/from_docs/colour_parameter.dart';
-import 'acceptance_testing/steps/submit_question.dart';
-import 'acceptance_testing/steps/tap_button.dart';
+import 'acceptance_testing/steps/expect_page.dart';
+import 'acceptance_testing/steps/signout.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
@@ -21,12 +18,11 @@ Future<void> main() {
       HookExample()
     ] // you can include "AttachScreenhotOnFailedStepHook()" to take a screenshot of each step failure and attach it to the world object
     ..stepDefinitions = [
-      TapButton(),
-      SubmitQuestion(),
-      ExpectNQuestions(),
+      SignOut(),
+      ExpectToBeInPage(),
     ]
     ..customStepParameterDefinitions = [
-      ColourParameter(),
+
     ]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test/acceptance_testing/app.dart"
@@ -34,7 +30,6 @@ Future<void> main() {
   // ..targetDeviceId = "all" // uncomment to run tests on all connected devices or set specific device target id
   // ..tagExpression = "@smoke" // uncomment to see an example of running scenarios based on tag expressions
   // ..logFlutterProcessOutput = true // uncomment to see the output from the Flutter process
-  // ..flutterBuildTimeout = Duration(minutes: 3) // uncomment to change the default period that flutter is expected to build and start the app within
     ..exitAfterTestRun = false; // set to false if debugging to exit cleanly
   return GherkinRunner().execute(config);
 

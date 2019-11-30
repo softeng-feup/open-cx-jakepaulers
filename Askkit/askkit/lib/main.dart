@@ -12,13 +12,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences preferences = await Preferences.getPreferences();
   Brightness brightness = (preferences.getBool("isDark") ?? false) ? Brightness.dark: Brightness.light;
-  runApp(MyApp(brightness));
+  runApp(MyApp(FirebaseController(), brightness));
 }
 
 class MyApp extends StatelessWidget {
-  DatabaseController controller = FirebaseController();
-  Brightness brightness;
-  MyApp(this.brightness);
+  final DatabaseController controller;
+  final Brightness brightness;
+  MyApp(this.controller, this.brightness);
 
 
   @override

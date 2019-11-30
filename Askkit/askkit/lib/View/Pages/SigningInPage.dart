@@ -1,7 +1,6 @@
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/AuthListener.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
-import 'package:askkit/View/Pages/LogInPage.dart';
 import 'package:askkit/View/Pages/TalksPage.dart';
 import 'package:askkit/View/Widgets/TitleText.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +14,8 @@ abstract class SigningPage extends StatefulWidget {
 }
 
 class SigningInPage extends SigningPage {
-  String password;
-  String username;
+  final String password;
+  final String username;
 
   SigningInPage(DatabaseController dbcontroller, this.username, this.password) : super(dbcontroller);
 
@@ -28,9 +27,9 @@ class SigningInPage extends SigningPage {
 }
 
 class SigningUpPage extends SigningPage {
-  String password;
-  String username;
-  String email;
+  final String password;
+  final String username;
+  final String email;
 
   SigningUpPage(DatabaseController dbcontroller, this.email, this.username, this.password) : super(dbcontroller);
 
@@ -92,12 +91,6 @@ class SigningPageState extends State<SigningPage> implements AuthListener {
       FlatButton(
         onPressed: () { Navigator.pop(context); },
         child: Text("Back"),
-      );
-
-  Widget _toLoginButton(BuildContext context) =>
-      FlatButton(
-        onPressed: () { Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage(widget._dbcontroller))); },
-        child: Text("Back to login"),
       );
 
   Widget _toTalksButton(BuildContext context) =>

@@ -1,5 +1,4 @@
 import 'package:askkit/Model/Answer.dart';
-import 'package:askkit/Model/Comment.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
@@ -11,7 +10,6 @@ import 'package:askkit/View/Widgets/CustomPopupMenu.dart';
 import 'package:askkit/View/Widgets/UserAvatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import 'CustomDialog.dart';

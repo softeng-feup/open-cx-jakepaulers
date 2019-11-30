@@ -155,8 +155,8 @@ class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
 }
 
 class AnswersTab extends StatefulWidget{
-  User _user;
-  DatabaseController _dbcontroller;
+  final User _user;
+  final DatabaseController _dbcontroller;
 
   AnswersTab(this._user, this._dbcontroller);
 
