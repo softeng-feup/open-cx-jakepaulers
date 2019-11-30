@@ -55,7 +55,7 @@ class AnswerCard extends CardTemplate {
             child: Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(bottom: 7.5),
-              child: Icon(Icons.check, color: Colors.green),
+              child: Icon(Icons.check_circle, color: Colors.green),
             ),
           ),
           Row(
@@ -89,7 +89,7 @@ class AnswerCard extends CardTemplate {
       return;
     this._dbcontroller.editAnswer(this._answer, comment);
     this._answer.content = comment;
-    this.listener.refreshModel();
+    this.listener.refreshModel(true);
   }
 
   void deleteAnswer(BuildContext context) async {
@@ -99,7 +99,7 @@ class AnswerCard extends CardTemplate {
         context: context,
         yesPressed: () async {
           await this._dbcontroller.deleteAnswer(_answer);
-          this.listener.refreshModel();
+          this.listener.refreshModel(true);
         } ,
         noPressed: () {}
     ).show();
@@ -108,6 +108,6 @@ class AnswerCard extends CardTemplate {
   void markBestAnswer(BuildContext context) async {
     this._answer.bestAnswer = !this._answer.bestAnswer;
     this._dbcontroller.flagAnswerAsBest(_answer, _answer.bestAnswer);
-    this.listener.refreshModel();
+    this.listener.refreshModel(true);
   }
 }

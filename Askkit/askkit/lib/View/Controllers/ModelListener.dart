@@ -1,3 +1,3 @@
 abstract class ModelListener {
-  void refreshModel();
+  void refreshModel(bool showIndicator);
 }

@@ -35,25 +35,26 @@ class TalksPageState extends State<TalksPage> implements ModelListener {
   List<Talk> talks = new List();
 
   bool dayTheme = true;
-  bool loaded = false;
+  bool showLoadingIndicator = false;
   ScrollController scrollController;
 
   @override void initState() {
+    super.initState();
     scrollController = ScrollController();
     dayTheme = DynamicTheme.of(context).brightness == Brightness.light;
-    this.refreshModel();
+    this.refreshModel(true);
   }
 
   @override void dispose() {
     super.dispose();
   }
 
-  Future<void> refreshModel() async {
+  Future<void> refreshModel(bool showIndicator) async {
     Stopwatch sw = Stopwatch()..start();
-    setState(() { });
+    setState(() { showLoadingIndicator = showIndicator; });
     talks = await widget._dbcontroller.getTalks();
     if (this.mounted)
-      setState(() { loaded = true; });
+      setState(() { showLoadingIndicator = false; });
     print("Talks fetch time: " + sw.elapsed.toString());
   }
 
@@ -75,17 +76,20 @@ class TalksPageState extends State<TalksPage> implements ModelListener {
   }
 
   Widget getBody() {
-    if (!this.loaded)
-      return LinearProgressIndicator();
-    return talkList();
+    return Column(
+        children: <Widget>[
+          Visibility(visible: showLoadingIndicator, child: LinearProgressIndicator()),
+          Expanded(child: talkList())
+        ]
+    );
   }
 
 
   Widget talkList() {
-    if (talks.length == 0 && this.loaded)
+    if (talks.length == 0  && !this.showLoadingIndicator)
       return CenterText("No talks found.\nWhat if someone started one? 🤔", textScale: 1.25);
     return CustomListView(
-        onRefresh: refreshModel,
+        onRefresh: () => refreshModel(false),
         controller: scrollController,
         itemCount: this.talks.length,
         itemBuilder: (BuildContext context, int i) {
@@ -102,7 +106,7 @@ class TalksPageState extends State<TalksPage> implements ModelListener {
   void addTalkForm(BuildContext context) async {
     Widget talkPage = NewTalkPage(widget._dbcontroller);
     await Navigator.push(context, MaterialPageRoute(builder: (context) => talkPage));
-    refreshModel();
+    refreshModel(true);
   }
 
   Widget getDrawer(BuildContext context) {
@@ -153,7 +157,7 @@ class TalksPageState extends State<TalksPage> implements ModelListener {
                   avatarRadius: 35.0,
                   textStyle: Theme.of(context).textTheme.body2.copyWith(fontSize: 22)
               ),
-              decoration: ShadowDecoration(color:Theme.of(context).primaryColorLight,  blurRadius: 2.0, spreadRadius: 0.0, offset:  Offset(0, 1))
+              decoration: ShadowDecoration(color:Theme.of(context).primaryColorLight,  blurRadius: 2.0, offset:  Offset(0, 1))
           ),
           ListTile(
             leading: Icon(Icons.person, color: Theme.of(context).iconTheme.color),
@@ -203,7 +207,6 @@ class TalksPageState extends State<TalksPage> implements ModelListener {
     setState(() {
       this.dayTheme = !this.dayTheme;
     });
-
 
     DynamicTheme.of(context).setBrightness(this.dayTheme? Brightness.light: Brightness.dark);
   }

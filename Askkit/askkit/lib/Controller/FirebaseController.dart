@@ -26,13 +26,13 @@ class FirebaseController implements DatabaseController {
   @override
   Future<DocumentReference> addAnswer(Question question, String content) {
     assert (_currentUser != null);
-    return firebase.collection("answers").add({'question': question.reference, 'user': _currentUser.reference, 'content': content, 'edited': false, 'uploadDate' : Timestamp.fromDate(DateTime.now()), });
+    return firebase.collection("answers").add({'question': question.reference, 'user': _currentUser.reference, 'content': content, 'edited': false, 'bestanswer': false, 'uploadDate' : Timestamp.fromDate(DateTime.now()), });
   }
 
   @override
   Future<DocumentReference> addQuestion(Talk talk, String content) {
     assert (_currentUser != null);
-    return firebase.collection("questions").add({'talk': talk.reference, 'user': _currentUser.reference, 'content': content, 'edited': false, 'uploadDate' : Timestamp.fromDate(DateTime.now())});
+    return firebase.collection("questions").add({'talk': talk.reference, 'user': _currentUser.reference, 'content': content, 'edited': false, 'answered' : false, 'uploadDate' : Timestamp.fromDate(DateTime.now())});
   }
 
   @override

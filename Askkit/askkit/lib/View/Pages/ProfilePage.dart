@@ -14,10 +14,9 @@ import 'package:flutter/services.dart';
 class ProfilePage extends StatelessWidget {
   final DatabaseController _dbcontroller;
   final User _user;
-  bool self;
-  ProfilePage(this._user, this._dbcontroller) {
-    this.self = (_user == this._dbcontroller.getCurrentUser());
-  }
+  final bool self;
+  
+  ProfilePage(this._user, this._dbcontroller) : this.self = (_user == _dbcontroller.getCurrentUser());
 
   @override
   Widget build(BuildContext context) {
@@ -77,40 +76,44 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget getUsernameLine() {
-    return this.self?
-    Row(
+    return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           TitleText(text: _user.username, margin: EdgeInsets.only(top: 10.0)),
-          GestureDetector(
-              child: Icon(Icons.edit),
-              onTap: () => changeUsername()
+          Visibility(
+              visible: this.self,
+              child: IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: changeUsername
+              )
           )
         ]
-    ) : TitleText(text: _user.username, margin: EdgeInsets.only(top: 10.0));
+    );
   }
 }
 
 class QuestionsTab extends StatefulWidget{
-  User _user;
-  DatabaseController _dbcontroller;
+  final User _user;
+  final DatabaseController _dbcontroller;
 
   QuestionsTab(this._user, this._dbcontroller);
 
   @override
   State<StatefulWidget> createState() {
-    return QuestionsTabState(this._user, this._dbcontroller);
+    return QuestionsTabState();
   }
 }
 
 class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
-  DatabaseController _dbcontroller;
-  User _user;
+  bool showLoadingIndicator = false;
   bool loading = true;
   List<Question> questions = new List();
 
-  QuestionsTabState(this._user, this._dbcontroller) {
-    this.refreshModel();
+
+  @override
+  void initState() {
+    super.initState();
+    this.refreshModel(true);
   }
 
   @override
@@ -130,7 +133,8 @@ class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
                 decoration: ShadowDecoration(
                     shadowColor: CardTemplate.cardShadowColor,
                     spreadRadius: 1.0,
-                    offset: Offset(0, 1)),
+                    offset: Offset(0, 1)
+                ),
                 margin: EdgeInsets.only(top: 10.0),
                 child: QuestionCard(this, question, true, null, widget._dbcontroller))
         ).toList()
@@ -138,14 +142,13 @@ class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
   }
 
   @override
-  Future refreshModel() async {
+  Future refreshModel(bool showIndicator) async {
     Stopwatch sw = Stopwatch()..start();
-    if (this.mounted)
-      setState(() { loading = true; });
-    questions = await this._dbcontroller.getQuestionsByUser(this._user);
+    setState(() { showLoadingIndicator = showIndicator; });
+    questions = await widget._dbcontroller.getQuestionsByUser(widget._user);
     questions.sort((question1, question2) => question2.upvotes.compareTo(question1.upvotes));
     if (this.mounted)
-      setState(() { loading = false; });
+      setState(() { showLoadingIndicator = false; });
     print(questions.length);
     print("Question fetch time: " + sw.elapsed.toString());
   }
@@ -159,25 +162,25 @@ class AnswersTab extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() {
-    return AnswersTabState(this._user, this._dbcontroller);
+    return AnswersTabState();
   }
 }
 
 class AnswersTabState extends State<AnswersTab> implements ModelListener {
-  DatabaseController _dbcontroller;
-  User _user;
-  bool loading = true;
+  bool showLoadingIndicator = false;
   List<Answer> answers = new List();
 
-  AnswersTabState(this._user, this._dbcontroller) {
-    this.refreshModel();
+  @override
+  void initState() {
+    super.initState();
+    this.refreshModel(true);
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Column(
         children: <Widget>[
-          Visibility(visible: this.loading, child: LinearProgressIndicator()),
+          Visibility(visible: this.showLoadingIndicator, child: LinearProgressIndicator()),
           Expanded(child: answerList())
         ]
     );
@@ -198,13 +201,12 @@ class AnswersTabState extends State<AnswersTab> implements ModelListener {
   }
 
   @override
-  Future refreshModel() async {
+  Future refreshModel(bool showIndicator) async {
     Stopwatch sw = Stopwatch()..start();
+    setState(() { showLoadingIndicator = showIndicator; });
+    answers = await widget._dbcontroller.getAnswersByUser(widget._user);
     if (this.mounted)
-      setState(() { loading = true; });
-    answers = await this._dbcontroller.getAnswersByUser(this._user);
-    if (this.mounted)
-      setState(() { loading = false; });
+      setState(() { showLoadingIndicator = false; });
     print("Question fetch time: " + sw.elapsed.toString());
   }
 }

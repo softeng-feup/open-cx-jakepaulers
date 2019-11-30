@@ -33,14 +33,15 @@ class AnswersPage extends StatefulWidget {
 class AnswersPageState extends State<AnswersPage> implements ModelListener {
   List<Answer> answers = new List();
 
-  bool loaded = false;
+  bool showLoadingIndicator = false;
   Timer minuteTimer;
   ScrollController scrollController;
 
   @override void initState() {
+    super.initState();
     scrollController = ScrollController();
     minuteTimer = Timer.periodic(Duration(minutes: 1), (t) { setState(() { }); });
-    this.refreshModel();
+    this.refreshModel(true);
   }
 
   @override void dispose() {
@@ -48,12 +49,12 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
     super.dispose();
   }
 
-  Future<void> refreshModel() async {
+  Future<void> refreshModel(bool showIndicator) async {
     Stopwatch sw = Stopwatch()..start();
-    setState(() { });
+    setState(() { showLoadingIndicator = showIndicator; });
     await Future.wait([this.fetchQuestion(), this.fetchAnswers()]);
     if (this.mounted)
-      setState(() { loaded = true; });
+      setState(() { showLoadingIndicator = false; });
     print("Answer fetch time: " + sw.elapsed.toString());
   }
 
@@ -62,7 +63,7 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
       await widget._dbcontroller.refreshQuestion(widget._question);
     } on Error {
       Navigator.pop(context);
-      widget._listener.refreshModel();
+      widget._listener.refreshModel(true);
     }
   }
 
@@ -88,17 +89,17 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
         children: <Widget>[
           QuestionCard(this, widget._question, false, widget._talkhost, widget._dbcontroller),
           Divider(color: CardTemplate.cardShadowColor, thickness: 1.0, height: 1.0),
-          Visibility(visible: !this.loaded, child: LinearProgressIndicator()),
+          Visibility(visible: showLoadingIndicator, child: LinearProgressIndicator()),
           Expanded(child: answerList(widget._question))
         ]
     );
   }
 
   Widget answerList(Question question) {
-    if (answers.length == 0 && this.loaded)
+    if (answers.length == 0 && !this.showLoadingIndicator)
       return CenterText("This human needs assistance!\nLet's help him! 😃", textScale: 1.25);
     return CustomListView(
-        onRefresh: refreshModel,
+        onRefresh: () => refreshModel(false),
         controller: scrollController,
         itemCount: answers.length,
         itemBuilder: (BuildContext context, int i) {
@@ -121,6 +122,6 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
     if (comment == null)
       return;
     await widget._dbcontroller.addAnswer(widget._question, comment);
-    refreshModel();
+    refreshModel(true);
   }
 }

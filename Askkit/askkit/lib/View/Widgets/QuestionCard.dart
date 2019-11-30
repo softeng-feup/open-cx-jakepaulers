@@ -63,7 +63,7 @@ class QuestionCard extends CardTemplate {
                       visible: this._question.answered,
                       child: Container(
                         padding: EdgeInsets.only(bottom: 7.5),
-                        child: Icon(Icons.check_circle, color: Colors.green),
+                        child: Icon(Icons.check, color: Colors.green),
                       ),
                     ),
                     GestureDetector(
@@ -107,7 +107,7 @@ class QuestionCard extends CardTemplate {
       return;
     this._dbcontroller.editQuestion(this._question, comment);
     this._question.content = comment;
-    this.listener.refreshModel();
+    this.listener.refreshModel(true);
   }
 
   void deleteQuestion(BuildContext context) async {
@@ -117,7 +117,7 @@ class QuestionCard extends CardTemplate {
         context: context,
         yesPressed: () async {
           await this._dbcontroller.deleteQuestion(_question);
-          this.listener.refreshModel();
+          this.listener.refreshModel(true);
         } ,
         noPressed: () {}
     ).show();
@@ -131,7 +131,7 @@ class QuestionCard extends CardTemplate {
         yesPressed: () {
           this._dbcontroller.flagQuestionAsAnswered(_question);
           this._question.markAnswered();
-          this.listener.refreshModel();
+          this.listener.refreshModel(true);
         },
         noPressed: () {}
     ).show();

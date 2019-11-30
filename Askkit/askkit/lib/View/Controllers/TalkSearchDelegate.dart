@@ -126,7 +126,7 @@ class TalkSearchDelegate extends SearchDelegate<Talk> implements ModelListener {
   }
 
   @override
-  void refreshModel() { }
+  void refreshModel(bool showIndicator) { }
 
   bool match(Talk talk, String query) {
     return talk.room.toLowerCase().contains(query.toLowerCase()) || talk.title.toLowerCase().contains(query.toLowerCase());

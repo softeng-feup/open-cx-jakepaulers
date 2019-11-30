@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/Talk.dart';
-import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Pages/ManageCommentPage.dart';
@@ -33,14 +32,15 @@ class QuestionsPage extends StatefulWidget {
 class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
   List<Question> questions = new List();
 
-  bool loaded = false;
+  bool showLoadingIndicator = false;
   Timer minuteTimer;
   ScrollController scrollController;
 
   @override void initState() {
+    super.initState();
     scrollController = ScrollController();
     minuteTimer = Timer.periodic(Duration(minutes: 1), (t) { setState(() { }); });
-    this.refreshModel();
+    this.refreshModel(true);
   }
 
   @override void dispose() {
@@ -48,13 +48,13 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
     super.dispose();
   }
 
-  Future<void> refreshModel() async {
+  Future<void> refreshModel(bool showIndicator) async {
     Stopwatch sw = Stopwatch()..start();
-    setState(() { });
+    setState(() { showLoadingIndicator = showIndicator; });
     questions = await widget._dbcontroller.getQuestions(widget._talk);
     questions.sort((question1, question2) => question2.upvotes.compareTo(question1.upvotes));
     if (this.mounted)
-      setState(() { loaded = true; });
+      setState(() { showLoadingIndicator = false; });
     print("Question fetch time: " + sw.elapsed.toString());
   }
 
@@ -72,17 +72,20 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
   }
 
   Widget getBody() {
-    if (!this.loaded)
-      return Column(children: <Widget>[LinearProgressIndicator(), _talkHeader()]);
-    return questionList();
+    return Column(
+        children: <Widget>[
+          Visibility(visible: showLoadingIndicator, child: LinearProgressIndicator()),
+          Expanded(child: questionList()),
+        ]
+    );
   }
 
 
   Widget questionList() {
-    if (questions.length == 0 && this.loaded)
+    if (questions.length == 0 && !this.showLoadingIndicator)
       return _emptyQuestionList();
     return CustomListView(
-        onRefresh: refreshModel,
+        onRefresh: () => refreshModel(false),
         controller: scrollController,
         itemCount: this.questions.length + 1,
         itemBuilder: (BuildContext context, int i) {
@@ -145,6 +148,6 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
     DocumentReference reference = await widget._dbcontroller.addQuestion(widget._talk, comment);
     await widget._dbcontroller.setUserUpvote(reference, 1);
 
-    refreshModel();
+    refreshModel(true);
   }
 }
