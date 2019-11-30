@@ -88,7 +88,7 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
     return Column(
         children: <Widget>[
           QuestionCard(this, widget._question, false, widget._talkhost, widget._dbcontroller),
-          Divider(color: CardTemplate.cardShadowColor, thickness: 1.0, height: 1.0),
+          Divider(color: CardTemplate.shadowColor(context), thickness: 1.0, height: 1.0),
           Visibility(visible: showLoadingIndicator, child: LinearProgressIndicator()),
           Expanded(child: answerList(widget._question))
         ]
@@ -108,7 +108,7 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
               child: Column(
                 children: <Widget>[
                   AnswerCard(this, answers[i], widget._question.user, widget._dbcontroller),
-                  Divider(color: CardTemplate.cardShadowColor, thickness: 1.0, height: 1.0),
+                  Divider(color: CardTemplate.shadowColor(context), thickness: 1.0, height: 1.0),
                 ],
               )
           );
