@@ -1,6 +1,7 @@
 import 'package:askkit/Model/Talk.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
+import 'package:askkit/View/Controllers/UrlLauncher.dart';
 import 'package:askkit/View/Pages/QuestionsPage.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class TalkCard extends CardTemplate {
           Text(_talk.title, style: CardTemplate.usernameStyle(context, false)),
           Container(
             padding: CardTemplate.contentPadding,
-            child: MarkdownBody(data: _talk.description),
+            child: MarkdownBody(data: _talk.description, onTapLink: UrlLauncher.launchURL),
             alignment: Alignment.centerLeft,
           ),
           Divider(),

@@ -9,6 +9,7 @@ import 'Controller/FirebaseController.dart';
 import 'View/Pages/LogInPage.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences preferences = await Preferences.getPreferences();
   Brightness brightness = (preferences.getBool("isDark") ?? false) ? Brightness.dark: Brightness.light;
   runApp(MyApp(brightness));

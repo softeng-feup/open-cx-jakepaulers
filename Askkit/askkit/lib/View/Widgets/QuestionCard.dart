@@ -2,6 +2,7 @@ import 'package:askkit/Model/Question.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
+import 'package:askkit/View/Controllers/UrlLauncher.dart';
 import 'package:askkit/View/Pages/AnswersPage.dart';
 import 'package:askkit/View/Pages/ManageCommentPage.dart';
 import 'package:askkit/View/Pages/ProfilePage.dart';
@@ -75,7 +76,7 @@ class QuestionCard extends CardTemplate {
                     ),
                     Container(
                       padding: CardTemplate.contentPadding,
-                      child: MarkdownBody(data: _question.content),
+                      child: MarkdownBody(data: _question.content, onTapLink: UrlLauncher.launchURL),
                       alignment: Alignment.centerLeft,
                     ),
                     Divider(),
