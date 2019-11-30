@@ -2,10 +2,9 @@ import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/Talk.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
-import 'package:askkit/View/Widgets/TextAreaForm.dart';
+import 'package:askkit/View/Widgets/CustomTextForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
 abstract class ManageCommentPage extends StatelessWidget {
   static final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
@@ -30,7 +29,7 @@ abstract class ManageCommentPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(this.title),
           actions: <Widget>[
-            FlatButton(child: Text("Submit", style: Theme.of(context).textTheme.subhead), onPressed: () => _onSubmitPressed(context))
+            FlatButton(child: Text("Submit", style: Theme.of(context).textTheme.headline), onPressed: () => _onSubmitPressed(context))
           ],
         ),
         body: ListView(
@@ -70,14 +69,13 @@ abstract class ManageCommentPage extends StatelessWidget {
   Future<bool> _onBackPressed(BuildContext context) {
     if (_controller.text == this.initialContent())
       return Future<bool>.value(true);
-    TextStyle buttonTheme = Theme.of(context).textTheme.subhead.copyWith(color: Colors.black);
     return CustomDialog(
           context: context,
           title: "Are you sure?",
           content: "This will discard your comment.",
           actions: <Widget>[
-            FlatButton(child: Text("Cancel", style: buttonTheme), onPressed: () { Navigator.of(context).pop(false);}),
-            FlatButton(child: Text("Discard", style: buttonTheme), onPressed: () { Navigator.of(context).pop(true); }),
+            FlatButton(child: Text("Cancel"), onPressed: () { Navigator.of(context).pop(false);}),
+            FlatButton(child: Text("Discard"), onPressed: () { Navigator.of(context).pop(true); }),
           ],
     ).show() ?? false;
   }

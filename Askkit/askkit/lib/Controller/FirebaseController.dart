@@ -12,6 +12,16 @@ import 'Authenticator.dart';
 class FirebaseController implements DatabaseController {
   static final Firestore firebase =  Firestore.instance;
   static User _currentUser;
+  static List<String> adminList = List();
+  
+  FirebaseController() {
+    firebase.collection("admins").getDocuments().then((documents)  {
+      documents.documents.forEach((document) async {
+        String userRef = document.documentID;
+        adminList.add((await firebase.collection("users").document(userRef).get())['username']);
+      });
+    });
+  }
 
   @override
   Future<DocumentReference> addAnswer(Question question, String content) {
@@ -184,6 +194,10 @@ class FirebaseController implements DatabaseController {
   @override
   User getCurrentUser() {
     return _currentUser;
+  }
+  
+  bool isAdmin() {
+    return adminList.contains(_currentUser.username);
   }
 
   Future<DocumentSnapshot> _getUserUpvoteDoc(DocumentReference question) async {

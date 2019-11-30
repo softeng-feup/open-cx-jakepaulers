@@ -23,8 +23,7 @@ class AskkitThemes {
         textTheme: TextTheme(
           title: TextStyle(fontSize: 38.0, fontWeight: FontWeight.bold, color: Colors.blueAccent),
           subtitle: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold, color: Colors.blueAccent),
-          headline: TextStyle(fontSize: 20.0, fontWeight: FontWeight.normal, color: Colors.white),
-          subhead: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal, color: Colors.white),
+          headline: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal, color: Colors.white),
           body1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black),
           body2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.black),
         )
@@ -54,7 +53,6 @@ class AskkitThemes {
           title: TextStyle(fontSize: 38.0, fontWeight: FontWeight.bold, color: Colors.indigo),
           subtitle: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold, color: Colors.indigo),
           headline: TextStyle(fontSize: 20.0, fontWeight: FontWeight.normal, color: Colors.white),
-          subhead: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal, color: Colors.white),
           body1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black54),
           body2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.black54),
         )

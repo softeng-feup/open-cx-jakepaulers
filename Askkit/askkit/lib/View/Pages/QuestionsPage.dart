@@ -73,7 +73,7 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
 
   Widget getBody() {
     if (!this.loaded)
-      return LinearProgressIndicator();
+      return Column(children: <Widget>[LinearProgressIndicator(), _talkHeader()]);
     return questionList();
   }
 
@@ -97,18 +97,9 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
     );
   }
 
-  void addQuestionForm(BuildContext context) async {
-    Widget questionPage = NewQuestionPage(widget._talk);
-    String comment = await Navigator.push(context, MaterialPageRoute(builder: (context) => questionPage));
-    if (comment == null)
-      return;
-    DocumentReference reference = await widget._dbcontroller.addQuestion(widget._talk, comment);
-    await widget._dbcontroller.setUserUpvote(reference, 1);
-
-    refreshModel();
-  }
 
   Widget _talkHeader() {
+    TextStyle style = Theme.of(context).textTheme.headline;
     return Container(
         decoration: ShadowDecoration(color: Theme.of(context).primaryColor, shadowColor: Colors.black, spreadRadius: 0.25, blurRadius: 7.5),
         padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 15.0, bottom: 15.0),
@@ -119,18 +110,18 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
                   padding: EdgeInsets.only(bottom: 10.0),
                   child: Row(
                     children: <Widget>[
-                      Text(widget._talk.host.name, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 11), textAlign: TextAlign.left),
+                      Text(widget._talk.host.name, style: style.copyWith(fontSize: 11), textAlign: TextAlign.left),
                       Spacer(),
-                      Text("Room " + widget._talk.room, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 11), textAlign: TextAlign.left)
+                      Text("Room " + widget._talk.room, style: style.copyWith(fontSize: 11), textAlign: TextAlign.left)
                     ],
                   )
               ),
               Container(
                   margin: EdgeInsets.only(bottom: 10.0),
-                  child: Text(widget._talk.title, style: Theme.of(context).textTheme.headline.copyWith(height: 1.25), textAlign: TextAlign.center)
+                  child: Text(widget._talk.title, style: style.copyWith(height: 1.25, fontSize: 20), textAlign: TextAlign.center)
               ),
               Container(
-                  child: Text(widget._talk.description, style: Theme.of(context).textTheme.subhead, textAlign: TextAlign.center)
+                  child: Text(widget._talk.description, style: style, textAlign: TextAlign.center)
               ),
             ]
         )
@@ -144,5 +135,16 @@ class QuestionsPageState extends State<QuestionsPage> implements ModelListener {
           Expanded(child: CenterText("Feels lonely here 😔\nBe the first to ask something!", textScale: 1.25))
         ]
     );
+  }
+
+  void addQuestionForm(BuildContext context) async {
+    Widget questionPage = NewQuestionPage(widget._talk);
+    String comment = await Navigator.push(context, MaterialPageRoute(builder: (context) => questionPage));
+    if (comment == null)
+      return;
+    DocumentReference reference = await widget._dbcontroller.addQuestion(widget._talk, comment);
+    await widget._dbcontroller.setUserUpvote(reference, 1);
+
+    refreshModel();
   }
 }

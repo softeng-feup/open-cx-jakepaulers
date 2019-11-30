@@ -8,11 +8,14 @@ import 'package:askkit/View/Pages/ProfilePage.dart';
 import 'package:askkit/View/Widgets/CenterText.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:askkit/View/Widgets/CustomListView.dart';
+import 'package:askkit/View/Widgets/DynamicFAB.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
 import 'package:askkit/View/Widgets/TalkCard.dart';
 import 'package:askkit/View/Widgets/UserAvatar.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+
+import 'NewTalkPage.dart';
 
 
 class TalksPage extends StatefulWidget {
@@ -63,7 +66,11 @@ class TalksPageState extends State<TalksPage> implements ModelListener {
         ),
         drawer: getDrawer(context),
         backgroundColor: Theme.of(context).backgroundColor,
-        body: getBody()
+        body: getBody(),
+        floatingActionButton: Visibility(
+            visible: widget._dbcontroller.isAdmin(),
+            child: DynamicFAB(scrollController, () => addTalkForm(context))
+        )
     );
   }
 
@@ -90,6 +97,12 @@ class TalksPageState extends State<TalksPage> implements ModelListener {
           );
         }
     );
+  }
+
+  void addTalkForm(BuildContext context) async {
+    Widget talkPage = NewTalkPage(widget._dbcontroller);
+    await Navigator.push(context, MaterialPageRoute(builder: (context) => talkPage));
+    refreshModel();
   }
 
   Widget getDrawer(BuildContext context) {

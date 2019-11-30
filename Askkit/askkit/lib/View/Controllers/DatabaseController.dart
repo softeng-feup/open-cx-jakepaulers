@@ -16,6 +16,8 @@ abstract class DatabaseController {
   Future<DocumentReference> addTalk(Talk talk);
 
   User getCurrentUser();
+  bool isAdmin();
+
   Future<bool> isAlreadyLoggedIn();
 
   Future<List<Talk>> getTalks();
@@ -25,8 +27,12 @@ abstract class DatabaseController {
   Future<List<Question>> getQuestionsByUser(User user);
   Future<void> refreshQuestion(Question question);
 
+  Future<User> getUserByUsername(String username);
+  Future<User> getUserByEmail(String email);
 
-  Future<void> setUserUpvote(DocumentReference question, int value);
+
+
+    Future<void> setUserUpvote(DocumentReference question, int value);
   Future<int> getUserUpvote(DocumentReference question);
   Future<int> getUpvotes(Question question);
 
@@ -38,6 +44,7 @@ abstract class DatabaseController {
 
   Future<void> flagQuestionAsAnswered(Question question);
   Future<void> flagAnswerAsBest(Answer answer, bool isBest);
+
 
 
 

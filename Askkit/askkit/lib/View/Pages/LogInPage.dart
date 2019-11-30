@@ -198,7 +198,7 @@ class _LogInPageState extends State<LogInPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Icon(icon, color: Theme.of(context).canvasColor),
-            Text(text, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 20.0)),
+            Text(text, style: Theme.of(context).textTheme.headline),
             Icon(null),
           ],
         ),

@@ -32,7 +32,7 @@ dependencies:
   intl: ^0.15.8
   flutter_markdown: ^0.3.0
   dynamic_theme: ^1.0.0
-
+  datetime_picker_formfield: ^0.4.3
 
 dev_dependencies:
   flutter_test:

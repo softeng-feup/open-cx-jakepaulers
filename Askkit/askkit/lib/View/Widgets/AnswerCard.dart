@@ -29,7 +29,7 @@ class AnswerCard extends CardTemplate {
     User currentUser = _dbcontroller.getCurrentUser();
     List<Widget> items = [];
     List<VoidCallback> actions = [];
-    if (currentUser != _answer.user && currentUser != _questionPoster)
+    if (currentUser != _answer.user && currentUser != _questionPoster && _dbcontroller.isAdmin())
       return;
     if (currentUser == _questionPoster) {
       String verb = _answer.bestAnswer ? 'Unmark' : 'Mark';
@@ -37,7 +37,7 @@ class AnswerCard extends CardTemplate {
       items.add(Row(children: <Widget>[Icon(icon), Text('  $verb as best', style: Theme.of(context).textTheme.body1)]));
       actions.add(() => markBestAnswer(context));
     }
-    if (currentUser == _answer.user) {
+    if (currentUser == _answer.user || _dbcontroller.isAdmin()) {
       items.add(Row(children: <Widget>[Icon(Icons.edit), Text('  Edit', style: Theme.of(context).textTheme.body1)]));
       items.add(Row(children: <Widget>[Icon(Icons.delete), Text('  Delete', style: Theme.of(context).textTheme.body1)]));
       actions.add(() => editAnswer(context));

@@ -34,13 +34,13 @@ class QuestionCard extends CardTemplate {
       User currentUser = _dbcontroller.getCurrentUser();
       List<Widget> items = [];
       List<VoidCallback> actions = [];
-      if (currentUser != _question.user && currentUser != _talkHost)
+      if (currentUser != _question.user && currentUser != _talkHost && !_dbcontroller.isAdmin())
         return;
       if (!_question.answered) {
         items.add(Row(children: <Widget>[Icon(Icons.check), Text('  Mark as answered', style: Theme.of(context).textTheme.body1)]));
         actions.add(() => markQuestion(context));
       }
-      if (currentUser == _question.user) {
+      if (currentUser == _question.user || _dbcontroller.isAdmin()) {
         items.add(Row(children: <Widget>[Icon(Icons.edit), Text('  Edit', style: Theme.of(context).textTheme.body1)]));
         items.add(Row(children: <Widget>[Icon(Icons.delete), Text('  Delete', style: Theme.of(context).textTheme.body1)]));
         actions.add(() => editQuestion(context));
