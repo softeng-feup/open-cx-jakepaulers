@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/Talk.dart';
@@ -10,6 +12,11 @@ abstract class DatabaseController {
   Future<void> signUp(String email, String username, String password, AuthListener listener);
   Future<void> signOut();
   Future<void> sendForgotPassword(String username);
+  Future<bool> changeUsername(String newUsername);
+  Future<bool> changeEmail(String newEmail);
+  Future<void> changeImage(File image);
+  Future<void> changePassword(String newPassword);
+  Future<void> updateUserInfo(String bios, String displayName);
 
   Future<DocumentReference> addQuestion(Talk talk, String content);
   Future<DocumentReference> addAnswer(Question question, String content);
@@ -32,7 +39,7 @@ abstract class DatabaseController {
 
 
 
-    Future<void> setUserUpvote(DocumentReference question, int value);
+  Future<void> setUserUpvote(DocumentReference question, int value);
   Future<int> getUserUpvote(DocumentReference question);
   Future<int> getUpvotes(Question question);
 

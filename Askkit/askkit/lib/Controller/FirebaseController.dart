@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:askkit/Model/Talk.dart';
 import 'package:askkit/View/Controllers/AuthListener.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
@@ -6,8 +8,11 @@ import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'Authenticator.dart';
+import 'package:path/path.dart' as Path;
+
 
 class FirebaseController implements DatabaseController {
   static final Firestore firebase =  Firestore.instance;
@@ -37,7 +42,7 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<DocumentReference> addUser(User user) {
-    return firebase.collection("users").add({'username' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image});
+    return firebase.collection("users").add({'username' : user.username, 'email' : user.email, 'name': user.name, 'image' : user.image, 'bios': user.bios});
   }
 
   @override
@@ -49,7 +54,7 @@ class FirebaseController implements DatabaseController {
     Map data = document.data;
     if (data == null)
       return User.empty();
-    return User(data['username'], data['email'], data['name'], data['image'], document.reference);
+    return User(data['username'], data['email'], data['name'], data['image'], data['bios'], document.reference);
   }
 
   Future<Question> _makeQuestionFromDoc(DocumentSnapshot document) async {
@@ -177,8 +182,7 @@ class FirebaseController implements DatabaseController {
     QuerySnapshot snapshot = await firebase.collection("users").where("email", isEqualTo: email).limit(1).getDocuments();
     if (snapshot.documents.length == 0)
       return null;
-    Map data = snapshot.documents[0].data;
-    return User(data['username'], data['email'], data['name'], data['image'], snapshot.documents[0].reference);
+    return await _makeUserFromDoc(snapshot.documents[0]);
   }
 
   Future<bool> isAlreadyLoggedIn() async {
@@ -262,7 +266,7 @@ class FirebaseController implements DatabaseController {
       return listener.onSignUpDuplicateUsername();
     try {
       await Auth.signUp(email,  password);
-      await addUser(User(username, email, username, User.defaultAvatar, null));
+      await addUser(User(username, email, username, User.defaultAvatar, "Welcome to my profile!", null));
       await Auth.signIn(email, password);
       _currentUser = await this.getUserByUsername(username);
       listener.onSignUpSuccess();
@@ -288,6 +292,46 @@ class FirebaseController implements DatabaseController {
       Auth.sendForgotPassword(user.email);
     }
     catch (exception) {}
+  }
+
+  @override
+  Future<bool> changeEmail(String newEmail) async {
+    if (await getUserByEmail(newEmail) != null)
+      return false;
+    FirebaseUser user = await Auth.getCurrentUser();
+    await Future.wait([user.updateEmail(newEmail), _currentUser.reference.updateData({'email': newEmail})]);
+    return true;
+  }
+
+  @override
+  Future<bool> changeUsername(String newUsername) async {
+    if (await getUserByUsername(newUsername) != null)
+      return false;
+    await _currentUser.reference.updateData({'username': newUsername});
+    return true;
+  }
+
+  @override
+  Future<void> changePassword(String newPassword) async {
+    FirebaseUser user = await Auth.getCurrentUser();
+    user.updatePassword(newPassword);
+    return null;
+  }
+
+
+  @override
+  Future<void> changeImage(File newImage) async {
+    StorageReference storageReference = FirebaseStorage.instance.ref().child('userImages/${_currentUser.reference.documentID}');
+    StorageUploadTask uploadTask = storageReference.putFile(newImage);
+    await uploadTask.onComplete;
+    String url = await storageReference.getDownloadURL();
+    await _currentUser.reference.updateData({'image': url});
+    _currentUser.image = url;
+  }
+
+  @override
+  Future<void> updateUserInfo(String bios, String displayName) async {
+    await _currentUser.reference.updateData({'bios': bios, 'name:': displayName});
   }
 
   @override
@@ -325,4 +369,8 @@ class FirebaseController implements DatabaseController {
   Future<void> flagAnswerAsBest(Answer answer, bool isBest) async {
     await answer.reference.updateData({'bestanswer' : isBest});
   }
+
+
+
+
 }
