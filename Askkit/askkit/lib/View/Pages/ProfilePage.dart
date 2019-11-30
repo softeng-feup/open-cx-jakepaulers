@@ -5,6 +5,7 @@ import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
 import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
+import 'package:askkit/View/Widgets/CustomListView.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
 import 'package:askkit/View/Widgets/TitleText.dart';
@@ -67,7 +68,7 @@ class ProfilePage extends StatelessWidget {
     return QuestionsTab(this._user, this._dbcontroller);
   }
 
-  createAnswersTab() {
+  Widget createAnswersTab() {
     return AnswersTab(this._user, this._dbcontroller);
   }
 
@@ -104,40 +105,43 @@ class QuestionsTab extends StatefulWidget{
   }
 }
 
-class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
+class QuestionsTabState extends State<QuestionsTab> with AutomaticKeepAliveClientMixin<QuestionsTab>  implements ModelListener {
   bool showLoadingIndicator = false;
-  bool loading = true;
   List<Question> questions = new List();
+  ScrollController scrollController;
 
 
   @override
   void initState() {
     super.initState();
+    scrollController = ScrollController();
     this.refreshModel(true);
   }
+
+  @override bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
     return Column(
         children: <Widget>[
-          Visibility(visible: this.loading, child: LinearProgressIndicator()),
+          Visibility(visible: this.showLoadingIndicator, child: LinearProgressIndicator()),
           Expanded(child: questionList())
         ]
     );
   }
 
   questionList() {
-    return ListView(
-        children: questions.map((question) =>
-            Container(
-                decoration: ShadowDecoration(
-                    shadowColor: CardTemplate.cardShadowColor,
-                    spreadRadius: 1.0,
-                    offset: Offset(0, 1)
-                ),
-                margin: EdgeInsets.only(top: 10.0),
-                child: QuestionCard(this, question, true, null, widget._dbcontroller))
-        ).toList()
+    return CustomListView(
+      onRefresh: () => refreshModel(false),
+      controller: scrollController,
+      itemCount: this.questions.length,
+      itemBuilder: (BuildContext context, int i) {
+        return Container(
+            decoration: ShadowDecoration(shadowColor: CardTemplate.shadowColor(context), spreadRadius: 1.0, offset: Offset(0, 1)),
+            margin: EdgeInsets.only(top: 10.0),
+            child: QuestionCard(this, questions[i], true, null, widget._dbcontroller)
+        );
+      },
     );
   }
 
@@ -149,7 +153,6 @@ class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
     questions.sort((question1, question2) => question2.upvotes.compareTo(question1.upvotes));
     if (this.mounted)
       setState(() { showLoadingIndicator = false; });
-    print(questions.length);
     print("Question fetch time: " + sw.elapsed.toString());
   }
 }
@@ -166,16 +169,20 @@ class AnswersTab extends StatefulWidget{
   }
 }
 
-class AnswersTabState extends State<AnswersTab> implements ModelListener {
+class AnswersTabState extends State<AnswersTab> with AutomaticKeepAliveClientMixin<AnswersTab>  implements ModelListener {
   bool showLoadingIndicator = false;
   List<Answer> answers = new List();
+  ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
+    scrollController = ScrollController();
     this.refreshModel(true);
   }
-  
+
+  @override bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -187,16 +194,17 @@ class AnswersTabState extends State<AnswersTab> implements ModelListener {
   }
 
   answerList() {
-    return ListView(
-        children: answers.map((answer) =>
-            Container(
-                decoration: ShadowDecoration(
-                    shadowColor: CardTemplate.cardShadowColor,
-                    spreadRadius: 1.0,
-                    offset: Offset(0, 1)),
-                margin: EdgeInsets.only(top: 10.0),
-                child: AnswerCard(this, answer, null, widget._dbcontroller))
-        ).toList()
+    return CustomListView(
+        onRefresh: () => refreshModel(false),
+        controller: scrollController,
+        itemCount: this.answers.length,
+        itemBuilder: (BuildContext context, int i) {
+          return Container(
+              decoration: ShadowDecoration(shadowColor: CardTemplate.shadowColor(context), spreadRadius: 1.0, offset: Offset(0, 1)),
+              margin: EdgeInsets.only(top: 10.0),
+              child: AnswerCard(this, answers[i], null, widget._dbcontroller)
+          );
+        }
     );
   }
 
@@ -209,4 +217,5 @@ class AnswersTabState extends State<AnswersTab> implements ModelListener {
       setState(() { showLoadingIndicator = false; });
     print("Question fetch time: " + sw.elapsed.toString());
   }
+
 }

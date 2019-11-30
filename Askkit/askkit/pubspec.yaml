@@ -33,6 +33,7 @@ dependencies:
   flutter_markdown: ^0.3.0
   dynamic_theme: ^1.0.0
   datetime_picker_formfield: ^0.4.3
+  firebase_storage: ^3.0.3
 
 dev_dependencies:
   flutter_test:
