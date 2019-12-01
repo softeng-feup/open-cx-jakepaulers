@@ -1,9 +1,5 @@
-
-
 import 'package:askkit/Controller/Authenticator.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
-import 'package:askkit/View/TextFieldValidators/LoginValidators.dart';
-import 'package:askkit/View/Widgets/CustomTextForm.dart';
 import 'package:flutter/material.dart';
 
 class ChangePasswordPage extends StatelessWidget {
@@ -15,6 +11,8 @@ class ChangePasswordPage extends StatelessWidget {
   static final GlobalKey<FormState> oldPasswordKey = GlobalKey<FormState>();
   static final GlobalKey<FormState> newPasswordKey = GlobalKey<FormState>();
   static final GlobalKey<FormState> passwordCheckKey = GlobalKey<FormState>();
+
+  bool wrongPassword = false;
 
   ChangePasswordPage(this._dbcontroller);
 
@@ -39,8 +37,10 @@ class ChangePasswordPage extends StatelessWidget {
                         child: TextFormField(
                           obscureText: true,
                           validator: (String value) {
-                            if (value.length < 8)
-                              return "Password must be at least 8 characters";
+                            if (wrongPassword) {
+                              wrongPassword = false;
+                              return "Wrong password";
+                            }
                             return null;
                           },
                           controller: oldPasswordController,
@@ -100,11 +100,20 @@ class ChangePasswordPage extends StatelessWidget {
     if (!validateForm())
       return;
 
-    try {
+    /*try {
       print(_dbcontroller.getCurrentUser().email);
+      print(oldPasswordController.text);
       await Auth.reauthenticate(oldPasswordController.text);
-    }catch(ERROR_INVALID_CREDENTIAL){
-      print("Wrong password");
+    }catch(e){
+      print(e.toString());
+      return;
+    }*/
+    try {
+      await Auth.signIn((await Auth.getCurrentUser()).email, oldPasswordController.text);
+    } catch (e) {
+      print(e.toString());
+      wrongPassword = true;
+      oldPasswordKey.currentState.validate();
       return;
     }
 

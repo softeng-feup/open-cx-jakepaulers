@@ -22,7 +22,8 @@ class Auth {
     FirebaseUser user = await getCurrentUser();
     AuthCredential credential = EmailAuthProvider.getCredential(email: user.email, password: password);
     AuthResult result = await user.reauthenticateWithCredential(credential);
-    return result.user.uid;
+    //return result.user.uid;
+    return "";
   }
 
   static Future<FirebaseUser> getCurrentUser() async {
