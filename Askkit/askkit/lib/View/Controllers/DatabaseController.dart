@@ -14,7 +14,7 @@ abstract class DatabaseController {
   Future<void> sendForgotPassword(String username);
   Future<bool> changeUsername(String newUsername);
   Future<bool> changeEmail(String newEmail);
-  Future<void> changeImage(File image);
+  Future<String> changeImage(File image);
   Future<void> changePassword(String newPassword);
   Future<void> updateUserInfo(String bios, String displayName);
 

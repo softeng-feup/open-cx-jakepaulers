@@ -30,7 +30,7 @@ class AnswerCard extends CardTemplate {
     User currentUser = _dbcontroller.getCurrentUser();
     List<Widget> items = [];
     List<VoidCallback> actions = [];
-    if (currentUser != _answer.user && currentUser != _questionPoster && _dbcontroller.isAdmin())
+    if (currentUser != _answer.user && currentUser != _questionPoster && !_dbcontroller.isAdmin())
       return;
     if (currentUser == _questionPoster) {
       String verb = _answer.bestAnswer ? 'Unmark' : 'Mark';

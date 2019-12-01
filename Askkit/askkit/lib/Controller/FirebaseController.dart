@@ -320,13 +320,13 @@ class FirebaseController implements DatabaseController {
 
 
   @override
-  Future<void> changeImage(File newImage) async {
+  Future<String> changeImage(File newImage) async {
     StorageReference storageReference = FirebaseStorage.instance.ref().child('userImages/${_currentUser.reference.documentID}');
     StorageUploadTask uploadTask = storageReference.putFile(newImage);
     await uploadTask.onComplete;
     String url = await storageReference.getDownloadURL();
     await _currentUser.reference.updateData({'image': url});
-    _currentUser.image = url;
+    return url;
   }
 
   @override

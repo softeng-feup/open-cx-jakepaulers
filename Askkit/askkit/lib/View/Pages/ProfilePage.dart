@@ -3,6 +3,7 @@ import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
+import 'package:askkit/View/Pages/EditProfilePage.dart';
 import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CustomListView.dart';
@@ -16,7 +17,7 @@ class ProfilePage extends StatelessWidget {
   final DatabaseController _dbcontroller;
   final User _user;
   final bool self;
-  
+
   ProfilePage(this._user, this._dbcontroller) : this.self = (_user == _dbcontroller.getCurrentUser());
 
   @override
@@ -27,37 +28,37 @@ class ProfilePage extends StatelessWidget {
     ]);
 
     return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        appBar: AppBar(
+        length: 3,
+        child: Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
+          appBar: AppBar(
             title:  Text(_user.username + "'s Profile"),
-          bottom: TabBar(
-            isScrollable: false,
-            tabs: [
-              Tab(text: 'Info'),
-              Tab(text: 'Questions'),
-              Tab(text: 'Answers')
-            ]
+            bottom: TabBar(
+                isScrollable: false,
+                tabs: [
+                  Tab(text: 'Info'),
+                  Tab(text: 'Questions'),
+                  Tab(text: 'Answers')
+                ]
+            ),
+            actions: <Widget>[
+              Visibility(visible: self, child: IconButton(icon: Icon(Icons.edit), onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(this._user, this._dbcontroller))))),
+            ],
           ),
-          actions: <Widget>[
-            Visibility(visible: self, child: IconButton(icon: Icon(Icons.edit), onPressed: () => editProfile(context))),
-          ],
-        ),
-        body: Container(
-          decoration: new BoxDecoration(
-            image: new DecorationImage(image: _user.getImage(), fit: BoxFit.cover,),
-          ),
-          child: TabBarView(
-              children: [
-                createProfileTab(context),
-                createQuestionsTab(context),
-                createAnswersTab(context)
-              ]
-          )
+          body: Container(
+              decoration: new BoxDecoration(
+                image: new DecorationImage(image: _user.getImage(), fit: BoxFit.cover,),
+              ),
+              child: TabBarView(
+                  children: [
+                    createProfileTab(context),
+                    createQuestionsTab(context),
+                    createAnswersTab(context)
+                  ]
+              )
 
-        ),
-      )
+          ),
+        )
     );
   }
 
@@ -69,24 +70,24 @@ class ProfilePage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                  child: new CircleAvatar(radius: 45.0, backgroundImage: _user.getImage()),
-                  padding: EdgeInsets.all(1.0),
-                  decoration: new BoxDecoration(
-                    color: Theme.of(context).iconTheme.color, // border color
-                    shape: BoxShape.circle,
-                  )
-              ),
-              Container(
-                  child: Text(_user.username, style: Theme.of(context).textTheme.body2.copyWith(fontSize: 35)),
-                  margin: EdgeInsets.all(15)
-              ),
-              Text("Also known as: " + _user.name),
-              SizedBox(height: 10),
-              Text(_user.bios),
+          children: <Widget>[
+            Container(
+                child: new CircleAvatar(radius: 45.0, backgroundImage: _user.getImage()),
+                padding: EdgeInsets.all(1.0),
+                decoration: new BoxDecoration(
+                  color: Theme.of(context).iconTheme.color, // border color
+                  shape: BoxShape.circle,
+                )
+            ),
+            Container(
+                child: Text(_user.username, style: Theme.of(context).textTheme.body2.copyWith(fontSize: 35)),
+                margin: EdgeInsets.all(15)
+            ),
+            Text("Also known as: " + _user.name),
+            SizedBox(height: 10),
+            Text(_user.bios),
 
-            ],
+          ],
         )
     );
   }
@@ -105,8 +106,6 @@ class ProfilePage extends StatelessWidget {
     ImagePicker.pickImage(source: ImageSource.gallery).then((image) async {
       await _dbcontroller.changeImage(image);
     });
-    //Scaffold.of(context).showSnackBar(SnackBar(content: Text('Yay! A SnackBar!')));
-
   }
 }
 
