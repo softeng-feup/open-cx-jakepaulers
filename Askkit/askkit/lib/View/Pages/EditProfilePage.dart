@@ -1,5 +1,6 @@
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
+import 'package:askkit/View/Pages/ChangePasswordPage.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:askkit/View/Widgets/CustomTextForm.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
@@ -20,6 +21,7 @@ class EditProfilePage extends StatefulWidget {
 class EditProfilePageState extends State<EditProfilePage> {
   final User _user;
   final DatabaseController _dbcontroller;
+  bool loading = false;
 
   static TextEditingController nameController = new TextEditingController();
   static TextEditingController usernameController = new TextEditingController();
@@ -71,8 +73,9 @@ class EditProfilePageState extends State<EditProfilePage> {
                                     child: GestureDetector(
                                         onTap: () {
                                           ImagePicker.pickImage(source: ImageSource.gallery).then((image) async {
+                                            setState((){this.loading=true;});
                                             String url = await _dbcontroller.changeImage(image);
-                                            setState((){_user.image = url;});
+                                            setState((){_user.image = url; this.loading=false;});
                                           });
                                         },
                                         child: Icon(Icons.edit, color: Colors.white)
@@ -109,6 +112,10 @@ class EditProfilePageState extends State<EditProfilePage> {
                                 child: TextAreaForm(biosKey, biosController , "Your bios",  "Bios can't be empty!")
                             )
                           ],
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordPage(this._dbcontroller))),
+                          child: Text("Change Password")
                         )
                       ],
                     )

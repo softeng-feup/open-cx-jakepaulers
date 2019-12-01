@@ -331,7 +331,7 @@ class FirebaseController implements DatabaseController {
 
   @override
   Future<void> updateUserInfo(String bios, String displayName) async {
-    await _currentUser.reference.updateData({'bios': bios, 'name:': displayName});
+    await _currentUser.reference.updateData({'bios': bios, 'name': displayName});
   }
 
   @override
@@ -369,8 +369,4 @@ class FirebaseController implements DatabaseController {
   Future<void> flagAnswerAsBest(Answer answer, bool isBest) async {
     await answer.reference.updateData({'bestanswer' : isBest});
   }
-
-
-
-
 }
