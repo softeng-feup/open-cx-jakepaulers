@@ -1,5 +1,7 @@
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
+import 'package:askkit/View/Widgets/CustomDialog.dart';
+import 'package:askkit/View/Widgets/CustomTextForm.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,9 +20,14 @@ class EditProfilePage extends StatefulWidget {
 class EditProfilePageState extends State<EditProfilePage> {
   final User _user;
   final DatabaseController _dbcontroller;
-  TextEditingController nameController = new TextEditingController();
-  TextEditingController usernameController = new TextEditingController();
-  TextEditingController biosController = new TextEditingController();
+
+  static TextEditingController nameController = new TextEditingController();
+  static TextEditingController usernameController = new TextEditingController();
+  static TextEditingController biosController = new TextEditingController();
+
+  static final GlobalKey<FormState> nameKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> usernameKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> biosKey = GlobalKey<FormState>();
 
   EditProfilePageState(this._user, this._dbcontroller);
 
@@ -36,81 +43,105 @@ class EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
         appBar: AppBar(
           title:  Text(_user.username + "'s Profile"),
+          actions: <Widget>[
+            FlatButton(child: Icon(Icons.save, color: Colors.white), onPressed: () => _onSubmitPressed(context))
+          ],
         ),
         body: Container(
-          decoration: new BoxDecoration(
-            image: new DecorationImage(image: _user.getImage(), fit: BoxFit.cover,),
-          ),
-          child: Container(
-              margin: EdgeInsets.all(30),
-              decoration: ShadowDecoration(color: Theme.of(context).canvasColor, blurRadius: 5.0, spreadRadius: 1),
-              alignment: Alignment.center,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        child: Stack(
-                          children: <Widget>[
-                            CircleAvatar(radius: 45.0, backgroundImage: _user.getImage()),
-                            Positioned(
-                                bottom: 10.0,
-                                right: 10.0,
-                                child: GestureDetector(
-                                    onTap: () {
-                                      ImagePicker.pickImage(source: ImageSource.gallery).then((image) async {
-                                        String url = await _dbcontroller.changeImage(image);
-                                        setState((){_user.image = url;});
-                                      });
-                                    },
-                                    child: Icon(Icons.edit, color: Colors.white)
+            decoration: new BoxDecoration(
+              image: new DecorationImage(image: _user.getImage(), fit: BoxFit.cover,),
+            ),
+            child: Container(
+                margin: EdgeInsets.all(30),
+                decoration: ShadowDecoration(color: Theme.of(context).canvasColor, blurRadius: 5.0, spreadRadius: 1),
+                alignment: Alignment.center,
+                child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                            child: Stack(
+                              children: <Widget>[
+                                CircleAvatar(radius: 45.0, backgroundImage: _user.getImage()),
+                                Positioned(
+                                    bottom: 10.0,
+                                    right: 10.0,
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          ImagePicker.pickImage(source: ImageSource.gallery).then((image) async {
+                                            String url = await _dbcontroller.changeImage(image);
+                                            setState((){_user.image = url;});
+                                          });
+                                        },
+                                        child: Icon(Icons.edit, color: Colors.white)
+                                    )
                                 )
+                              ],
+                            ),
+                            padding: EdgeInsets.all(1.0),
+                            decoration: new BoxDecoration(
+                              color: Theme.of(context).iconTheme.color, // border color
+                              shape: BoxShape.circle,
+                            )
+                        ),
+                        Row(
+                            children: <Widget>[
+                              Text("Username: "),
+                              Flexible(
+                                child: TextAreaForm(usernameKey, usernameController , "Your username",  "Username can't be empty!")
+                              )
+                            ]
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text("Display Name: "),
+                            Flexible(
+                              child: TextAreaForm(nameKey, nameController , "Your display name",  "Display name can't be empty!")
                             )
                           ],
                         ),
-                        padding: EdgeInsets.all(1.0),
-                        decoration: new BoxDecoration(
-                          color: Theme.of(context).iconTheme.color, // border color
-                          shape: BoxShape.circle,
-                        )
-                    ),
-                    Container(
-                        //child: Text(_user.username, style: Theme.of(context).textTheme.body2.copyWith(fontSize: 35)),
-                        child: TextField(controller: nameController, style: Theme.of(context).textTheme.body2.copyWith(fontSize: 35), onEditingComplete: () async {
-                          await _dbcontroller.changeUsername(usernameController.text);
-                          _user.username = usernameController.text;
-                          setState((){});
-                        }),
-                        margin: EdgeInsets.all(15)
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Text("Also known as: "),
-                        Flexible(
-                            child: TextField(controller: nameController, onEditingComplete: () async {
-                              await _dbcontroller.updateUserInfo(_user.bios, nameController.text);
-                              _user.name = nameController.text;
-                              setState((){});
-                            })
+                        Row(
+                          children: <Widget>[
+                            Text("Bios: "),
+                            Flexible(
+                                child: TextAreaForm(biosKey, biosController , "Your bios",  "Bios can't be empty!")
+                            )
+                          ],
                         )
                       ],
-                    ),
-                    SizedBox(height: 10),
-                    Flexible(
-                        child: TextField(controller: biosController, onEditingComplete: () async {
-                          await _dbcontroller.updateUserInfo(biosController.text, _user.name);
-                          _user.bios = biosController.text;
-                          setState((){});
-                        })
                     )
-
-                  ],
                 )
-              )
-          )
+            )
         )
     );
   }
+
+  void _onSubmitPressed(BuildContext context) async {
+    if (!validateForm())
+      return;
+
+    if(_user.username != usernameController.text) {
+      await _dbcontroller.changeUsername(usernameController.text);
+      setState((){_user.username=usernameController.text;});
+    }
+
+    if(_user.name != nameController.text || _user.bios != biosController.text) {
+      await _dbcontroller.updateUserInfo(biosController.text, nameController.text);
+      setState((){_user.name=nameController.text; _user.bios = biosController.text;});
+    }
+
+    Navigator.pop(context);
+  }
+
+  bool validateForm() {
+    bool isValid = true;
+    [nameKey, usernameKey, biosKey].forEach((key) {
+      if (!key.currentState.validate())
+        isValid = false;
+    });
+    return isValid;
+  }
+
 }
