@@ -269,7 +269,8 @@ class FirebaseController implements DatabaseController {
       await addUser(User(username, email, username, User.defaultAvatar, "Welcome to my profile!", null));
       await Auth.signIn(email, password);
       _currentUser = await this.getUserByUsername(username);
-      listener.onSignUpSuccess();
+      if (listener != null)
+        listener.onSignUpSuccess();
     }
     on PlatformException catch (exception) {
       print("Exception " + exception.code);

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
@@ -47,15 +49,18 @@ class ProfilePage extends StatelessWidget {
           ),
           body: Container(
               decoration: new BoxDecoration(
-                image: new DecorationImage(image: _user.getImage(), fit: BoxFit.cover,),
+                image: new DecorationImage(image: _user.getImage(), fit: BoxFit.cover),
               ),
+            child: new BackdropFilter(
+              filter: new ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
               child: TabBarView(
-                  children: [
-                    createProfileTab(context),
-                    createQuestionsTab(context),
-                    createAnswersTab(context)
-                  ]
-              )
+                children: [
+                  createProfileTab(context),
+                  createQuestionsTab(context),
+                  createAnswersTab(context)
+                ],
+              ),
+            ),
 
           ),
         )
@@ -72,7 +77,7 @@ class ProfilePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-                child: new CircleAvatar(radius: 90.0, backgroundImage: _user.getImage()),
+                child: new CircleAvatar(radius: 60.0, backgroundImage: _user.getImage()),
                 padding: EdgeInsets.all(1.0),
                 decoration: new BoxDecoration(
                   color: Theme.of(context).iconTheme.color, // border color

@@ -40,4 +40,12 @@ class LoginValidator {
     };
   }
 
+  static FormFieldValidator<String> confirmEmailValidator(TextEditingController emailController) {
+    return (String value) {
+      if (value != emailController.text)
+        return "Emails do not match";
+      return null;
+    };
+  }
+
 }

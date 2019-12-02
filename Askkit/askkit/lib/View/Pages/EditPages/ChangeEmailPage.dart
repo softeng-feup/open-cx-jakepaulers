@@ -1,17 +1,17 @@
-import 'package:askkit/Controller/Authenticator.dart';
+import 'package:askkit/Model/User.dart';
+import 'package:askkit/View/Controllers/AuthListener.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/TextFieldValidators/LoginValidators.dart';
+import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:flutter/material.dart';
 
-class ChangeEmailPage extends StatelessWidget {
-  DatabaseController _dbcontroller;
-  static TextEditingController passwordController = new TextEditingController();
-  static TextEditingController newEmailController = new TextEditingController();
-  static TextEditingController emailChecKController = new TextEditingController();
+class ChangeEmailPage extends StatelessWidget implements AuthListener {
+  final DatabaseController _dbcontroller;
+  final TextEditingController passwordController = new TextEditingController();
+  final TextEditingController newEmailController = new TextEditingController();
+  final TextEditingController emailCheckController = new TextEditingController();
 
-  static final GlobalKey<FormState> passwordKey = GlobalKey<FormState>();
-  static final GlobalKey<FormState> newEmailKey = GlobalKey<FormState>();
-  static final GlobalKey<FormState> emailCheckKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool wrongPassword = false;
 
@@ -23,74 +23,38 @@ class ChangeEmailPage extends StatelessWidget {
         appBar: AppBar(
           title:  Text("Change Email"),
           actions: <Widget>[
-            FlatButton(child: Icon(Icons.save, color: Colors.white), onPressed: () => _onSubmitPressed(context))
+            FlatButton(child: Icon(Icons.check, color: Colors.white), onPressed: () => _onSubmitPressed(context))
           ],
         ),
-        body: Column(
-          children: <Widget>[
-            Container(
-                margin: EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  children: <Widget>[
-                    Text("Password: "),
-                    Expanded(
-                        child: Form(
-                            key: passwordKey,
-                            child: TextFormField(
-                              obscureText: true,
-                              validator: (String value) {
-                                if (wrongPassword) {
-                                  wrongPassword = false;
-                                  return "Wrong password";
-                                }
-                                return null;
-                              },
-                              controller: passwordController,
-                            )
-                        )
-                    )
-                  ],
-                )
-            ),
-            Container(
-                margin: EdgeInsets.only(left: 20, right: 20),
-                child:Row(
-                  children: <Widget>[
-                    Text("New Email: "),
-                    Expanded(
-                        child: Form(
-                            key: newEmailKey,
-                            child: TextFormField(
-                              validator: LoginValidator.emailValidator(),
-                              controller: newEmailController,
-                            )
-                        )
-                    )
-                  ],
-                )
-            ),
-            Container(
-                margin: EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  children: <Widget>[
-                    Text("Repeat email: "),
-                    Expanded(
-                        child: Form(
-                            key: emailCheckKey,
-                            child: TextFormField(
-                              validator: (String value) {
-                                if (value != newEmailController.text)
-                                  return "Emails must match";
-                                return null;
-                              },
-                              controller: emailChecKController,
-                            )
-                        )
-                    )
-                  ],
-                )
+        body: Form(
+            key: formKey,
+            child: Column(
+                children: <Widget>[
+                  _makeTextField(context, "Password", passwordController, obscureText: true,
+                      validator: (String value) {
+                        if (!wrongPassword)
+                          return null;
+                        wrongPassword = false;
+                        return "Wrong password";
+                      }
+                  ),
+                  _makeTextField(context, "New Email", newEmailController, validator: LoginValidator.emailValidator()),
+                  _makeTextField(context, "Confirm email", emailCheckController, validator: LoginValidator.confirmEmailValidator(newEmailController))
+                ]
             )
-          ],
+        )
+    );
+  }
+
+  Widget _makeTextField(BuildContext context, String hint, TextEditingController controller, {bool obscureText = false, String Function(String) validator}) {
+    return Container(
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: TextFormField(
+            style: Theme.of(context).textTheme.body2.copyWith(fontWeight: FontWeight.normal),
+            decoration: InputDecoration(hintText: hint),
+            obscureText: obscureText,
+            validator: validator,
+            controller: controller
         )
     );
   }
@@ -98,23 +62,37 @@ class ChangeEmailPage extends StatelessWidget {
   void _onSubmitPressed(BuildContext context) async {
     if (!validateForm())
       return;
+    await _dbcontroller.signIn(_dbcontroller.getCurrentUser().username, passwordController.text, this);
 
-    try {
-      await Auth.signIn((await Auth.getCurrentUser()).email, passwordController.text);
-    } catch (e) {
-      wrongPassword = true;
-      passwordKey.currentState.validate();
+    if (wrongPassword) {
+      validateForm();
       return;
     }
 
-    await _dbcontroller.changeEmail(newEmailController.text);
-    passwordController.clear();
-    newEmailController.clear();
-    emailChecKController.clear();
-    Navigator.pop(context);
+
+    ConfirmDialog(
+        context: context,
+        title: "Change email?",
+        content: "You won't be able to use the old one to recover your password.",
+        yesPressed: () async {
+          await _dbcontroller.changeEmail(newEmailController.text);
+          Navigator.pop(context);
+        },
+        noPressed: () {}
+    ).show();
   }
 
   bool validateForm() {
-    return (newEmailKey.currentState.validate() && emailCheckKey.currentState.validate());
+    return formKey.currentState.validate();
   }
+
+  @override void onSignInIncorrect() {
+    wrongPassword = true;
+  }
+
+  @override void onSignInSuccess(User user) {}
+  @override void onSignUpDuplicateEmail() {}
+  @override void onSignUpDuplicateUsername() {}
+  @override void onSignUpSuccess() {}
+
 }

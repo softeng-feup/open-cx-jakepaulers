@@ -185,7 +185,6 @@ class _LogInPageState extends State<LogInPage> {
       decoration: InputDecoration(
         hintText: hint,
         prefixIcon: Icon(icon, color: Theme.of(context).iconTheme.color),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.blueAccent, width: 1.0)),
         suffixIcon: suffixIcon,
       )
     );
@@ -243,6 +242,8 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   void forgotPassword() {
+    if (_usernameController.text == "")
+      return;
     widget._dbcontroller.sendForgotPassword(_usernameController.text);
     OkDialog("Email sent to ${_usernameController.text}", "Check your inbox to reset your password.", context).show();
   }

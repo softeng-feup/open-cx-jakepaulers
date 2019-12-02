@@ -14,7 +14,7 @@ abstract class ManageCommentPage extends StatelessWidget {
   final String hintText;
   final String emptyError;
 
-  ManageCommentPage(this.hintText, this.emptyError, this.title);
+  ManageCommentPage(this.hintText, this.emptyError, this.title) : super();
 
   String getHeaderPrefix();
   String getHeaderSuffix();
