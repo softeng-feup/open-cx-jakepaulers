@@ -27,70 +27,76 @@ class ChangePasswordPage extends StatelessWidget {
         ),
         body: Column(
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Text("Old Password: "),
-                Container(
-                    width: 250.0,
-                    child: Form(
-                        key: oldPasswordKey,
-                        child: TextFormField(
-                          obscureText: true,
-                          validator: (String value) {
-                            if (wrongPassword) {
-                              wrongPassword = false;
-                              return "Wrong password";
-                            }
-                            return null;
-                          },
-                          controller: oldPasswordController,
+            Container(
+                margin: EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  children: <Widget>[
+                    Text("Old Password: "),
+                    Expanded(
+                        child: Form(
+                            key: oldPasswordKey,
+                            child: TextFormField(
+                              obscureText: true,
+                              validator: (String value) {
+                                if (wrongPassword) {
+                                  wrongPassword = false;
+                                  return "Wrong password";
+                                }
+                                return null;
+                              },
+                              controller: oldPasswordController,
+                            )
                         )
                     )
+                  ],
                 )
-              ],
             ),
-            Row(
-              children: <Widget>[
-                Text("New Password: "),
-                Container(
-                  width: 250.0,
-                  child: Form(
-                      key: newPasswordKey,
-                      child: TextFormField(
-                        obscureText: true,
-                        validator: (String value) {
-                          if (value.length < 8)
-                            return "Password must be at least 8 characters";
-                          return null;
-                        },
-                        controller: newPasswordController,
-                      )
-                  )
-                )
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Text("Repeat password: "),
-                Container(
-                    width: 250.0,
-                    child: Form(
-                        key: passwordCheckKey,
-                        child: TextFormField(
-                          obscureText: true,
-                          validator: (String value) {
-                            if (value.length < 8)
-                              return "Password must be at least 8 characters";
-                            if (value != newPasswordController.text)
-                              return "Passwords must match";
-                            return null;
-                          },
-                          controller: passwordCheckController,
+            Container(
+                margin: EdgeInsets.only(left: 20, right: 20),
+                child:Row(
+                  children: <Widget>[
+                    Text("New Password: "),
+                    Expanded(
+                        child: Form(
+                            key: newPasswordKey,
+                            child: TextFormField(
+                              obscureText: true,
+                              validator: (String value) {
+                                if (value.length < 8)
+                                  return "Password must be at least 8 characters";
+                                return null;
+                              },
+                              controller: newPasswordController,
+                            )
                         )
                     )
+                  ],
                 )
-              ],
             ),
+            Container(
+                margin: EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  children: <Widget>[
+                    Text("Repeat password: "),
+                    Expanded(
+                        child: Form(
+                            key: passwordCheckKey,
+                            child: TextFormField(
+                              obscureText: true,
+                              validator: (String value) {
+                                if (value.length < 8)
+                                  return "Password must be at least 8 characters";
+                                if (value != newPasswordController.text)
+                                  return "Passwords must match";
+                                return null;
+                              },
+                              controller: passwordCheckController,
+                            )
+                        )
+                    )
+                  ],
+                )
+            )
           ],
         )
     );
@@ -111,7 +117,6 @@ class ChangePasswordPage extends StatelessWidget {
     try {
       await Auth.signIn((await Auth.getCurrentUser()).email, oldPasswordController.text);
     } catch (e) {
-      print(e.toString());
       wrongPassword = true;
       oldPasswordKey.currentState.validate();
       return;

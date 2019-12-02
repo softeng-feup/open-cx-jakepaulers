@@ -72,7 +72,7 @@ class ProfilePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-                child: new CircleAvatar(radius: 45.0, backgroundImage: _user.getImage()),
+                child: new CircleAvatar(radius: 90.0, backgroundImage: _user.getImage()),
                 padding: EdgeInsets.all(1.0),
                 decoration: new BoxDecoration(
                   color: Theme.of(context).iconTheme.color, // border color

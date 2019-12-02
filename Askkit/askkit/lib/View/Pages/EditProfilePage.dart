@@ -64,22 +64,27 @@ class EditProfilePageState extends State<EditProfilePage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Container(
-                            child: Stack(
+                            child: Column(
                               children: <Widget>[
-                                CircleAvatar(radius: 45.0, backgroundImage: _user.getImage()),
-                                Positioned(
-                                    bottom: 10.0,
-                                    right: 10.0,
-                                    child: GestureDetector(
-                                        onTap: () {
-                                          ImagePicker.pickImage(source: ImageSource.gallery).then((image) async {
-                                            setState((){this.loading=true;});
-                                            String url = await _dbcontroller.changeImage(image);
-                                            setState((){_user.image = url; this.loading=false;});
-                                          });
-                                        },
-                                        child: Icon(Icons.edit, color: Colors.white)
+                                Visibility(visible: loading, child: LinearProgressIndicator()),
+                                Stack(
+                                  children: <Widget>[
+                                    CircleAvatar(radius: 90.0, backgroundImage: _user.getImage()),
+                                    Positioned(
+                                        bottom: 25.0,
+                                        right: 25.0,
+                                        child: GestureDetector(
+                                            onTap: () {
+                                              ImagePicker.pickImage(source: ImageSource.gallery).then((image) async {
+                                                setState((){this.loading=true;});
+                                                String url = await _dbcontroller.changeImage(image);
+                                                setState((){_user.image = url; this.loading=false;});
+                                              });
+                                            },
+                                            child: Icon(Icons.edit, color: Colors.white, size: 25.0)
+                                        )
                                     )
+                                  ],
                                 )
                               ],
                             ),
@@ -89,33 +94,42 @@ class EditProfilePageState extends State<EditProfilePage> {
                               shape: BoxShape.circle,
                             )
                         ),
-                        Row(
-                            children: <Widget>[
-                              Text("Username: "),
-                              Flexible(
-                                child: TextAreaForm(usernameKey, usernameController , "Your username",  "Username can't be empty!")
-                              )
-                            ]
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text("Display Name: "),
-                            Flexible(
-                              child: TextAreaForm(nameKey, nameController , "Your display name",  "Display name can't be empty!")
+                        Container(
+                            margin: EdgeInsets.only(left: 20, right: 20),
+                            child: Row(
+                                children: <Widget>[
+                                  Text("Username: "),
+                                  Flexible(
+                                      child: TextAreaForm(usernameKey, usernameController , "Your username",  "Username can't be empty!")
+                                  )
+                                ]
                             )
-                          ],
                         ),
-                        Row(
-                          children: <Widget>[
-                            Text("Bios: "),
-                            Flexible(
-                                child: TextAreaForm(biosKey, biosController , "Your bios",  "Bios can't be empty!")
+                        Container(
+                            margin: EdgeInsets.only(left: 20, right: 20),
+                            child: Row(
+                              children: <Widget>[
+                                Text("Display Name: "),
+                                Flexible(
+                                    child: TextAreaForm(nameKey, nameController , "Your display name",  "Display name can't be empty!")
+                                )
+                              ],
                             )
-                          ],
+                        ),
+                        Container(
+                            margin: EdgeInsets.only(left: 20, right: 20),
+                            child: Row(
+                              children: <Widget>[
+                                Text("Bios: "),
+                                Flexible(
+                                    child: TextAreaForm(biosKey, biosController , "Your bios",  "Bios can't be empty!")
+                                )
+                              ],
+                            )
                         ),
                         GestureDetector(
-                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordPage(this._dbcontroller))),
-                          child: Text("Change Password")
+                            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordPage(this._dbcontroller))),
+                            child: Text("Change Password")
                         )
                       ],
                     )
