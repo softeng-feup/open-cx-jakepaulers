@@ -1,6 +1,7 @@
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
-import 'package:askkit/View/Pages/ChangePasswordPage.dart';
+import 'package:askkit/View/Pages/EditPages/ChangeEmailPage.dart';
+import 'package:askkit/View/Pages/EditPages/ChangePasswordPage.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:askkit/View/Widgets/CustomTextForm.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
@@ -127,9 +128,15 @@ class EditProfilePageState extends State<EditProfilePage> {
                               ],
                             )
                         ),
+                        SizedBox(height: 60),
                         GestureDetector(
                             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordPage(this._dbcontroller))),
                             child: Text("Change Password")
+                        ),
+                        SizedBox(height: 15),
+                        GestureDetector(
+                            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeEmailPage(this._dbcontroller))),
+                            child: Text("Change Email")
                         )
                       ],
                     )

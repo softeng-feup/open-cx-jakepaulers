@@ -1,26 +1,27 @@
 import 'package:askkit/Controller/Authenticator.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
+import 'package:askkit/View/TextFieldValidators/LoginValidators.dart';
 import 'package:flutter/material.dart';
 
-class ChangePasswordPage extends StatelessWidget {
+class ChangeEmailPage extends StatelessWidget {
   DatabaseController _dbcontroller;
-  static TextEditingController oldPasswordController = new TextEditingController();
-  static TextEditingController newPasswordController = new TextEditingController();
-  static TextEditingController passwordCheckController = new TextEditingController();
+  static TextEditingController passwordController = new TextEditingController();
+  static TextEditingController newEmailController = new TextEditingController();
+  static TextEditingController emailChecKController = new TextEditingController();
 
-  static final GlobalKey<FormState> oldPasswordKey = GlobalKey<FormState>();
-  static final GlobalKey<FormState> newPasswordKey = GlobalKey<FormState>();
-  static final GlobalKey<FormState> passwordCheckKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> passwordKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> newEmailKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> emailCheckKey = GlobalKey<FormState>();
 
   bool wrongPassword = false;
 
-  ChangePasswordPage(this._dbcontroller);
+  ChangeEmailPage(this._dbcontroller);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title:  Text("Change Password"),
+          title:  Text("Change Email"),
           actions: <Widget>[
             FlatButton(child: Icon(Icons.save, color: Colors.white), onPressed: () => _onSubmitPressed(context))
           ],
@@ -31,10 +32,10 @@ class ChangePasswordPage extends StatelessWidget {
                 margin: EdgeInsets.only(left: 20, right: 20),
                 child: Row(
                   children: <Widget>[
-                    Text("Old Password: "),
+                    Text("Password: "),
                     Expanded(
                         child: Form(
-                            key: oldPasswordKey,
+                            key: passwordKey,
                             child: TextFormField(
                               obscureText: true,
                               validator: (String value) {
@@ -44,7 +45,7 @@ class ChangePasswordPage extends StatelessWidget {
                                 }
                                 return null;
                               },
-                              controller: oldPasswordController,
+                              controller: passwordController,
                             )
                         )
                     )
@@ -55,18 +56,13 @@ class ChangePasswordPage extends StatelessWidget {
                 margin: EdgeInsets.only(left: 20, right: 20),
                 child:Row(
                   children: <Widget>[
-                    Text("New Password: "),
+                    Text("New Email: "),
                     Expanded(
                         child: Form(
-                            key: newPasswordKey,
+                            key: newEmailKey,
                             child: TextFormField(
-                              obscureText: true,
-                              validator: (String value) {
-                                if (value.length < 8)
-                                  return "Password must be at least 8 characters";
-                                return null;
-                              },
-                              controller: newPasswordController,
+                              validator: LoginValidator.emailValidator(),
+                              controller: newEmailController,
                             )
                         )
                     )
@@ -77,20 +73,17 @@ class ChangePasswordPage extends StatelessWidget {
                 margin: EdgeInsets.only(left: 20, right: 20),
                 child: Row(
                   children: <Widget>[
-                    Text("Repeat password: "),
+                    Text("Repeat email: "),
                     Expanded(
                         child: Form(
-                            key: passwordCheckKey,
+                            key: emailCheckKey,
                             child: TextFormField(
-                              obscureText: true,
                               validator: (String value) {
-                                if (value.length < 8)
-                                  return "Password must be at least 8 characters";
-                                if (value != newPasswordController.text)
-                                  return "Passwords must match";
+                                if (value != newEmailController.text)
+                                  return "Emails must match";
                                 return null;
                               },
-                              controller: passwordCheckController,
+                              controller: emailChecKController,
                             )
                         )
                     )
@@ -106,27 +99,22 @@ class ChangePasswordPage extends StatelessWidget {
     if (!validateForm())
       return;
 
-    /*try {
-      print(_dbcontroller.getCurrentUser().email);
-      print(oldPasswordController.text);
-      await Auth.reauthenticate(oldPasswordController.text);
-    }catch(e){
-      print(e.toString());
-      return;
-    }*/
     try {
-      await Auth.signIn((await Auth.getCurrentUser()).email, oldPasswordController.text);
+      await Auth.signIn((await Auth.getCurrentUser()).email, passwordController.text);
     } catch (e) {
       wrongPassword = true;
-      oldPasswordKey.currentState.validate();
+      passwordKey.currentState.validate();
       return;
     }
 
-    _dbcontroller.changePassword(newPasswordController.text);
+    await _dbcontroller.changeEmail(newEmailController.text);
+    passwordController.clear();
+    newEmailController.clear();
+    emailChecKController.clear();
     Navigator.pop(context);
   }
 
   bool validateForm() {
-    return (newPasswordKey.currentState.validate() && passwordCheckKey.currentState.validate());
+    return (newEmailKey.currentState.validate() && emailCheckKey.currentState.validate());
   }
 }

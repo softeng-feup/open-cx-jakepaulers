@@ -3,7 +3,7 @@ import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
-import 'package:askkit/View/Pages/EditProfilePage.dart';
+import 'package:askkit/View/Pages/EditPages/EditProfilePage.dart';
 import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
 import 'package:askkit/View/Widgets/CustomListView.dart';
