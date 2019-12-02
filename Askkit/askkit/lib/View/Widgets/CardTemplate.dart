@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 abstract class CardTemplate extends StatelessWidget {
 
 
-  static const Color cardShadowColor = Color.fromARGB(255, 180, 180, 180);
 
   static TextStyle usernameStyle(BuildContext context, bool highlight) {
     if (highlight)
@@ -12,6 +11,7 @@ abstract class CardTemplate extends StatelessWidget {
     return Theme.of(context).textTheme.body2.copyWith(fontSize: 20.0);
   }
 
+  static Color shadowColor(BuildContext context) => Theme.of(context).dividerColor;
   static TextStyle dateStyle(BuildContext context) => Theme.of(context).textTheme.body1.copyWith(fontSize: 10.0);
   static TextStyle editedStyle(BuildContext context) => Theme.of(context).textTheme.body1.copyWith(fontSize: 8.0);
 

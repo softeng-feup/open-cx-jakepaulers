@@ -12,10 +12,18 @@ class Auth {
   }
 
   static Future<String> signUp(String email, String password) async {
-      AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-      FirebaseUser user = result.user;
-      result.user.sendEmailVerification();
-      return user.uid;
+    AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+    FirebaseUser user = result.user;
+    result.user.sendEmailVerification();
+    return user.uid;
+  }
+
+  static Future<String> reauthenticate(String password) async {
+    FirebaseUser user = await getCurrentUser();
+    AuthCredential credential = EmailAuthProvider.getCredential(email: user.email, password: password);
+    AuthResult result = await user.reauthenticateWithCredential(credential);
+    //return result.user.uid;
+    return "";
   }
 
   static Future<FirebaseUser> getCurrentUser() async {

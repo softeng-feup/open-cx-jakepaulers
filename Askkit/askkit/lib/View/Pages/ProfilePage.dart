@@ -1,21 +1,25 @@
+import 'dart:ui';
+
 import 'package:askkit/Model/Answer.dart';
 import 'package:askkit/Model/Question.dart';
 import 'package:askkit/Model/User.dart';
 import 'package:askkit/View/Controllers/DatabaseController.dart';
 import 'package:askkit/View/Controllers/ModelListener.dart';
+import 'package:askkit/View/Pages/EditPages/EditProfilePage.dart';
 import 'package:askkit/View/Widgets/AnswerCard.dart';
 import 'package:askkit/View/Widgets/CardTemplate.dart';
+import 'package:askkit/View/Widgets/CustomListView.dart';
 import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
-import 'package:askkit/View/Widgets/TitleText.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatelessWidget {
   final DatabaseController _dbcontroller;
   final User _user;
   final bool self;
-  
+
   ProfilePage(this._user, this._dbcontroller) : this.self = (_user == _dbcontroller.getCurrentUser());
 
   @override
@@ -26,69 +30,87 @@ class ProfilePage extends StatelessWidget {
     ]);
 
     return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
+        length: 3,
+        child: Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
+          appBar: AppBar(
             title:  Text(_user.username + "'s Profile"),
-          bottom: TabBar(
-            isScrollable: false,
-            tabs: [
-              Tab(text: 'Info'),
-              Tab(text: 'Questions'),
-              Tab(text: 'Answers')
-            ]
-          )
-        ),
-        body: TabBarView(
-          children: [
-            createProfileTab(),
-            createQuestionsTab(),
-            createAnswersTab()
-          ]
+            bottom: TabBar(
+                isScrollable: false,
+                tabs: [
+                  Tab(text: 'Info'),
+                  Tab(text: 'Questions'),
+                  Tab(text: 'Answers')
+                ]
+            ),
+            actions: <Widget>[
+              Visibility(visible: self, child: IconButton(icon: Icon(Icons.edit), onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(this._user, this._dbcontroller))))),
+            ],
+          ),
+          body: Container(
+              decoration: new BoxDecoration(
+                image: new DecorationImage(image: _user.getImage(), fit: BoxFit.cover),
+              ),
+            child: new BackdropFilter(
+              filter: new ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+              child: TabBarView(
+                children: [
+                  createProfileTab(context),
+                  createQuestionsTab(context),
+                  createAnswersTab(context)
+                ],
+              ),
+            ),
+
+          ),
         )
-      )
     );
   }
 
-  Widget createProfileTab() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        CircleAvatar(
-            radius: 45.0,
-            backgroundImage: _user.getImage()
-        ),
-        getUsernameLine(),
-      ],
+  Widget createProfileTab(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.all(50),
+        decoration: ShadowDecoration(color: Theme.of(context).canvasColor, blurRadius: 5.0, spreadRadius: 1),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+                child: new CircleAvatar(radius: 60.0, backgroundImage: _user.getImage()),
+                padding: EdgeInsets.all(1.0),
+                decoration: new BoxDecoration(
+                  color: Theme.of(context).iconTheme.color, // border color
+                  shape: BoxShape.circle,
+                )
+            ),
+            Container(
+                child: Text(_user.username, style: Theme.of(context).textTheme.body2.copyWith(fontSize: 35)),
+                margin: EdgeInsets.all(15)
+            ),
+            Text("Also known as: " + _user.name),
+            SizedBox(height: 10),
+            Text(_user.bios),
+
+          ],
+        )
     );
   }
 
-  Widget createQuestionsTab() {
+  Widget createQuestionsTab(BuildContext context) {
     return QuestionsTab(this._user, this._dbcontroller);
   }
 
-  createAnswersTab() {
+  Widget createAnswersTab(BuildContext context) {
     return AnswersTab(this._user, this._dbcontroller);
   }
 
-  changeUsername() {
-    print("Lmao, culpa o Moás");
-  }
+  Future editProfile(BuildContext context) {
+    print("ta aqi para testar");
 
-  Widget getUsernameLine() {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          TitleText(text: _user.username, margin: EdgeInsets.only(top: 10.0)),
-          Visibility(
-              visible: this.self,
-              child: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: changeUsername
-              )
-          )
-        ]
-    );
+    ImagePicker.pickImage(source: ImageSource.gallery).then((image) async {
+      await _dbcontroller.changeImage(image);
+    });
   }
 }
 
@@ -104,40 +126,43 @@ class QuestionsTab extends StatefulWidget{
   }
 }
 
-class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
+class QuestionsTabState extends State<QuestionsTab> with AutomaticKeepAliveClientMixin<QuestionsTab>  implements ModelListener {
   bool showLoadingIndicator = false;
-  bool loading = true;
   List<Question> questions = new List();
+  ScrollController scrollController;
 
 
   @override
   void initState() {
     super.initState();
+    scrollController = ScrollController();
     this.refreshModel(true);
   }
+
+  @override bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
     return Column(
         children: <Widget>[
-          Visibility(visible: this.loading, child: LinearProgressIndicator()),
+          Visibility(visible: this.showLoadingIndicator, child: LinearProgressIndicator()),
           Expanded(child: questionList())
         ]
     );
   }
 
   questionList() {
-    return ListView(
-        children: questions.map((question) =>
-            Container(
-                decoration: ShadowDecoration(
-                    shadowColor: CardTemplate.cardShadowColor,
-                    spreadRadius: 1.0,
-                    offset: Offset(0, 1)
-                ),
-                margin: EdgeInsets.only(top: 10.0),
-                child: QuestionCard(this, question, true, null, widget._dbcontroller))
-        ).toList()
+    return CustomListView(
+      onRefresh: () => refreshModel(false),
+      controller: scrollController,
+      itemCount: this.questions.length,
+      itemBuilder: (BuildContext context, int i) {
+        return Container(
+            decoration: ShadowDecoration(shadowColor: Colors.black.withAlpha(150), spreadRadius: 1.0, offset: Offset(0, 1)),
+            margin: EdgeInsets.only(top: 10.0),
+            child: QuestionCard(this, questions[i], true, null, widget._dbcontroller)
+        );
+      },
     );
   }
 
@@ -149,7 +174,6 @@ class QuestionsTabState extends State<QuestionsTab> implements ModelListener {
     questions.sort((question1, question2) => question2.upvotes.compareTo(question1.upvotes));
     if (this.mounted)
       setState(() { showLoadingIndicator = false; });
-    print(questions.length);
     print("Question fetch time: " + sw.elapsed.toString());
   }
 }
@@ -166,16 +190,20 @@ class AnswersTab extends StatefulWidget{
   }
 }
 
-class AnswersTabState extends State<AnswersTab> implements ModelListener {
+class AnswersTabState extends State<AnswersTab> with AutomaticKeepAliveClientMixin<AnswersTab>  implements ModelListener {
   bool showLoadingIndicator = false;
   List<Answer> answers = new List();
+  ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
+    scrollController = ScrollController();
     this.refreshModel(true);
   }
-  
+
+  @override bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -187,16 +215,17 @@ class AnswersTabState extends State<AnswersTab> implements ModelListener {
   }
 
   answerList() {
-    return ListView(
-        children: answers.map((answer) =>
-            Container(
-                decoration: ShadowDecoration(
-                    shadowColor: CardTemplate.cardShadowColor,
-                    spreadRadius: 1.0,
-                    offset: Offset(0, 1)),
-                margin: EdgeInsets.only(top: 10.0),
-                child: AnswerCard(this, answer, null, widget._dbcontroller))
-        ).toList()
+    return CustomListView(
+        onRefresh: () => refreshModel(false),
+        controller: scrollController,
+        itemCount: this.answers.length,
+        itemBuilder: (BuildContext context, int i) {
+          return Container(
+              decoration: ShadowDecoration(shadowColor: Colors.black.withAlpha(150), spreadRadius: 1.0, offset: Offset(0, 1)),
+              margin: EdgeInsets.only(top: 10.0),
+              child: AnswerCard(this, answers[i], null, widget._dbcontroller)
+          );
+        }
     );
   }
 
@@ -209,4 +238,5 @@ class AnswersTabState extends State<AnswersTab> implements ModelListener {
       setState(() { showLoadingIndicator = false; });
     print("Question fetch time: " + sw.elapsed.toString());
   }
+
 }

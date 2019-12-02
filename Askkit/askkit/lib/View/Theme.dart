@@ -19,6 +19,8 @@ class AskkitThemes {
 
         inputDecorationTheme: InputDecorationTheme(
           hintStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.blueAccent),
+          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.blueAccent, width: 1.0)),
+
         ),
         textTheme: TextTheme(
           title: TextStyle(fontSize: 38.0, fontWeight: FontWeight.bold, color: Colors.blueAccent),
@@ -48,6 +50,7 @@ class AskkitThemes {
 
         inputDecorationTheme: InputDecorationTheme(
           hintStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.indigo),
+          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color:  Colors.indigo, width: 1.0)),
         ),
         textTheme: TextTheme(
           title: TextStyle(fontSize: 38.0, fontWeight: FontWeight.bold, color: Colors.indigo),

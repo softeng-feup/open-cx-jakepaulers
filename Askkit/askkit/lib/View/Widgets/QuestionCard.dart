@@ -126,7 +126,7 @@ class QuestionCard extends CardTemplate {
   void markQuestion(BuildContext context) async {
     ConfirmDialog(
         title: "Mark question as answered?",
-        content: "This will notify every user who upvoted it.",
+        content: "This action cannot be reversed.",
         context: context,
         yesPressed: () {
           this._dbcontroller.flagQuestionAsAnswered(_question);

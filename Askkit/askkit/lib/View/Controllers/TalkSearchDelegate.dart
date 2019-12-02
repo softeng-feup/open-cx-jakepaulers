@@ -13,7 +13,7 @@ class TalkSearchDelegate extends SearchDelegate<Talk> implements ModelListener {
   final DatabaseController dbcontroller;
   List<Talk> allTalks;
 
-  TalkSearchDelegate(this.dbcontroller) : super(searchFieldLabel: "Search talk...") {
+  TalkSearchDelegate(this.dbcontroller) : super(searchFieldLabel: "Search talk title/room...") {
     dbcontroller.getTalks().then((talks) {
       allTalks = talks;
     });

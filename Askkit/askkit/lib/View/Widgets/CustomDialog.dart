@@ -56,15 +56,15 @@ class ConfirmDialog extends CustomDialog {
         new FlatButton(
           child: new Text("Yes"),
           onPressed: () {
-            yesPressed();
             Navigator.of(context).pop();
+            yesPressed();
           },
         ),
         new FlatButton(
           child: new Text("No"),
           onPressed: () {
-            noPressed();
             Navigator.of(context).pop();
+            noPressed();
           },
         ),
       ]
