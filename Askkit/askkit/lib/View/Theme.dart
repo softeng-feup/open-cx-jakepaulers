@@ -34,30 +34,29 @@ class AskkitThemes {
 
   static darkTheme() {
     return ThemeData(
-        primaryColor: Colors.indigo,
-        primaryColorDark: Colors.indigo.shade700,
-        primaryColorLight: Colors.indigo.shade300,
-        dialogBackgroundColor: Colors.indigo.shade300,
-        backgroundColor: Colors.indigo.shade100,
-        canvasColor: Colors.indigo.shade200,
-        buttonColor: Colors.indigo,
-        accentColor: Color(0xFFE64A19),
-        dividerColor: Colors.indigo.shade300,
+        primaryColor: Color(0xFF404040),
+        primaryColorDark: Colors.lightBlue,
+        primaryColorLight: Color(0xFF404040),
+        backgroundColor: Color(0xFF121212),
+        canvasColor: Color(0xFF303030),
+        buttonColor: Colors.indigo.shade200,
+        accentColor: Color(0xFFE35D34),
+        dividerColor: Colors.indigo.shade400,
         highlightColor: Colors.indigo,
         iconTheme: IconThemeData(
-            color: Colors.black
+            color: Color(0xDDFFFFFF)
         ),
 
         inputDecorationTheme: InputDecorationTheme(
-          hintStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.indigo),
+          hintStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.normal, color: Colors.indigo.shade300),
           enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color:  Colors.indigo, width: 1.0)),
         ),
         textTheme: TextTheme(
-          title: TextStyle(fontSize: 38.0, fontWeight: FontWeight.bold, color: Colors.indigo),
-          subtitle: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold, color: Colors.indigo),
-          headline: TextStyle(fontSize: 20.0, fontWeight: FontWeight.normal, color: Colors.white),
-          body1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black54),
-          body2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.black54),
+          title: TextStyle(fontSize: 38.0, fontWeight: FontWeight.bold, color: Colors.indigo.shade200),
+          subtitle: TextStyle(fontSize: 19.0, fontWeight: FontWeight.bold, color: Colors.indigo.shade200),
+          headline: TextStyle(fontSize: 20.0, fontWeight: FontWeight.normal, color: Colors.indigo.shade100),
+          body1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Color(0xDCFFFFFF)),
+          body2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Color(0xCBFFFFFF)),
         )
     );
   }
