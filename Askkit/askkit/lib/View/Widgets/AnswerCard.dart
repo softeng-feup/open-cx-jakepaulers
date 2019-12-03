@@ -32,7 +32,7 @@ class AnswerCard extends CardTemplate {
       return;
     if (currentUser == _questionPoster || _dbcontroller.isAdmin()) {
       String verb = _answer.bestAnswer ? 'Unmark' : 'Mark';
-      IconData icon =  _answer.bestAnswer ? Icons.clear : Icons.check;
+      IconData icon =  _answer.bestAnswer ? Icons.star_border : Icons.star;
       items.add(Row(children: <Widget>[Icon(icon), Text('  $verb as best', style: Theme.of(context).textTheme.body1)]));
       actions.add(() => markBestAnswer(context));
     }

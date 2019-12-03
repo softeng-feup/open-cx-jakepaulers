@@ -32,11 +32,11 @@ class AnswersPage extends StatefulWidget {
 
 class AnswersPageState extends State<AnswersPage> implements ModelListener {
   static final List<Color> borderColors = [
-    Colors.green,
-    Colors.purple,
-    Colors.blueAccent,
+    Colors.red,
     Colors.yellow,
-    Colors.red
+    Colors.green,
+    Colors.blueAccent,
+    Colors.purple
   ];
 
   List<Answer> answers = new List();
