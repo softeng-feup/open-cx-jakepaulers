@@ -30,7 +30,7 @@ class AnswerCard extends CardTemplate {
     List<VoidCallback> actions = [];
     if (currentUser != _answer.user && currentUser != _questionPoster && !_dbcontroller.isAdmin())
       return;
-    if (currentUser == _questionPoster) {
+    if (currentUser == _questionPoster || _dbcontroller.isAdmin()) {
       String verb = _answer.bestAnswer ? 'Unmark' : 'Mark';
       IconData icon =  _answer.bestAnswer ? Icons.clear : Icons.check;
       items.add(Row(children: <Widget>[Icon(icon), Text('  $verb as best', style: Theme.of(context).textTheme.body1)]));
@@ -52,9 +52,12 @@ class AnswerCard extends CardTemplate {
           Visibility(
             visible: this._answer.bestAnswer,
             child: Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.only(bottom: 7.5),
-              child: Icon(Icons.check_circle, color: Colors.green),
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(bottom: 7.5),
+                child: Row(children: <Widget>[
+                  Icon(Icons.star, size: 16, color: Colors.yellow.shade800),
+                  Text(" Best answer", style: Theme.of(context).textTheme.body1.copyWith(color: Colors.yellow.shade800)),
+                ])
             ),
           ),
           Row(

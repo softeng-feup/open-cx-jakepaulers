@@ -21,7 +21,7 @@ void main() async {
   // This line enables the extension
   enableFlutterDriverExtension();
 
-  User testUser = User("Test", "m.m@gmail.com", "Name", User.defaultAvatar, null);
+  User testUser = User("Test", "m.m@gmail.com", "Name", User.defaultAvatar, "bios", null);
   Talk testTalk = Talk("Title", "Desc",DateTime.now(), testUser,  "Room", null);
   Question testQuestion = Question(null, testUser, "Question?", DateTime.now(), null);
   Answer testAnswer = Answer(testUser, "Answer!", DateTime.now(), null, null);

@@ -31,6 +31,14 @@ class AnswersPage extends StatefulWidget {
 }
 
 class AnswersPageState extends State<AnswersPage> implements ModelListener {
+  static final List<Color> borderColors = [
+    Colors.green,
+    Colors.purple,
+    Colors.blueAccent,
+    Colors.yellow,
+    Colors.red
+  ];
+
   List<Answer> answers = new List();
 
   bool showLoadingIndicator = false;
@@ -104,7 +112,7 @@ class AnswersPageState extends State<AnswersPage> implements ModelListener {
         itemCount: answers.length,
         itemBuilder: (BuildContext context, int i) {
           return Container(
-              decoration: BoxDecoration(border: BorderLeft(Theme.of(context).primaryColor, 4.0)),
+              decoration: BoxDecoration(border: BorderLeft(borderColors[i % borderColors.length], 4.0)),
               child: Column(
                 children: <Widget>[
                   AnswerCard(this, answers[i], widget._question.user, widget._dbcontroller),

@@ -63,7 +63,10 @@ class QuestionCard extends CardTemplate {
                       visible: this._question.answered,
                       child: Container(
                         padding: EdgeInsets.only(bottom: 7.5),
-                        child: Icon(Icons.check, color: Colors.green),
+                        child: Row(children: <Widget>[
+                          Text("Answered ", style: Theme.of(context).textTheme.body1.copyWith(color: Colors.green.shade700)),
+                          Icon(Icons.check, size: 16, color: Colors.green.shade700),
+                        ])
                       ),
                     ),
                     GestureDetector(

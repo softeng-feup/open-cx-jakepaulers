@@ -98,7 +98,7 @@ packages:
       name: dynamic_theme
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   file:
     dependency: transitive
     description:
@@ -419,7 +419,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3"
+    version: "0.5.4+6"
   shelf:
     dependency: transitive
     description:
