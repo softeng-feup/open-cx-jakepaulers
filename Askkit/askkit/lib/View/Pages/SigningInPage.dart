@@ -23,7 +23,7 @@ class SigningInPage extends SigningPage {
   State<StatefulWidget> createState() => SigningPageState("Signing in...");
 
   @override
-  performSign(AuthListener listener) => this._dbcontroller.signIn(username, password, listener);
+  performSign(AuthListener listener) => this._dbcontroller.signIn(username.trim(), password, listener);
 }
 
 class SigningUpPage extends SigningPage {

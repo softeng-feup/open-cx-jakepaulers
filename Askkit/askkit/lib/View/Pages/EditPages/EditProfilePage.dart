@@ -5,6 +5,7 @@ import 'package:askkit/View/Pages/EditPages/ChangePasswordPage.dart';
 import 'package:askkit/View/Widgets/CustomDialog.dart';
 import 'package:askkit/View/Widgets/CustomTextForm.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
@@ -52,6 +53,7 @@ class EditProfilePageState extends State<EditProfilePage> {
         ),
         body: ListView(
           children: <Widget>[
+            Visibility(visible: loading, child: LinearProgressIndicator()),
             Container(
                 child: _getEditableAvatar(),
                 margin: EdgeInsets.all(20.0),
@@ -61,10 +63,14 @@ class EditProfilePageState extends State<EditProfilePage> {
                   shape: BoxShape.circle,
                 )
             ),
-        ..._makeEditable("Edit username:", TextAreaForm(usernameKey, usernameController , "Your username",  "Username can't be empty!")),
-        ..._makeEditable("Edit display name:", TextAreaForm(nameKey, nameController , "Your display name",  "Display name can't be empty!")),
-        ..._makeEditable("Edit bios:", TextAreaForm(biosKey, biosController , "Your bios",  "Bios can't be empty!")),
-            SizedBox(height: 30),
+        ..._makeEditable("Edit username:", CustomTextField(usernameKey, usernameController , "Your username",  "Username can't be empty!")),
+        ..._makeEditable("Edit display name:", CustomTextField(nameKey, nameController , "Your display name",  "Display name can't be empty!")),
+        ..._makeEditable("Edit bios:", TextAreaForm(biosKey, biosController , "Your bios",  "Bios can't be empty!"), maxFormHeight: 200),
+            Container (
+              padding: EdgeInsets.only(left: 20.0,right: 20.0),
+    child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
             GestureDetector(
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordPage(this._dbcontroller))),
                 child: Text("Change Password", textAlign: TextAlign.center, style: Theme.of(context).textTheme.body2)
@@ -74,18 +80,23 @@ class EditProfilePageState extends State<EditProfilePage> {
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeEmailPage(this._dbcontroller))),
                 child: Text("Change Email", textAlign: TextAlign.center, style: Theme.of(context).textTheme.body2)
             )
+  ]
+            )
+            )
           ],
         )
     );
   }
 
-  List<Widget> _makeEditable(String text, Widget formField) {
+  List<Widget> _makeEditable(String text, Widget formField, {double maxFormHeight = double.infinity}) {
     return  [
       Container(
         margin: EdgeInsets.only(left: 10.0),
         child: Text(text, style: Theme.of(context).textTheme.body1.copyWith(decoration: TextDecoration.underline)),
       ),
       Container(
+        //decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+          constraints: BoxConstraints(maxHeight: maxFormHeight),
           margin: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 10.0),
           child: formField
       )
@@ -95,7 +106,6 @@ class EditProfilePageState extends State<EditProfilePage> {
   Widget _getEditableAvatar() {
     return Column(
       children: <Widget>[
-        Visibility(visible: loading, child: LinearProgressIndicator()),
         Stack(
           children: <Widget>[
             CircleAvatar(radius: 60.0, backgroundImage: _user.getImage()),
@@ -114,7 +124,9 @@ class EditProfilePageState extends State<EditProfilePage> {
   }
 
   void pickUserImage() {
-    ImagePicker.pickImage(source: ImageSource.gallery).then((image) async {
+    ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 600).then((image) async {
+      if (image == null)
+        return;
       setState((){this.loading=true;});
       String url = await _dbcontroller.changeImage(image);
       setState((){ _user.image = url; this.loading=false; });

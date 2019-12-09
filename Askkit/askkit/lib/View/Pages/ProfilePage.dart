@@ -13,6 +13,7 @@ import 'package:askkit/View/Widgets/QuestionCard.dart';
 import 'package:askkit/View/Widgets/ShadowDecoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -71,30 +72,31 @@ class ProfilePage extends StatelessWidget {
     return Container(
         margin: EdgeInsets.all(50),
         decoration: ShadowDecoration(color: Theme.of(context).canvasColor, blurRadius: 5.0, spreadRadius: 1),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-                child: new CircleAvatar(radius: 60.0, backgroundImage: _user.getImage()),
-                padding: EdgeInsets.all(1.0),
-                decoration: new BoxDecoration(
-                  color: Theme.of(context).iconTheme.color, // border color
-                  shape: BoxShape.circle,
+        child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Container(
+                    child: new CircleAvatar(radius: 60.0, backgroundImage: _user.getImage()),
+                    margin: EdgeInsets.only(top: 20.0),
+                    padding: EdgeInsets.all(1.0),
+                    decoration: new BoxDecoration(
+                      color: Theme.of(context).iconTheme.color, // border color
+                      shape: BoxShape.circle,
+                    )
+                ),
+                Container(
+                    child: Text(_user.username, style: Theme.of(context).textTheme.body2.copyWith(fontSize: 35)),
+                    margin: EdgeInsets.all(15)
+                ),
+                Text("Also known as: " + _user.name),
+                Divider(thickness: 1, height: 15, indent: 15, endIndent: 15),
+                Container(
+                  padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 10.0),
+                    child: MarkdownBody(data: _user.bios)
                 )
-            ),
-            Container(
-                child: Text(_user.username, style: Theme.of(context).textTheme.body2.copyWith(fontSize: 35)),
-                margin: EdgeInsets.all(15)
-            ),
-            Text("Also known as: " + _user.name),
-            SizedBox(height: 10),
-            Text(_user.bios),
-
           ],
         )
-    );
+    ));
   }
 
   Widget createQuestionsTab(BuildContext context) {

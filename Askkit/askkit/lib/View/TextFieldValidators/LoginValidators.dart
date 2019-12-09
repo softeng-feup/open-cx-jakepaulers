@@ -4,19 +4,23 @@ class LoginValidator {
   static const usernameMinLength = 6;
   static const passwordMinLength = 6;
   static const String emailRegex = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  static const String usernameRegex = r'^[\w]+$';
 
   static FormFieldValidator<String> usernameValidator() {
     return (String value) {
       if (value.length < usernameMinLength)
         return "Username must be at least $usernameMinLength characters long";
-      return null;
+      if (RegExp(usernameRegex).hasMatch(value))
+        return null;
+
+      return "Username can only contain letters and numbers";
     };
   }
 
 
   static FormFieldValidator<String> emailValidator() {
     return (String value) {
-      RegExp regex = new RegExp(emailRegex, caseSensitive: false);
+      RegExp regex = RegExp(emailRegex, caseSensitive: false);
       if (regex.hasMatch(value))
         return null;
       return "Invalid email";
