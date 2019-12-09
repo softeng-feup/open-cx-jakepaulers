@@ -65,7 +65,7 @@ class EditProfilePageState extends State<EditProfilePage> {
             ),
         ..._makeEditable("Edit username:", CustomTextField(usernameKey, usernameController , "Your username",  "Username can't be empty!")),
         ..._makeEditable("Edit display name:", CustomTextField(nameKey, nameController , "Your display name",  "Display name can't be empty!")),
-        ..._makeEditable("Edit bios:", TextAreaForm(biosKey, biosController , "Your bios",  "Bios can't be empty!"), maxFormHeight: 200),
+        ..._makeEditable("Edit bios:", TextAreaForm(biosKey, biosController , "Your bios",  "Bios can't be empty!"), maxFormHeight: 150),
             Container (
               padding: EdgeInsets.only(left: 20.0,right: 20.0),
     child: Row(
