@@ -15,3 +15,9 @@ Making host-atendee interaction simple. Users post relevant questions and the au
 - As a user, I want to be notified when my questions are answered or verified by the host, so that I don't have to keep the app open until something happens.
 
 - As an attendee, I want to be automatically entered into the forum corresponding to the talk I'm currently attending, so that I don't need to waste time joining a room every time I open the app.
+
+## Installation
+
+If you're an android user, just install the Askkit.apk file.
+
+If you're iOS or don't trust us, don't worry, the app is coming to the App Store / Google Play soon!
