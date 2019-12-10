@@ -6,16 +6,16 @@ import 'package:askkit/View/Widgets/CustomTextForm.dart';
 import 'package:flutter/material.dart';
 
 class NewTalkPage extends StatelessWidget {
-  static final GlobalKey<FormState> _formkey1 = GlobalKey<FormState>();
-  static final GlobalKey<FormState> _formkey2 = GlobalKey<FormState>();
-  static final GlobalKey<FormState> _formkey3 = GlobalKey<FormState>();
-  static final GlobalKey<FormState> _formkey4 = GlobalKey<FormState>();
-  static final GlobalKey<FormState> _formkey5 = GlobalKey<FormState>();
-  static final TextEditingController _titleController = TextEditingController();
-  static final TextEditingController _descController = TextEditingController();
-  static final TextEditingController _roomController = TextEditingController();
-  static final TextEditingController _usernameController = TextEditingController();
-  static final TextEditingController _dateController = TextEditingController();
+  final GlobalKey<FormState> _formkey1 = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formkey2 = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formkey3 = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formkey4 = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formkey5 = GlobalKey<FormState>();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descController = TextEditingController();
+  final TextEditingController _roomController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
 
   final DatabaseController dbcontroller;
 
