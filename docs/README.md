@@ -345,15 +345,14 @@ Changelogs for the 4 different product increments can be found [here](https://gi
 ---
 ## Test
 
-<!-- TODO -->
+To make sure the application performed as expected we planned to run some automated tests using gherkin to test some features. However, at this moment only developed one test using gherkin since gherkin integration into flutter was not as friendly as we initially expected requiring some code restructuration.
 
-There are several ways of documenting testing activities, and quality assurance in general, being the most common: a strategy, a plan, test case specifications, and test checklists.
+The planned features to be tested are:
 
-In this section it is only expected to include the following:
-* test plan describing the list of features to be tested and the testing methods and tools;
-* test case specifications to verify the functionalities, using unit tests and acceptance tests.
- 
-A good practice is to simplify this, avoiding repetitions, and automating the testing actions as much as possible.
+* Login/Sign-in/Logout (already implemented in gherkin);
+* Upvoting and downvoting questions;
+* Adding and removing questions;
+* Search for talks.
 
 ---
 ## Configuration and change management
