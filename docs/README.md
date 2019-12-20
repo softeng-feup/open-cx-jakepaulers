@@ -309,7 +309,15 @@ For the upvote structure, we simply created a many-to-many association between  
 
 ## Architecture and Design
 
+The architecture of a software system encompasses the set of key decisions about its overall organization. 
+
+We will be talking about the logical architecture, a high-level view of the code structure, and the physical architecture, which will show the connection between each machine and the used technologies.
+
 ### Logical architecture
+
+<img src="./img/ComponentDiagram.png" width="1000">
+
+We decided to go with an MVC approach...
 
 <!-- Todo -->
 The purpose of this subsection is to document the high-level logical structure of the code, using a UML diagram with logical packages, without the worry of allocating to components, processes or machines.
@@ -318,7 +326,10 @@ It can be beneficial to present the system both in a horizontal or vertical deco
 * horizontal decomposition may define layers and implementation concepts, such as the user interface, business logic and concepts; 
 * vertical decomposition can define a hierarchy of subsystems that cover all layers of implementation.
 
+
 ### Physical architecture
+
+<img src="./img/DeploymentDiagram.png" width="1000">
 
 Our project's physical structure is very simple. The user installs Askkit on their smartphone, and whenever the need to connect with our database arises, it communicates with it via HTTPS requests, where it will store and retrieve all the information needed.
 
@@ -326,13 +337,6 @@ Before starting our project, we discussed what programming language would best s
 
 We used Firebase for our database server because of its easy integration with flutter, as well as simple setup.
  
-**UML component diagram**
-
-<img src="./img/ComponentDiagram.png" width="1000">
-
-**UML deployment diagram**
-
-<img src="./img/DeploymentDiagram.png" width="1000">
 
 
 ### Prototype
