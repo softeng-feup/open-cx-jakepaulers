@@ -303,7 +303,7 @@ Effort: M
 
 The concepts are relatively simple, consisting of talks, users and comments, each with the appropriate attributes. We extended the comment class, as we need to have a distinction between questions and answers (questions can have answers).
 
-For the upvote system, we simply created an association class between a user and a question, allowing its value to be -1, 1 or 0, depending if the user has downvoted, upvoted or did not react to the question.
+For the upvote structure, we simply created a many-to-many association between  user and question, allowing its value to be -1, 1 or 0, depending if the user has downvoted, upvoted or did not react to the question.
 
 ---
 
