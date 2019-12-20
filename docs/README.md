@@ -301,21 +301,16 @@ Effort: M
 
 ![UML](./img/UML.svg "UML Class Diagram")
 
-<!-- Perguntar ao prof se é preciso texto -->
+The concepts are relatively simple, consisting of talks, users and comments, each with the appropriate attributes. We extended the comment class, as we need to have a distinction between questions and answers (questions can have answers).
+
+For the upvote system, we simply created an association class between a user and a question, allowing its value to be -1, 1 or 0, depending if the user has downvoted, upvoted or did not react to the question.
 
 ---
 
 ## Architecture and Design
-<!-- Todo -->
-The architecture of a software system encompasses the set of key decisions about its overall organization. 
-
-A well written architecture document is brief but reduces the amount of time it takes new programmers to a project to understand the code to feel able to make modifications and enhancements.
-
-To document the architecture requires describing the decomposition of the system in their parts (high-level components) and the key behaviors and collaborations between them. 
-
-In this section you should start by briefly describing the overall components of the project and their interrelations. You should also describe how you solved typical problems you may have encountered, pointing to well-known architectural and design patterns, if applicable.
 
 ### Logical architecture
+
 <!-- Todo -->
 The purpose of this subsection is to document the high-level logical structure of the code, using a UML diagram with logical packages, without the worry of allocating to components, processes or machines.
 
@@ -324,11 +319,22 @@ It can be beneficial to present the system both in a horizontal or vertical deco
 * vertical decomposition can define a hierarchy of subsystems that cover all layers of implementation.
 
 ### Physical architecture
-<!-- Todo -->
-The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams or component diagrams (separate or integrated), showing the physical structure of the system.
 
-It should describe also the technologies considered and justify the selections made. Examples of technologies relevant for openCX are, for example, frameworks for mobile applications (Flutter vs ReactNative vs ...), languages to program with microbit, and communication with things (beacons, sensors, etc.).
+Our project's physical structure is very simple. The user installs Askkit on their smartphone, and whenever the need to connect with our database arises, it communicates with it via HTTPS requests, where it will store and retrieve all the information needed.
+
+Before starting our project, we discussed what programming language would best suit our mobile app. After deliberating between React and Flutter, we opted with Flutter, because, even thought it's much more recent, it seemed very appealing due to the many built-in features it provides, but also because we believe it will help us more in the future.
+
+We used Firebase for our database server because of its easy integration with flutter, as well as simple setup.
  
+**UML component diagram**
+
+<img src="./img/ComponentDiagram.png" width="1000">
+
+**UML deployment diagram**
+
+<img src="./img/DeploymentDiagram.png" width="1000">
+
+
 ### Prototype
 
 For the application prototype, we decided to tackle our Story #1, which states that "As a conference atendee, I want to be able to easily ask questions to the host, so that I get to understand the subject better and faster.", this being the basis of our app.
@@ -345,7 +351,7 @@ Changelogs for the 4 different product increments can be found [here](https://gi
 ---
 ## Test
 
-To make sure the application performed as expected we planned to run some automated tests using gherkin to test some features. However, at this moment only developed one test using gherkin since gherkin integration into flutter was not as friendly as we initially expected requiring some code restructuration.
+To make sure the application performed as expected we planned to run some automated tests using gherkin to test some features. However, at this moment only developed one test using gherkin since integrating it into flutter was not as friendly as we initially expected, and would required a lot of code to be restructured.
 
 The planned features to be tested are:
 
