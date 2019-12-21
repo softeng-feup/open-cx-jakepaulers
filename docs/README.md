@@ -317,15 +317,11 @@ We will be talking about the logical architecture, a high-level view of the code
 
 <img src="./img/ComponentDiagram.png" width="1000">
 
-We decided to go with an MVC approach...
+We decided to go with an MVC approach, as it makes the most sense and allows the project structure to be much simpler. 
 
-<!-- Todo -->
-The purpose of this subsection is to document the high-level logical structure of the code, using a UML diagram with logical packages, without the worry of allocating to components, processes or machines.
+The Model contains the data for the Talks, Questions, etc., as described on the domain model diagram. That way, the View, composed of widgets, simply displays that information. 
 
-It can be beneficial to present the system both in a horizontal or vertical decomposition:
-* horizontal decomposition may define layers and implementation concepts, such as the user interface, business logic and concepts; 
-* vertical decomposition can define a hierarchy of subsystems that cover all layers of implementation.
-
+Both the Model and the View are related to the Controller, which consists of objects that query the database and provide authentication functions, being the View the one to ask the Controller to update the Model.
 
 ### Physical architecture
 
